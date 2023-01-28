@@ -24,7 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import {colors, fonts} from './src/constants';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -34,18 +34,25 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Text>Lets Crack It</Text>
+        style={styles.container}>
+        <Text style={styles.testStyles}>Lets Crack It</Text>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.LIGHT_YELLOW,
+  },
+  testStyles: {
+    fontSize: 100,
+    fontFamily: fonts.SHORTBABY,
+  },
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,

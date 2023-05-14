@@ -1,7 +1,9 @@
 export const colors = {
   BLACK: '#000000',
   LIGHT_YELLOW: '#F5D184',
+  WHITE: '#ffffff'
 };
+
 
 export const fonts = {
   RUBIK_REGULAR: 'Rubik-Regular',

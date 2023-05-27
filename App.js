@@ -1,70 +1,22 @@
-/* eslint-disable react-native/no-inline-styles */
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import {SafeAreaView, StyleSheet, View, Image, Dimensions} from 'react-native';
 
-import {colors, fonts} from './src/constants';
-const {width, height} = Dimensions.get('window');
-
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {SplashScreen} from './src/SplashScreen';
+import {Home} from './src/Home';
 const App = () => {
+  const Stack = createStackNavigator();
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={styles.container}>
-        <View
-          style={{
-            flex: 1,
-            height: height,
-            width: width,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={require('./src/icons/logo-transparent-png.png')}
-            style={{width: 150, height: 150}}
-          />
-        </View>
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: height,
-    backgroundColor: colors.WHITE,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  testStyles: {
-    fontSize: 100,
-    fontFamily: fonts.SHORTBABY,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

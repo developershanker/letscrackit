@@ -7,14 +7,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, { useEffect } from 'react'
-import { colors, fonts } from './constants';
+import { colors, fontsNames } from './utils/constants';
 
 const {width, height} = Dimensions.get('window');
 export const SplashScreen = ({navigation, route}) => {
   useEffect(() => {
     const setTimer = setTimeout(() => {
       navigation.navigate('Home')
-    }, 5000);
+    }, 2000);
     return () => clearTimeout(setTimer);
   }, []);
   return (
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   testStyles: {
     fontSize: 100,
-    fontFamily: fonts.SHORTBABY,
+    fontFamily: fontsNames.SHORTBABY,
   },
   sectionContainer: {
     marginTop: 32,

@@ -1,7 +1,8 @@
 export const colors = {
   BLACK: '#000000',
   LIGHT_YELLOW: '#F5D184',
-  WHITE: '#ffffff'
+  WHITE: '#ffffff',
+  APP_COLOR: '#010e24'
 };
 
 

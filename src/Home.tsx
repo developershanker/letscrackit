@@ -1,6 +1,7 @@
-import { View, Text, BackHandler } from 'react-native'
+import { View, Text, BackHandler, StyleSheet, SafeAreaView } from 'react-native'
 import React, { useEffect } from 'react'
 import Header from './components/Header'
+import { colors } from './utils/constants'
 
 export const Home = ({navigation, route}) => {
 
@@ -17,9 +18,16 @@ export const Home = ({navigation, route}) => {
   }
   
   return (
-    <View>
+    <SafeAreaView style={styles.homeContainer}>
       <Header/>
         <Text>Home</Text>
-    </View>
+    </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  homeContainer: {
+    flex: 1,
+    backgroundColor: colors.APP_COLOR
+  }
+})

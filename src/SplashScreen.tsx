@@ -5,34 +5,39 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  Text
 } from 'react-native';
-import React, { useEffect } from 'react'
-import { colors, fontsNames } from './utils/constants';
+import React, { useEffect, useState } from 'react'
+import { colors, fonts, fontsNames } from './utils/constants';
 
 const {width, height} = Dimensions.get('window');
 export const SplashScreen = ({navigation, route}) => {
+  const [showLoading, setShowLoading] = useState(false)
   useEffect(() => {
     const setTimer = setTimeout(() => {
-      navigation.navigate('Home')
+      setShowLoading(true)
     }, 2000);
     return () => clearTimeout(setTimer);
+  }, []);
+  useEffect(() => {
+    const setTimer2 = setTimeout(() => {
+      navigation.navigate('Home')
+    }, 4000);
+    return () => clearTimeout(setTimer2);
   }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <View
-          style={{
-            height: height - 100,
-            width: width,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={require('./icons/logo-transparent-png.png')}
-            style={{width: 150, height: 150}}
-          />
+          style={styles.logoView}>
+         {!showLoading ?  <Image
+            source={require('./icons/logo-transparent2.png')}
+            style={{width: 200, height: 200}}
+          /> : <Text style={styles.nameStyles}>
+            Lets Crack It
+            </Text>}
         </View>
-        <ActivityIndicator size={'large'} color={colors.LIGHT_YELLOW} />
+        {showLoading ? <ActivityIndicator size={'large'} color={colors.WHITE} /> : null}
       </View>
     </SafeAreaView>
   )
@@ -41,15 +46,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: height,
-    backgroundColor: colors.WHITE,
+    backgroundColor: colors.APP_COLOR,
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
   },
-  testStyles: {
-    fontSize: 100,
-    fontFamily: fontsNames.SHORTBABY,
+  logoView: {
+    height: height - 100,
+    width: width,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nameStyles: {
+    ...fonts.PoppinsSemiBold(20),color: colors.WHITE
   },
   sectionContainer: {
     marginTop: 32,

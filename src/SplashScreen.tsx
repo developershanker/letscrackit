@@ -1,47 +1,51 @@
 import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
   SafeAreaView,
   StyleSheet,
+  Text,
   View,
-  Image,
-  Dimensions,
-  ActivityIndicator,
-  Text
 } from 'react-native';
-import React, { useEffect, useState } from 'react'
-import { colors, fonts, fontsNames } from './utils/constants';
+import * as React from 'react';
+import {useEffect, useState} from 'react';
+import {colors, fonts} from './utils/constants';
 
 const {width, height} = Dimensions.get('window');
 export const SplashScreen = ({navigation, route}) => {
-  const [showLoading, setShowLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false);
   useEffect(() => {
     const setTimer = setTimeout(() => {
-      setShowLoading(true)
+      setShowLoading(true);
     }, 2000);
     return () => clearTimeout(setTimer);
   }, []);
   useEffect(() => {
     const setTimer2 = setTimeout(() => {
-      navigation.navigate('Home')
+      navigation.navigate('Home');
     }, 4000);
     return () => clearTimeout(setTimer2);
   }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-        <View
-          style={styles.logoView}>
-         {!showLoading ?  <Image
-            source={require('./icons/logo-transparent2.png')}
-            style={{width: 200, height: 200}}
-          /> : <Text style={styles.nameStyles}>
-            Lets Crack It
-            </Text>}
+        <View style={styles.logoView}>
+          {!showLoading ? (
+            <Image
+              source={require('./icons/logo-transparent2.png')}
+              style={{width: 200, height: 200}}
+            />
+          ) : (
+            <Text style={styles.nameStyles}>Lets Crack It</Text>
+          )}
         </View>
-        {showLoading ? <ActivityIndicator size={'large'} color={colors.WHITE} /> : null}
+        {showLoading ? (
+          <ActivityIndicator size={'large'} color={colors.WHITE} />
+        ) : null}
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -59,7 +63,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   nameStyles: {
-    ...fonts.PoppinsSemiBold(20),color: colors.WHITE
+    ...fonts.PoppinsSemiBold(20),
+    color: colors.WHITE,
   },
   sectionContainer: {
     marginTop: 32,

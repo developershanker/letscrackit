@@ -18,7 +18,10 @@ export const Home = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.homeContainer}>
-      <Header />
+      <Header
+        leftIconName={'person-circle-outline'}
+        onPressLeftIcon={handleBack}
+      />
       <Text>Home Page</Text>
     </SafeAreaView>
   );

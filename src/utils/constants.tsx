@@ -2,9 +2,9 @@ export const colors = {
   BLACK: '#000000',
   LIGHT_YELLOW: '#F5D184',
   WHITE: '#ffffff',
-  APP_COLOR: '#010e24'
+  APP_COLOR: '#010e24',
+  DARK_GREY: '#363738',
 };
-
 
 export const fontsNames = {
   RUBIK_REGULAR: 'Rubik-Regular',
@@ -21,11 +21,11 @@ export const fontsNames = {
   RUBIK_SEMIBOLD_ITALIC: 'Rubik-SemiBoldItalic',
   SCHOLARLY_AMBITION_REGULAR: 'ScholarlyAmbitionRegular',
   SHORTBABY: 'ShortBaby',
-  POPPINS_BOLD:'Poppins-Bold',
-  POPPINS_SEMIBOLD:'Poppins-SemiBold',
-  POPPINS_MEDIUM:'Poppins-Medium',
-  POPPINS_REGULAR:'Poppins-Regular',
-  POPPINS_LIGHT:'Poppins-Light'
+  POPPINS_BOLD: 'Poppins-Bold',
+  POPPINS_SEMIBOLD: 'Poppins-SemiBold',
+  POPPINS_MEDIUM: 'Poppins-Medium',
+  POPPINS_REGULAR: 'Poppins-Regular',
+  POPPINS_LIGHT: 'Poppins-Light',
 };
 
 const Fonts = {

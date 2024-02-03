@@ -8,6 +8,8 @@ interface HeaderProps {
   headingTitle?: string;
   leftIconName?: string;
   rightIconName?: string;
+  leftIconSize?: number;
+  rightIconSize?: number;
   onPressRightIcon?: () => void;
   onPressLeftIcon?: () => void;
 }
@@ -17,19 +19,25 @@ const Header: React.FC<HeaderProps> = props => {
     leftIconName,
     headingTitle,
     rightIconName,
+    leftIconSize,
+    rightIconSize,
     onPressRightIcon,
     onPressLeftIcon,
   } = props;
   return (
     <View style={styles.viewContainer}>
       <TouchableOpacity style={styles.leftIconStyles} onPress={onPressLeftIcon}>
-        {leftIconName ? <DynamicIcon name={leftIconName} size={40} /> : null}
+        {leftIconName ? (
+          <DynamicIcon name={leftIconName} size={leftIconSize || 40} />
+        ) : null}
       </TouchableOpacity>
       <Text style={styles.headerStyles}>{headingTitle || ''}</Text>
       <TouchableOpacity
         style={styles.rightIconStyles}
         onPress={onPressRightIcon}>
-        {rightIconName ? <DynamicIcon name={rightIconName} size={40} /> : null}
+        {rightIconName ? (
+          <DynamicIcon name={rightIconName} size={rightIconSize || 40} />
+        ) : null}
       </TouchableOpacity>
     </View>
   );

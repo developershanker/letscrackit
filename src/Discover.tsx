@@ -1,11 +1,11 @@
-import {BackHandler, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {BackHandler, ScrollView, StyleSheet, View} from 'react-native';
 import * as React from 'react';
 import {useEffect} from 'react';
-import Header from './components/Header';
 import {colors} from './utils/constants';
 import {useNavigation} from '@react-navigation/native';
+import Header from './components/Header';
 
-export const Home: React.FC = () => {
+export const Discover: React.FC = () => {
   const navigation = useNavigation();
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBack);
@@ -14,21 +14,20 @@ export const Home: React.FC = () => {
     };
   }, []);
   const handleBack = () => {
-    BackHandler.exitApp();
+    navigation.goBack();
     return true;
   };
-
   return (
-    <SafeAreaView style={styles.homeContainer}>
+    <ScrollView style={styles.homeContainer}>
       <Header
-        leftIconName={'person-circle-outline'}
-        onPressLeftIcon={() => navigation.navigate('Profile')}
+        leftIconName={'chevron-back-outline'}
+        leftIconSize={25}
+        onPressLeftIcon={handleBack}
       />
-      <ScrollView></ScrollView>
-    </SafeAreaView>
+      <View></View>
+    </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   homeContainer: {
     flex: 1,

@@ -12,7 +12,7 @@ import {useEffect, useState} from 'react';
 import {colors, fonts} from './utils/constants';
 
 const {width, height} = Dimensions.get('window');
-export const SplashScreen = ({navigation, route}) => {
+export const SplashScreen = ({navigation}) => {
   const [showLoading, setShowLoading] = useState(false);
   useEffect(() => {
     const setTimer = setTimeout(() => {
@@ -22,7 +22,7 @@ export const SplashScreen = ({navigation, route}) => {
   }, []);
   useEffect(() => {
     const setTimer2 = setTimeout(() => {
-      navigation.navigate('Home');
+      navigation.navigate('TabBar');
     }, 4000);
     return () => clearTimeout(setTimer2);
   }, []);

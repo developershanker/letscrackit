@@ -1,9 +1,10 @@
-import {BackHandler, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {BackHandler, SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
 import * as React from 'react';
 import {useEffect} from 'react';
 import Header from './components/Header';
 import {colors} from './utils/constants';
 import {useNavigation} from '@react-navigation/native';
+import remoteConfig, { FirebaseRemoteConfigTypes } from '@react-native-firebase/remote-config';
 
 export const Home: React.FC = () => {
   const navigation = useNavigation();
@@ -18,13 +19,16 @@ export const Home: React.FC = () => {
     return true;
   };
 
+  const parameters = remoteConfig().getAll();
   return (
     <SafeAreaView style={styles.homeContainer}>
       <Header
         leftIconName={'person-circle-outline'}
         onPressLeftIcon={() => navigation.navigate('Profile')}
       />
-      <ScrollView></ScrollView>
+      <ScrollView>
+        <Text style={{color:colors.WHITE}}>{parameters?.DEMO_KEY?.asString()}</Text>
+      </ScrollView>
     </SafeAreaView>
   );
 };

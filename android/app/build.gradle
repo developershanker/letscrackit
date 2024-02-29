@@ -1,4 +1,7 @@
 apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
+apply plugin: "com.google.firebase.crashlytics"
+apply plugin: 'com.google.firebase.firebase-perf'
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -267,6 +270,13 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-vector-icons')
+    implementation platform("com.google.firebase:firebase-bom:28.2.0")
+    // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    // Declare the dependencies for the Analytics library
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    // Declare the dependencies for the Crashlytics library
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

@@ -1,13 +1,20 @@
-import {BackHandler, SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
+import {
+  BackHandler,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import * as React from 'react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Header from './components/Header';
 import {colors} from './utils/constants';
 import {useNavigation} from '@react-navigation/native';
-import remoteConfig, { FirebaseRemoteConfigTypes } from '@react-native-firebase/remote-config';
+import {firebaseRemoteConfigData} from './utils/helpers';
 
 export const Home: React.FC = () => {
   const navigation = useNavigation();
+  const [heading, setheading] = useState('');
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBack);
     return () => {
@@ -18,8 +25,14 @@ export const Home: React.FC = () => {
     BackHandler.exitApp();
     return true;
   };
+  const getData = async () => {
+    const headingText = await firebaseRemoteConfigData('DEMO_KEY', 'asString');
+    setheading(headingText);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
 
-  const parameters = remoteConfig().getAll();
   return (
     <SafeAreaView style={styles.homeContainer}>
       <Header
@@ -27,7 +40,7 @@ export const Home: React.FC = () => {
         onPressLeftIcon={() => navigation.navigate('Profile')}
       />
       <ScrollView>
-        <Text style={{color:colors.WHITE}}>{parameters?.DEMO_KEY?.asString()}</Text>
+        <Text style={{color: colors.WHITE}}>{heading}</Text>
       </ScrollView>
     </SafeAreaView>
   );

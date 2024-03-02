@@ -10,7 +10,6 @@ import {
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {colors, fonts} from './utils/constants';
-import remoteConfig, { FirebaseRemoteConfigTypes } from '@react-native-firebase/remote-config';
 const {width, height} = Dimensions.get('window');
 
 export const SplashScreen = ({navigation}) => {
@@ -22,30 +21,6 @@ export const SplashScreen = ({navigation}) => {
     return () => clearTimeout(setTimer);
   }, []);
 
-  useEffect(() => {
-    remoteConfig()
-      .setDefaults({
-        awesome_new_feature: 'disabled',
-      })
-      .then(() => {
-        console.log('Default values set.');
-      });
-
-  remoteConfig()
-  .setDefaults({
-    awesome_new_feature: 'disabled',
-  })
-  .then(() => remoteConfig().fetchAndActivate())
-  .then(fetchedRemotely => {
-    if (fetchedRemotely) {
-      console.log('Configs were retrieved from the backend and activated.');
-    } else {
-      console.log(
-        'No configs were fetched from the backend, and the local configs were already activated',
-      );
-    }
-  });
-  }, []);
   useEffect(() => {
     const setTimer2 = setTimeout(() => {
       navigation.navigate('TabBar');

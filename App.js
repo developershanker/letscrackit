@@ -8,8 +8,17 @@ import {Home} from './src/Home';
 import {Discover} from './src/Discover';
 import {Profile} from './src/Profile';
 import {initiateFirebaseConfig} from './src/utils/helpers';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const App = () => {
+  const configureGoogleSignIn = () => {
+    GoogleSignin.configure({
+      webClientId:
+        '113606866455-6b3rliisuocgf2culi18bp5u7cg85331.apps.googleusercontent.com',
+      offlineAccess: true,
+    });
+  };
+
   const fetchFirebaseRemoteConfigValues = async () => {
     try {
       await initiateFirebaseConfig();
@@ -20,6 +29,7 @@ const App = () => {
   useEffect(() => {
     fetchFirebaseRemoteConfigValues().finally(() => {
       console.log('fetched everything');
+      configureGoogleSignIn();
     });
   }, []);
   const Stack = createStackNavigator();

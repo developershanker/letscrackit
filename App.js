@@ -6,6 +6,7 @@ import { TabBar } from './src/TabBar';
 import { Home } from './src/Home';
 import { Discover } from './src/Discover';
 import { Profile } from './src/Profile';
+import { Login } from './src/Login';
 import { initiateFirebaseConfig } from './src/utils/helpers';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
@@ -54,6 +55,7 @@ const App = () => {
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Discover" component={Discover} />
             <Stack.Screen name="TabBar" component={TabBar} />
+            <Stack.Screen name="Login" component={Login} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

@@ -7,26 +7,38 @@ import {
   Text,
   View,
 } from 'react-native';
-import * as React from 'react';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {colors, fonts} from './utils/constants';
+import {useSelector} from 'react-redux';
+import {selectUserData} from './store/selectors/userSelectors';
+
 const {width, height} = Dimensions.get('window');
 
 export const SplashScreen = ({navigation}) => {
+  const userData: any = useSelector(selectUserData);
   const [showLoading, setShowLoading] = useState(false);
-  useEffect(() => {
-    const setTimer = setTimeout(() => {
-      setShowLoading(true);
-    }, 2000);
-    return () => clearTimeout(setTimer);
-  }, []);
 
   useEffect(() => {
-    const setTimer2 = setTimeout(() => {
-      navigation.navigate('TabBar');
-    }, 4000);
-    return () => clearTimeout(setTimer2);
-  }, []);
+    // Show animation first
+    const showTimer = setTimeout(() => {
+      setShowLoading(true);
+    }, 1000); // 1s for branding/logo
+
+    // Navigate based on login state
+    const navTimer = setTimeout(() => {
+      if (userData) {
+        navigation.replace('TabBar'); // 🔁 replace so Splash is removed from stack
+      } else {
+        navigation.replace('Login'); // 👈 or whatever your login screen is
+      }
+    }, 2000); // total wait = 2s
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(navTimer);
+    };
+  }, [userData, navigation]);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
@@ -37,7 +49,7 @@ export const SplashScreen = ({navigation}) => {
               style={{width: 200, height: 200}}
             />
           ) : (
-            <Text style={styles.nameStyles}>Lets Crack It</Text>
+            <Text style={styles.nameStyles}>Let's Crack It</Text>
           )}
         </View>
         {showLoading ? (
@@ -47,6 +59,7 @@ export const SplashScreen = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -66,21 +79,5 @@ const styles = StyleSheet.create({
   nameStyles: {
     ...fonts.PoppinsSemiBold(20),
     color: colors.WHITE,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
   },
 });

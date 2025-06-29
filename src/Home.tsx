@@ -8,13 +8,17 @@ import {
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Header from './components/Header';
-import {colors} from './utils/constants';
+import {colors, fonts} from './utils/constants';
 import {useNavigation} from '@react-navigation/native';
 import {firebaseRemoteConfigData} from './utils/helpers';
+import { useSelector } from 'react-redux';
+import { selectUserData } from './store/selectors/userSelectors';
 
 export const Home: React.FC = () => {
   const navigation = useNavigation();
-  const [heading, setheading] = useState('');
+  const [heading, setHeading] = useState('');
+  const [subHeading, setSubHeading] = useState('');
+  const userData: any = useSelector(selectUserData);
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBack);
     return () => {
@@ -26,8 +30,9 @@ export const Home: React.FC = () => {
     return true;
   };
   const getData = async () => {
-    const headingText = await firebaseRemoteConfigData('DEMO_KEY', 'asString');
-    setheading(headingText);
+    const headingText = await firebaseRemoteConfigData('DEMO_KEY');
+    setHeading(headingText?.heading?.replace('{{user}}', userData?.displayName));
+    setSubHeading(headingText?.subHeading)
   };
   useEffect(() => {
     getData();
@@ -40,7 +45,8 @@ export const Home: React.FC = () => {
         onPressLeftIcon={() => navigation.navigate('Profile')}
       />
       <ScrollView>
-        <Text style={{color: colors.WHITE}}>{heading}</Text>
+        <Text style={styles.headingText}>{heading}</Text>
+        <Text style={styles.headingText}>{subHeading}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -51,4 +57,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.APP_COLOR,
   },
+  headingText: { 
+      ...fonts.PoppinsBold(20), color: colors.WHITE, textAlign: 'center', width: '86%', alignSelf: 'center'}
 });

@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  SafeAreaView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors } from './utils/constants';
-import { signInWithGoogle } from './utils/googleLogin';
+import { colors, fonts } from './utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from './store/slices/userSlice';
 import { selectUserData } from './store/selectors/userSelectors';
+import { logout } from './store/slices/userSlice';
 
 export const Profile: React.FC = () => {
   const navigation = useNavigation();
@@ -30,70 +30,81 @@ export const Profile: React.FC = () => {
     return true;
   };
 
-  const handleLogin = async () => {
-    try {
-      const user = await signInWithGoogle();
-      dispatch(setUserData(user));
-      console.log('User:', user);
-    } catch (e) {
-      console.log('Login failed:', e);
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    navigation.replace("Login")
+  }
+
+  const renderProfileData = () => {
+    return (
+      <View style={styles.profileContainer}>
+        {userData?.photoURL && (
+          <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
+        )}
+        <Text style={styles.userStyles}>{userData?.displayName}</Text>
+      </View>
+    );
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.homeContainer}>
-      <View>
-        {userData?.emailVerified ? (
-          <View style={styles.profileContainer}>
-            {userData?.photoURL && (
-              <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
-            )}
-            <Text style={styles.userStyles}>{userData?.displayName}</Text>
-          </View>
-        ) : (
-          <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
-            <Text style={styles.loginText}>Login with Google</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {renderProfileData()}
+        </ScrollView>
+
+        <View style={styles.logoutButtonContainer}>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logOutText}>LOGOUT</Text>
           </TouchableOpacity>
-        )}
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  homeContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: colors.APP_COLOR,
+  },
+  scrollContent: {
     flexGrow: 1,
     backgroundColor: colors.APP_COLOR,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginButton: {
-    backgroundColor: 'white',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    elevation: 2,
-  },
-  loginText: {
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  userStyles: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 12,
-    textAlign: 'center',
   },
   profileContainer: {
     alignItems: 'center',
+    flexDirection: 'row',
+    padding: 16,
+    paddingTop: 32,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderWidth: 2,
-    borderColor: 'white',
+    borderWidth: 1,
+    borderColor: colors.APP_COLOR,
+  },
+  userStyles: {
+    color: 'white',
+    ...fonts.PoppinsSemiBold(18),
+    marginLeft: 16,
+  },
+  logoutButtonContainer: {
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.APP_COLOR,
+  },
+  logoutButton: {
+    backgroundColor: 'white',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+  },
+  logOutText: {
+    color: colors.APP_COLOR,
+    ...fonts.PoppinsSemiBold(18),
+    letterSpacing: 2,
   },
 });

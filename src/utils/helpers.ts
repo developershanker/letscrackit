@@ -37,9 +37,14 @@ export const fetchAndActivateAlongWithUpdateListener = async () => {
   }
 };
 
-export const firebaseRemoteConfigData = async (
-  keyName: string,
-  asFunc: string,
-) => {
-  return await remoteConfig().getAll()[keyName]?.[asFunc]?.();
+export const firebaseRemoteConfigData = async (keyName: string) => {
+  try {
+    const value = remoteConfig().getValue(keyName);
+    const raw = value?.asString(); // Safely get string
+    return JSON.parse(raw); // ✅ Parse JSON
+  } catch (e) {
+    console.error('Failed to parse remote config JSON', e);
+    return null;
+  }
 };
+

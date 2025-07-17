@@ -1,6 +1,6 @@
 // @ts-ignore
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import {colors, fonts} from '../utils/constants';
 import DynamicIcon from '../icons/iconsList';
 
@@ -12,6 +12,7 @@ interface HeaderProps {
   rightIconSize?: number;
   onPressRightIcon?: () => void;
   onPressLeftIcon?: () => void;
+  leftIconImage?: string
 }
 
 const Header: React.FC<HeaderProps> = props => {
@@ -23,12 +24,15 @@ const Header: React.FC<HeaderProps> = props => {
     rightIconSize,
     onPressRightIcon,
     onPressLeftIcon,
+    leftIconImage
   } = props;
   return (
     <View style={styles.viewContainer}>
       <TouchableOpacity style={styles.leftIconStyles} onPress={onPressLeftIcon}>
         {leftIconName ? (
           <DynamicIcon name={leftIconName} size={leftIconSize || 40} />
+        ) : leftIconImage ? (
+           <Image source={{ uri: leftIconImage }} style={styles.profileImage} />
         ) : null}
       </TouchableOpacity>
       <Text style={styles.headerStyles}>{headingTitle || ''}</Text>
@@ -57,6 +61,13 @@ const styles = StyleSheet.create({
     color: colors.WHITE,
     alignItems: 'center',
     textAlign: 'center',
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: colors.APP_COLOR,
   },
 });
 export default React.memo(Header);

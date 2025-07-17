@@ -8,7 +8,6 @@ export const colors = {
 
 export const fontsNames = {
   RUBIK_REGULAR: 'Rubik-Regular',
-  RUBIK_ITALIC: 'Rubik-SemiBold',
   RUBIK_BOLD: 'Rubik-Bold',
   RUBIK_BOLD_ITALIC: 'Rubik-BoldItalic',
   RUBIK_EXTRA_BOLD: 'Rubik-ExtraBold',
@@ -80,6 +79,12 @@ const Fonts = {
   PoppinsLight: (s = 12) => {
     return {
       fontFamily: fontsNames.POPPINS_LIGHT,
+      fontSize: s,
+    };
+  },
+  RubicItalics: (s = 12) => {
+    return {
+      fontFamily: fontsNames.RUBIK_LIGHT_ITALIC,
       fontSize: s,
     };
   },

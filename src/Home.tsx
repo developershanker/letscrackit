@@ -10,7 +10,7 @@ import {useEffect, useState} from 'react';
 import Header from './components/Header';
 import {colors, fonts} from './utils/constants';
 import {useNavigation} from '@react-navigation/native';
-import {firebaseRemoteConfigData} from './utils/helpers';
+import { capitalizeWords, firebaseRemoteConfigData} from './utils/helpers';
 import { useSelector } from 'react-redux';
 import { selectUserData } from './store/selectors/userSelectors';
 
@@ -41,12 +41,12 @@ export const Home: React.FC = () => {
   return (
     <SafeAreaView style={styles.homeContainer}>
       <Header
-        leftIconName={'person-circle-outline'}
+        leftIconImage={userData?.photoURL}
         onPressLeftIcon={() => navigation.navigate('Profile')}
       />
       <ScrollView>
-        <Text style={styles.headingText}>{heading}</Text>
-        <Text style={styles.headingText}>{subHeading}</Text>
+        <Text style={styles.headingText}>{capitalizeWords(heading)}</Text>
+        <Text style={styles.headingText2}>{subHeading}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -58,5 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.APP_COLOR,
   },
   headingText: { 
-      ...fonts.PoppinsBold(20), color: colors.WHITE, textAlign: 'center', width: '86%', alignSelf: 'center'}
+      ...fonts.RubicItalics(20), color: colors.WHITE, textAlign: 'center', width: '86%', alignSelf: 'center', lineHeight: 24},
+  headingText2: { 
+      ...fonts.RubikSemiBold(20), color: colors.WHITE, textAlign: 'center', width: '86%', alignSelf: 'center', padding : 16}
 });

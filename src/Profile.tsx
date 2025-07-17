@@ -14,6 +14,8 @@ import { colors, fonts } from './utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserData } from './store/selectors/userSelectors';
 import { logout } from './store/slices/userSlice';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export const Profile: React.FC = () => {
   const navigation = useNavigation();
@@ -30,16 +32,29 @@ export const Profile: React.FC = () => {
     return true;
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    try {
+    // Firebase sign out
+    await auth().signOut();
+
+    // Google sign out
+    await GoogleSignin.signOut();
+
+    // Clear Redux state
     dispatch(logout());
+
+    console.log('✅ Successfully signed out');
     navigation.replace("Login")
+  } catch (error) {
+    console.error('❌ Logout failed:', error);
+  }
   }
 
   const renderProfileData = () => {
     return (
       <View style={styles.profileContainer}>
         {userData?.photoURL && (
-          <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
+          <Image source={{ uri: userData?.photoURL }} style={styles.profileImage} />
         )}
         <Text style={styles.userStyles}>{userData?.displayName}</Text>
       </View>

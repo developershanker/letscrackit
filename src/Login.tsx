@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colors, fonts } from './utils/constants';
-import { signInWithGoogle } from './utils/googleLogin';
+import { getBMIHistory, signInWithGoogle } from './utils/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from './store/slices/userSlice';
+import { setUserData, setUserPhysicalData } from './store/slices/userSlice';
 
 export const Login: React.FC = () => {
   const navigation = useNavigation();
@@ -34,6 +34,8 @@ export const Login: React.FC = () => {
     try {
       const user = await signInWithGoogle();
       dispatch(setUserData(user));
+      const getUserPhysicalData = await getBMIHistory();
+      dispatch(setUserPhysicalData(getUserPhysicalData));
       navigation.navigate("TabBar")
     } catch (e) {
       console.log('Login failed:', e);

@@ -8,71 +8,102 @@ import {
   Text,
   Image,
   SafeAreaView,
+  Pressable,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colors, fonts } from './utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserData } from './store/selectors/userSelectors';
+import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { capitalizeWords, getCategory } from './utils/helpers';
 
 export const Profile: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userData: any = useSelector(selectUserData);
+  const userPhysicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBack);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.goBack();
+      return true;
+    });
     return () => backHandler.remove();
   }, []);
 
-  const handleBack = () => {
-    navigation.goBack();
-    return true;
+  const handleLogout = async () => {
+    try {
+      await auth().signOut();
+      await GoogleSignin.signOut();
+      dispatch(logout());
+      console.log('✅ Successfully signed out');
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('❌ Logout failed:', error);
+      Alert.alert('Logout Failed', 'Something went wrong while signing out.');
+    }
   };
 
-  const handleLogout = async() => {
-    try {
-    // Firebase sign out
-    await auth().signOut();
+  const renderProfileHeader = () => (
+    <View style={styles.profileContainer}>
+      {userData?.photoURL ? (
+        <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
+      ) : (
+        <View style={[styles.profileImage, styles.imageFallback]}>
+          <Text style={{ color: colors.APP_COLOR, fontSize: 32 }}>
+            {userData?.displayName?.[0]?.toUpperCase() || 'U'}
+          </Text>
+        </View>
+      )}
+      <View style={styles.profileTextContainer}>
+        <Text style={styles.userStyles}>{capitalizeWords(userData?.displayName)}</Text>
+        <Text style={styles.userEmailStyles}>{userData?.email}</Text>
+      </View>
+    </View>
+  );
+  const renderBMIBlock = () => {
+    const latestEntry = userPhysicalData?.[0];
+    const bmi = latestEntry?.bmi;
 
-    // Google sign out
-    await GoogleSignin.signOut();
-
-    // Clear Redux state
-    dispatch(logout());
-
-    console.log('✅ Successfully signed out');
-    navigation.replace("Login")
-  } catch (error) {
-    console.error('❌ Logout failed:', error);
-  }
-  }
-
-  const renderProfileData = () => {
     return (
-      <View style={styles.profileContainer}>
-        {userData?.photoURL && (
-          <Image source={{ uri: userData?.photoURL }} style={styles.profileImage} />
-        )}
-        <Text style={styles.userStyles}>{userData?.displayName}</Text>
+      <View style={styles.bmiContainer}>
+        <Text style={styles.bmiText}>Body Mass Index</Text>
+        <Text style={styles.bmiValueText}>{bmi ?? '--'}</Text>
+        <Text style={styles.bmiCategoryText}>{bmi ? getCategory(bmi) : 'No data'}</Text>
       </View>
     );
   };
-
+  const renderAddOrUpdateButton = () => {
+    const hasData = userPhysicalData?.length > 0;
+    const label = hasData ? 'Update Details' : 'Add Details';
+  
+    return (
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate('AddDetails')}>
+        <Text style={styles.actionButtonText}>{label}</Text>
+      </TouchableOpacity>
+    );
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {renderProfileData()}
-        </ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+  {renderProfileHeader()}
+  {userPhysicalData.length > 0 ? renderBMIBlock() : null}
+</ScrollView>
 
-        <View style={styles.logoutButtonContainer}>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logOutText}>LOGOUT</Text>
-          </TouchableOpacity>
-        </View>
+{/* Always show Add/Update button */}
+<View style={styles.bottomButtonContainer}>
+  {renderAddOrUpdateButton()}
+  <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+    <Text style={styles.logOutText}>LOGOUT</Text>
+  </TouchableOpacity>
+</View>
       </View>
     </SafeAreaView>
   );
@@ -88,22 +119,68 @@ const styles = StyleSheet.create({
     backgroundColor: colors.APP_COLOR,
   },
   profileContainer: {
-    alignItems: 'center',
     flexDirection: 'row',
-    padding: 16,
+    alignItems: 'center',
+    paddingHorizontal: 16,
     paddingTop: 32,
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    borderWidth: 1,
-    borderColor: colors.APP_COLOR,
+    borderWidth: 2,
+    borderColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageFallback: {
+    backgroundColor: 'white',
+  },
+  profileTextContainer: {
+    marginLeft: 16,
+    flexDirection: 'column',
+    gap: 8,
   },
   userStyles: {
     color: 'white',
-    ...fonts.PoppinsSemiBold(18),
-    marginLeft: 16,
+    ...fonts.RubikSemiBold(18),
+    lineHeight: 24,
+  },
+  userEmailStyles: {
+    color: 'white',
+    ...fonts.RubicItalics(16),
+  },
+  bmiContainer: {
+    marginTop: 32,
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  bmiText: {
+    color: 'white',
+    ...fonts.RubikSemiBold(20),
+    marginBottom: 8,
+  },
+  bmiValueText: {
+    color: 'white',
+    ...fonts.RubikSemiBold(48),
+  },
+  bmiCategoryText: {
+    color: 'white',
+    ...fonts.RubikSemiBold(16),
+    marginTop: 4,
+  },
+  addDetailsContainer: {
+    marginTop: 40,
+    backgroundColor: 'white',
+    marginHorizontal: 40,
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  addDetailsText: {
+    color: colors.APP_COLOR,
+    ...fonts.PoppinsSemiBold(16),
+    letterSpacing: 1,
   },
   logoutButtonContainer: {
     padding: 16,
@@ -112,14 +189,31 @@ const styles = StyleSheet.create({
     backgroundColor: colors.APP_COLOR,
   },
   logoutButton: {
+    backgroundColor: colors.APP_COLOR,
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  logOutText: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(18),
+    letterSpacing: 2,
+  },
+  bottomButtonContainer: {
+    padding: 16,
+    backgroundColor: colors.APP_COLOR,
+  },
+  actionButton: {
     backgroundColor: 'white',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
+    marginBottom: 12,
+    alignItems: 'center',
   },
-  logOutText: {
+  actionButtonText: {
     color: colors.APP_COLOR,
-    ...fonts.PoppinsSemiBold(18),
-    letterSpacing: 2,
-  },
+    ...fonts.PoppinsSemiBold(16),
+  },  
 });

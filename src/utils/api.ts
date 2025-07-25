@@ -50,3 +50,45 @@ export const signInWithGoogle = async () => {
     throw error;
   }
 };
+
+export const addBMIEntry = async (weightKg: number, heightCm: number) => {
+  const user = auth().currentUser;
+  if (!user) throw new Error("Not authenticated");
+
+  const bmiRef = firestore()
+    .collection('users')
+    .doc(user.uid)
+    .collection('bmiHistory');
+
+  await bmiRef.add({
+    weight: weightKg,
+    height: heightCm,
+    createdAt: firestore.FieldValue.serverTimestamp()
+  });
+};
+
+export const getBMIHistory = async () => {
+  const user = auth().currentUser;
+  if (!user) throw new Error("Not authenticated");
+
+  const snapshot = await firestore()
+    .collection('users')
+    .doc(user.uid)
+    .collection('bmiHistory')
+    .orderBy('createdAt', 'desc') // newest first
+    .get();
+
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    const heightM = data.height / 100;
+    const bmi = data.weight / (heightM * heightM);
+
+    return {
+      id: doc.id,
+      weight: data.weight,
+      height: data.height,
+      createdAt: data.createdAt?.toDate(),
+      bmi: parseFloat(bmi.toFixed(1)),
+    };
+  });
+};

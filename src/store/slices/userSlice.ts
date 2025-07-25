@@ -5,12 +5,14 @@ interface AuthState {
   isLoggedIn: boolean;
   token: string | null;
   userData: object | null;
+  userPhysicalData: any[] | null;
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
   token: null,
-  userData: null
+  userData: null,
+  userPhysicalData: []
 };
 
 const userSlice = createSlice({
@@ -24,13 +26,17 @@ const userSlice = createSlice({
     setUserData(state, action: PayloadAction<object>) {
       state.userData = action.payload;
     },
+    setUserPhysicalData(state, action: PayloadAction<any[]>) {
+      state.userPhysicalData = action.payload;
+    },
     logout(state) {
       state.isLoggedIn = false;
       state.token = null;
       state.userData = null;
+      state.userPhysicalData = null;
     },
   },
 });
 
-export const { setLogin, logout, setUserData } = userSlice.actions;
+export const { setLogin, logout, setUserData, setUserPhysicalData } = userSlice.actions;
 export default userSlice.reducer;

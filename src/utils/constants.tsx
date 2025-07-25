@@ -3,6 +3,7 @@ export const colors = {
   LIGHT_YELLOW: '#F5D184',
   WHITE: '#ffffff',
   APP_COLOR: '#010e24',
+  APP_COLOR_LIGHT: '#b6c2d6',
   DARK_GREY: '#363738',
 };
 

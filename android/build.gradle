@@ -1,90 +1,22 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-apply plugin: 'maven-publish'
 buildscript {
     ext {
-        buildToolsVersion = "33.0.0"
-        minSdkVersion = 26
+        buildToolsVersion = "34.0.0"
+        minSdkVersion = 24
         compileSdkVersion = 35
-        targetSdkVersion = 35
-        supportLibVersion = "28.0.0"
-        googlePlayServicesVersion = "15.0.0"
-        androidXCore = "1.0.2"
-        kotlinVersion = '1.6.10' //1.4.32w
-        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
-        clientId ="letscrackit"
-        hyperSDKVersion = '2.1.22'
+        targetSdkVersion = 34
+        ndkVersion = "26.1.10909125"
+        kotlinVersion = "1.9.24"
     }
     repositories {
-        maven(){
-            url 'https://mvnrepository.com/'
-        }
-        mavenLocal()
+        google()
         mavenCentral()
-        jcenter()
-        maven {
-             url "https://maven.google.com"
-        }
-        gradlePluginPortal()
-        maven { url 'https://www.jitpack.io' }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.4")
+        classpath("com.android.tools.build:gradle:8.3.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("de.undercouch:gradle-download-task:4.1.2")
-        classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:perf-plugin:1.4.2'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
-        classpath 'com.google.firebase:perf-plugin:1.4.2'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
-        gradlePluginPortal()
-        maven(){
-            url 'https://mvnrepository.com/'
-        }
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url("$rootDir/../node_modules/react-native/android")
-        }
-        maven {
-            // Android JSC is installed from npm
-            url("$rootDir/../node_modules/jsc-android/dist")
-        }
-        exclusiveContent {
-            // We get React Native's Android binaries exclusively through npm,
-            // from a local Maven repo inside node_modules/react-native/.
-            // (The use of exclusiveContent prevents looking elsewhere like Maven Central
-            // and potentially getting a wrong version.)
-            filter {
-                includeGroup "com.facebook.react"
-            }
-            forRepository {
-                maven {
-                    url "$rootDir/../node_modules/react-native/android"
-                }
-            }
-        }
-        mavenCentral() {
-            // We don't want to fetch react-native from Maven Central as there are
-            // older versions over there.
-            content {
-                excludeGroup "com.facebook.react"
-            }
-        }
-        maven { url 'https://www.jitpack.io' }
+        classpath('com.google.gms:google-services:4.4.2')
+        classpath('com.google.firebase:perf-plugin:1.4.2')
+        classpath('com.google.firebase:firebase-crashlytics-gradle:2.9.9')
     }
 }

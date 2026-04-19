@@ -16,7 +16,6 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()

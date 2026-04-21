@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SplashScreen } from './src/SplashScreen';
 import { TabBar } from './src/TabBar';
 import { Home } from './src/Home';
@@ -43,9 +44,10 @@ const App = () => {
   const Stack = createStackNavigator();
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
@@ -59,9 +61,10 @@ const App = () => {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="AddDetails" component={AddDetails} />
           </Stack.Navigator>
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

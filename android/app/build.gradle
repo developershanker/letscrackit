@@ -8,7 +8,7 @@ plugins {
 }
 
 react {
-    // Hermes is the default JS engine for RN 0.70+
+    autolinkLibrariesWithApp()
 }
 
 android {

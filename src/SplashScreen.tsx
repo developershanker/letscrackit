@@ -2,7 +2,6 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -11,6 +10,7 @@ import React, {useEffect, useState} from 'react';
 import {colors, fonts} from './utils/constants';
 import {useSelector} from 'react-redux';
 import {selectUserData} from './store/selectors/userSelectors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 

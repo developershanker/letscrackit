@@ -1,6 +1,5 @@
 import {
     BackHandler,
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
@@ -13,7 +12,6 @@ import {
   } from 'react-native';
   import * as React from 'react';
   import {useEffect, useState} from 'react';
-  import Header from './components/Header';
   import {colors, fonts} from './utils/constants';
   import {useNavigation} from '@react-navigation/native';
   import {capitalizeWords} from './utils/helpers';
@@ -22,6 +20,7 @@ import {
   import {addBMIEntry, getBMIHistory} from './utils/api';
   import { useDispatch } from 'react-redux';
 import { setUserPhysicalData } from './store/slices/userSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
   
   export const AddDetails: React.FC = () => {
     const navigation = useNavigation();

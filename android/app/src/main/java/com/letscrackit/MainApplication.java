@@ -9,6 +9,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactHost;
 import com.facebook.react.defaults.DefaultReactNativeHost;
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlags;
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsJavaAccessor;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
@@ -51,12 +53,13 @@ public class MainApplication extends Application implements ReactApplication {
 
   @Override
   public ReactHost getReactHost() {
-    return DefaultReactHost.getDefaultReactHost(getApplicationContext(), mReactNativeHost, null);
+    return DefaultReactHost.getDefaultReactHost(getApplicationContext(), mReactNativeHost);
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
+    ReactNativeFeatureFlags.setAccessorProvider(() -> new ReactNativeFeatureFlagsJavaAccessor());
     SoLoader.init(this, false);
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       DefaultNewArchitectureEntryPoint.load();

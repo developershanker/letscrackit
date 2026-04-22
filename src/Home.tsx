@@ -1,6 +1,5 @@
 import {
   BackHandler,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import { capitalizeWords, firebaseRemoteConfigData} from './utils/helpers';
 import { useSelector } from 'react-redux';
 import { selectUserData } from './store/selectors/userSelectors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Home: React.FC = () => {
   const navigation = useNavigation();

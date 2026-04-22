@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  SafeAreaView,
-  Pressable,
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +17,7 @@ import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { capitalizeWords, getCategory } from './utils/helpers';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Profile: React.FC = () => {
   const navigation = useNavigation();

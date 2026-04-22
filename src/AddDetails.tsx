@@ -12,7 +12,6 @@ import {
   } from 'react-native';
   import * as React from 'react';
   import {useEffect, useState} from 'react';
-  import Header from './components/Header';
   import {colors, fonts} from './utils/constants';
   import {useNavigation} from '@react-navigation/native';
   import {capitalizeWords} from './utils/helpers';

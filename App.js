@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {SplashScreen} from './src/SplashScreen';
 import {TabBar} from './src/TabBar';
 import {Home} from './src/Home';
@@ -45,6 +46,7 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
+      <SafeAreaProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <NavigationContainer>
@@ -64,6 +66,7 @@ const App = () => {
           </NavigationContainer>
         </PersistGate>
       </Provider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 };

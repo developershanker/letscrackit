@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  Pressable,
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';

@@ -1,0 +1,31 @@
+{
+  "buildFiles": [
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/bhawanashanker/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/bhawanashanker/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "appmodules::@6890427a1f51a3e7e1df": {
+      "artifactName": "appmodules",
+      "abi": "x86",
+      "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/Debug/4w315x68/obj/x86/libappmodules.so",
+      "runtimeFiles": [
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/3c01aea05d2737e987399f1309ae090e/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.x86/libfbjni.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/edeb5bd2d85492850af39f8fd5e68fb0/transformed/react-android-0.85.2-debug/prefab/modules/jsi/libs/android.x86/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/edeb5bd2d85492850af39f8fd5e68fb0/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86/libreactnative.so"
+      ]
+    }
+  }
+}

@@ -1,0 +1,3 @@
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/appmodules.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/edit_cache.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/rebuild_cache.dir

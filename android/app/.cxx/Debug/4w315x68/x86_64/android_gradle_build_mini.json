@@ -1,6 +1,9 @@
 {
   "buildFiles": [
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt",
     "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/CMakeLists.txt",
     "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
@@ -18,14 +21,29 @@
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
+    "react_codegen_RNVectorIconsSpec::@479809fae146501fd34d": {
+      "artifactName": "react_codegen_RNVectorIconsSpec",
+      "abi": "x86_64",
+      "runtimeFiles": []
+    },
     "react_codegen_safeareacontext::@7984cd80db47aa7b952a": {
       "artifactName": "react_codegen_safeareacontext",
       "abi": "x86_64",
       "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/Debug/4w315x68/obj/x86_64/libreact_codegen_safeareacontext.so",
       "runtimeFiles": [
-        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/3c01aea05d2737e987399f1309ae090e/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.x86_64/libfbjni.so",
-        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/edeb5bd2d85492850af39f8fd5e68fb0/transformed/react-android-0.85.2-debug/prefab/modules/jsi/libs/android.x86_64/libjsi.so",
-        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/edeb5bd2d85492850af39f8fd5e68fb0/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86_64/libreactnative.so"
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/220d65392139fe00f2cec43032d9c0c5/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.x86_64/libfbjni.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/jsi/libs/android.x86_64/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86_64/libreactnative.so"
+      ]
+    },
+    "react_codegen_rnscreens::@25bcbd507e98d3a854ad": {
+      "artifactName": "react_codegen_rnscreens",
+      "abi": "x86_64",
+      "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/Debug/4w315x68/obj/x86_64/libreact_codegen_rnscreens.so",
+      "runtimeFiles": [
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86_64/libreactnative.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/jsi/libs/android.x86_64/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/220d65392139fe00f2cec43032d9c0c5/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.x86_64/libfbjni.so"
       ]
     },
     "appmodules::@6890427a1f51a3e7e1df": {
@@ -34,10 +52,16 @@
       "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/Debug/4w315x68/obj/x86_64/libappmodules.so",
       "runtimeFiles": [
         "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/Debug/4w315x68/obj/x86_64/libreact_codegen_safeareacontext.so",
-        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/3c01aea05d2737e987399f1309ae090e/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.x86_64/libfbjni.so",
-        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/edeb5bd2d85492850af39f8fd5e68fb0/transformed/react-android-0.85.2-debug/prefab/modules/jsi/libs/android.x86_64/libjsi.so",
-        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/edeb5bd2d85492850af39f8fd5e68fb0/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86_64/libreactnative.so"
+        "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/Debug/4w315x68/obj/x86_64/libreact_codegen_rnscreens.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/220d65392139fe00f2cec43032d9c0c5/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.x86_64/libfbjni.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/jsi/libs/android.x86_64/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86_64/libreactnative.so"
       ]
+    },
+    "react_codegen_rnasyncstorage::@1596841e19ec5b9eeffe": {
+      "artifactName": "react_codegen_rnasyncstorage",
+      "abi": "x86_64",
+      "runtimeFiles": []
     }
   }
 }

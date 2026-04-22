@@ -1,6 +1,8 @@
 {
   "buildFiles": [
     "/Users/bhawanashanker/Documents/letscrackit/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/@react-native-google-signin/google-signin/android/build/generated/source/codegen/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-gesture-handler/android/build/generated/source/codegen/jni/CMakeLists.txt",
     "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt",
     "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt",
     "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/CMakeLists.txt",
@@ -34,6 +36,11 @@
         "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/c25fb7056939488d784889cd3d2b8ec4/transformed/react-android-0.85.2-debug/prefab/modules/reactnative/libs/android.x86_64/libreactnative.so"
       ]
     },
+    "react_codegen_RNGoogleSignInCGen::@337b7b353bd94a4215c0": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "react_codegen_RNGoogleSignInCGen"
+    },
     "react_codegen_RNVectorIconsSpec::@479809fae146501fd34d": {
       "toolchain": "toolchain",
       "abi": "x86_64",
@@ -43,6 +50,11 @@
       "toolchain": "toolchain",
       "abi": "x86_64",
       "artifactName": "react_codegen_rnasyncstorage"
+    },
+    "react_codegen_rngesturehandler_codegen::@39f233abcd2c728bc6ec": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "react_codegen_rngesturehandler_codegen"
     },
     "react_codegen_rnscreens::@25bcbd507e98d3a854ad": {
       "toolchain": "toolchain",

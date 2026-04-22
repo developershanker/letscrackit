@@ -9,6 +9,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactHost;
 import com.facebook.react.defaults.DefaultReactNativeHost;
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlags;
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsJavaAccessor;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
@@ -57,6 +59,9 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    // Use Java-only feature flags accessor so libreact_featureflagsjni.so is never loaded.
+    // The .so is not packaged for Old Arch (newArchEnabled=false) in RN 0.81.
+    ReactNativeFeatureFlags.setAccessorProvider(() -> new ReactNativeFeatureFlagsJavaAccessor());
     SoLoader.init(this, false);
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       DefaultNewArchitectureEntryPoint.load();

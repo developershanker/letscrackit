@@ -20,10 +20,11 @@ export const Home: React.FC = () => {
   const [subHeading, setSubHeading] = useState('');
   const userData: any = useSelector(selectUserData);
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
-    };
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBack
+    );
+    return () => subscription.remove();
   }, []);
   const handleBack = () => {
     BackHandler.exitApp();

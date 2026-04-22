@@ -30,10 +30,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
     const [height, setHeight] = useState('');
   
     useEffect(() => {
-      BackHandler.addEventListener('hardwareBackPress', handleBack);
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', handleBack);
-      };
+      const subscription = BackHandler.addEventListener(
+  'hardwareBackPress',
+  handleBack
+);
+
+return () => subscription.remove();
     }, []);
   
     const handleBack = () => {

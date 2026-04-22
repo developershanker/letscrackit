@@ -45,6 +45,8 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rnasyncstorage_autolinked_build/cmake_install.cmake")
+  include("/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/RNGoogleSignInCGen_autolinked_build/cmake_install.cmake")
+  include("/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rngesturehandler_codegen_autolinked_build/cmake_install.cmake")
   include("/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/safeareacontext_autolinked_build/cmake_install.cmake")
   include("/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rnscreens_autolinked_build/cmake_install.cmake")
   include("/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/RNVectorIconsSpec_autolinked_build/cmake_install.cmake")

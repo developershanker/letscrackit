@@ -4,6 +4,12 @@
 /Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir
 /Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rnasyncstorage_autolinked_build/CMakeFiles/edit_cache.dir
 /Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rnasyncstorage_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/RNGoogleSignInCGen_autolinked_build/CMakeFiles/react_codegen_RNGoogleSignInCGen.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/RNGoogleSignInCGen_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/RNGoogleSignInCGen_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rngesturehandler_codegen_autolinked_build/CMakeFiles/react_codegen_rngesturehandler_codegen.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rngesturehandler_codegen_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/rngesturehandler_codegen_autolinked_build/CMakeFiles/rebuild_cache.dir
 /Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir
 /Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/safeareacontext_autolinked_build/CMakeFiles/edit_cache.dir
 /Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/armeabi-v7a/safeareacontext_autolinked_build/CMakeFiles/rebuild_cache.dir

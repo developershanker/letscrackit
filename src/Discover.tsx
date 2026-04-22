@@ -8,10 +8,12 @@ import Header from './components/Header';
 export const Discover: React.FC = () => {
   const navigation = useNavigation();
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
-    };
+    const subscription = BackHandler.addEventListener(
+  'hardwareBackPress',
+  handleBack
+);
+
+return () => subscription.remove();
   }, []);
   const handleBack = () => {
     navigation.goBack();

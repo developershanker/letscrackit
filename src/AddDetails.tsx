@@ -1,6 +1,5 @@
 import {
     BackHandler,
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
@@ -22,6 +21,7 @@ import {
   import {addBMIEntry, getBMIHistory} from './utils/api';
   import { useDispatch } from 'react-redux';
 import { setUserPhysicalData } from './store/slices/userSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
   
   export const AddDetails: React.FC = () => {
     const navigation = useNavigation();

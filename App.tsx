@@ -4,6 +4,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
+import {store, persistor} from './src/store';
 import {SplashScreen} from './src/SplashScreen';
 import {TabBar} from './src/TabBar';
 import {Home} from './src/Home';
@@ -12,14 +17,20 @@ import {Profile} from './src/Profile';
 import {Login} from './src/Login';
 import {AddDetails} from './src/AddDetails';
 import {initiateFirebaseConfig} from './src/utils/helpers';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from './src/store';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  SplashScreen: undefined;
+  Home: undefined;
+  Profile: undefined;
+  Discover: undefined;
+  TabBar: undefined;
+  Login: undefined;
+  AddDetails: undefined;
+};
 
-const App = () => {
+const Stack = createStackNavigator<RootStackParamList>();
+
+function App(): React.JSX.Element {
   const configureGoogleSignIn = () => {
     GoogleSignin.configure({
       webClientId:
@@ -69,6 +80,6 @@ const App = () => {
       </PersistGate>
     </Provider>
   );
-};
+}
 
 export default App;

@@ -53,14 +53,12 @@ public class MainApplication extends Application implements ReactApplication {
 
   @Override
   public ReactHost getReactHost() {
-    return DefaultReactHost.getDefaultReactHost(getApplicationContext(), mReactNativeHost, null);
+    return DefaultReactHost.getDefaultReactHost(getApplicationContext(), mReactNativeHost);
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
-    // Use Java-only feature flags accessor so libreact_featureflagsjni.so is never loaded.
-    // The .so is not packaged for Old Arch (newArchEnabled=false) in RN 0.81.
     ReactNativeFeatureFlags.setAccessorProvider(() -> new ReactNativeFeatureFlagsJavaAccessor());
     SoLoader.init(this, false);
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {

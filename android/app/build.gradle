@@ -26,6 +26,18 @@ android {
         versionName "1.0"
     }
 
+    buildFeatures {
+        prefab true
+    }
+
+    packagingOptions {
+        pickFirst "**/libfbjni.so"
+        pickFirst "**/libc++_shared.so"
+        pickFirst "**/libreact_featureflagsjni.so"
+        pickFirst "**/libreactnative.so"
+        pickFirst "**/libjsi.so"
+    }
+
     signingConfigs {
         release {
             storeFile file('my-release-key.keystore')

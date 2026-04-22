@@ -11,7 +11,8 @@ export const signInWithGoogle = async () => {
     const response = await GoogleSignin.signIn();
     console.log('✅ Google Sign-in response:', response);
 
-    const idToken = response?.idToken || response?.data?.idToken;
+    if (response.type !== 'success') throw new Error(`Sign-in not completed: ${response.type}`);
+    const idToken = response.data?.idToken;
     if (!idToken) throw new Error('Missing idToken in Google response');
 
     console.log('🚀 3. Creating Google credential...');

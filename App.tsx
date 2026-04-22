@@ -48,9 +48,9 @@ function App(): React.JSX.Element {
   };
 
   useEffect(() => {
+    configureGoogleSignIn();
     fetchFirebaseRemoteConfigValues().finally(() => {
       console.log('fetched everything');
-      configureGoogleSignIn();
     });
   }, []);
 

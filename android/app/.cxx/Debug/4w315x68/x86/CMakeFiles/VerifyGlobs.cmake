@@ -5,6 +5,51 @@ cmake_policy(SET CMP0009 NEW)
 # input_SRC at /Users/bhawanashanker/Documents/letscrackit/node_modules/react-native/ReactAndroid/cmake-utils/ReactNative-application.cmake:55 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/bhawanashanker/Documents/letscrackit/android/app/build/generated/autolinking/src/main/jni/*.cpp")
 set(OLD_GLOB
+  "/Users/bhawanashanker/Documents/letscrackit/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/cmake.verify_globs")
+endif()
+
+# LIB_CUSTOM_SRCS at /Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:12 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/*.cpp")
+set(OLD_GLOB
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/cmake.verify_globs")
+endif()
+
+# LIB_CUSTOM_SRCS at /Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:12 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../../common/cpp/react/renderer/components/safeareacontext/*.cpp")
+set(OLD_GLOB
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../../common/cpp/react/renderer/components/safeareacontext/RNCSafeAreaViewShadowNode.cpp"
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../../common/cpp/react/renderer/components/safeareacontext/RNCSafeAreaViewState.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/cmake.verify_globs")
+endif()
+
+# LIB_CODEGEN_SRCS at /Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:13 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/*.cpp")
+set(OLD_GLOB
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/safeareacontext-generated.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/Debug/4w315x68/x86/CMakeFiles/cmake.verify_globs")
+endif()
+
+# LIB_CODEGEN_SRCS at /Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:13 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/*.cpp")
+set(OLD_GLOB
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/ComponentDescriptors.cpp"
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/EventEmitters.cpp"
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/Props.cpp"
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/ShadowNodes.cpp"
+  "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/../../../build/generated/source/codegen/jni/react/renderer/components/safeareacontext/States.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

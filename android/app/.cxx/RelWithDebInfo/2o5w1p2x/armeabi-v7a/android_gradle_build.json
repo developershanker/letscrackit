@@ -1,0 +1,92 @@
+{
+  "buildFiles": [
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/@react-native-google-signin/google-signin/android/build/generated/source/codegen/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-gesture-handler/android/build/generated/source/codegen/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-screens/android/src/main/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native-vector-icons/android/build/generated/source/codegen/jni/CMakeLists.txt",
+    "/Users/bhawanashanker/Documents/letscrackit/node_modules/react-native/ReactAndroid/cmake-utils/default-app-setup/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/bhawanashanker/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/RelWithDebInfo/2o5w1p2x/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/bhawanashanker/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/bhawanashanker/Documents/letscrackit/android/app/.cxx/RelWithDebInfo/2o5w1p2x/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "appmodules::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "appmodules",
+      "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/RelWithDebInfo/2o5w1p2x/obj/armeabi-v7a/libappmodules.so",
+      "runtimeFiles": [
+        "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/RelWithDebInfo/2o5w1p2x/obj/armeabi-v7a/libreact_codegen_safeareacontext.so",
+        "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/RelWithDebInfo/2o5w1p2x/obj/armeabi-v7a/libreact_codegen_rnscreens.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/220d65392139fe00f2cec43032d9c0c5/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.armeabi-v7a/libfbjni.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/6e644eab27a879a8c611ecf37b859228/transformed/react-android-0.85.2-release/prefab/modules/jsi/libs/android.armeabi-v7a/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/6e644eab27a879a8c611ecf37b859228/transformed/react-android-0.85.2-release/prefab/modules/reactnative/libs/android.armeabi-v7a/libreactnative.so"
+      ]
+    },
+    "react_codegen_RNGoogleSignInCGen::@337b7b353bd94a4215c0": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "react_codegen_RNGoogleSignInCGen"
+    },
+    "react_codegen_RNVectorIconsSpec::@479809fae146501fd34d": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "react_codegen_RNVectorIconsSpec"
+    },
+    "react_codegen_rnasyncstorage::@1596841e19ec5b9eeffe": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "react_codegen_rnasyncstorage"
+    },
+    "react_codegen_rngesturehandler_codegen::@39f233abcd2c728bc6ec": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "react_codegen_rngesturehandler_codegen"
+    },
+    "react_codegen_rnscreens::@25bcbd507e98d3a854ad": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "react_codegen_rnscreens",
+      "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/RelWithDebInfo/2o5w1p2x/obj/armeabi-v7a/libreact_codegen_rnscreens.so",
+      "runtimeFiles": [
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/6e644eab27a879a8c611ecf37b859228/transformed/react-android-0.85.2-release/prefab/modules/reactnative/libs/android.armeabi-v7a/libreactnative.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/6e644eab27a879a8c611ecf37b859228/transformed/react-android-0.85.2-release/prefab/modules/jsi/libs/android.armeabi-v7a/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/220d65392139fe00f2cec43032d9c0c5/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.armeabi-v7a/libfbjni.so"
+      ]
+    },
+    "react_codegen_safeareacontext::@7984cd80db47aa7b952a": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "react_codegen_safeareacontext",
+      "output": "/Users/bhawanashanker/Documents/letscrackit/android/app/build/intermediates/cxx/RelWithDebInfo/2o5w1p2x/obj/armeabi-v7a/libreact_codegen_safeareacontext.so",
+      "runtimeFiles": [
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/220d65392139fe00f2cec43032d9c0c5/transformed/fbjni-0.7.0/prefab/modules/fbjni/libs/android.armeabi-v7a/libfbjni.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/6e644eab27a879a8c611ecf37b859228/transformed/react-android-0.85.2-release/prefab/modules/jsi/libs/android.armeabi-v7a/libjsi.so",
+        "/Users/bhawanashanker/.gradle/caches/9.3.1/transforms/6e644eab27a879a8c611ecf37b859228/transformed/react-android-0.85.2-release/prefab/modules/reactnative/libs/android.armeabi-v7a/libreactnative.so"
+      ]
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/Users/bhawanashanker/Library/Android/sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/Users/bhawanashanker/Library/Android/sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

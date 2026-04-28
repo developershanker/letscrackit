@@ -63,3 +63,5 @@ buck-out/
 # Keystore files
 *.keystore
 *.jks
+
+android/app/.cxx/

@@ -116,3 +116,49 @@ export const verifyPhoneOtp = async (
 
   return user;
 };
+
+// export const signInWithEmailLink = async (email: string, emailLink: string) => {
+//   const userCredential = await auth().signInWithEmailLink(email, emailLink);
+//   const user = userCredential?.user;
+//   if (!user) throw new Error('Email sign-in failed');
+
+//   const { uid, displayName, photoURL } = user;
+//   await firestore()
+//     .collection('users')
+//     .doc(uid)
+//     .set({ email, displayName, photoURL }, { merge: true });
+
+//   return user;
+// };
+
+export const sendEmailLink = async (email: string) => {
+  const actionCodeSettings = {
+    handleCodeInApp: true,
+    url: 'https://letscrackit-dacc9.web.app', // replace with your Firebase Hosting URL
+    android: {
+      packageName: 'com.letscrackit',
+      installApp: true,
+    },
+    iOS: {
+      bundleId: 'com.letscrackit',
+    },
+  };
+  await auth().sendSignInLinkToEmail(email, actionCodeSettings);
+};
+
+export const completeEmailSignIn = async (email: string, emailLink: string) => {
+  console.log('emailLink', emailLink)
+  if (!auth().isSignInWithEmailLink(emailLink)) {
+    throw new Error('Invalid sign-in link');
+  }
+  const userCredential = await auth().signInWithEmailLink(email, emailLink);
+  const user = userCredential?.user;
+  if (!user) throw new Error('Sign in failed');
+
+  await firestore()
+    .collection('users')
+    .doc(user.uid)
+    .set({ email }, { merge: true });
+
+  return user;
+};

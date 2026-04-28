@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {Linking, StatusBar} from 'react-native';
+import {createNavigationContainerRef, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -20,7 +20,13 @@ import {PhoneAuth} from './src/PhoneAuth';
 import {OtpVerification} from './src/OtpVerification';
 import {initiateFirebaseConfig} from './src/utils/helpers';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {EmailAuth} from './src/EmailAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { completeEmailSignIn, getBMIHistory } from './src/utils/api';
+import { setUserData, setUserPhysicalData } from './src/store/slices/userSlice';
 
+
+export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 export type RootStackParamList = {
   SplashScreen: undefined;
   Home: undefined;
@@ -34,6 +40,7 @@ export type RootStackParamList = {
     confirmation: FirebaseAuthTypes.ConfirmationResult;
     phoneNumber: string;
   };
+  EmailAuth: undefined
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -46,6 +53,24 @@ function App(): React.JSX.Element {
       offlineAccess: true,
     });
   };
+  const handleEmailLink = async (url: string) => {
+  try {
+    const email = await AsyncStorage.getItem('emailForSignIn');
+    if (!email) return;
+    const user = await completeEmailSignIn(email, url);
+    store.dispatch(setUserData(user));
+    const physicalData = await getBMIHistory();
+    store.dispatch(setUserPhysicalData(physicalData));
+    await AsyncStorage.removeItem('emailForSignIn');
+
+    // Navigate after sign-in is complete
+    if (navigationRef.isReady()) {
+      navigationRef.navigate('TabBar');
+    }
+  } catch (e) {
+    console.log('Email link sign-in failed:', e);
+  }
+ };
 
   const fetchFirebaseRemoteConfigValues = async () => {
     try {
@@ -57,9 +82,13 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     configureGoogleSignIn();
+    Linking.getInitialURL().then(url => { if (url) handleEmailLink(url); });
+    const sub = Linking.addEventListener('url', ({ url }) => handleEmailLink(url));
+
     fetchFirebaseRemoteConfigValues().finally(() => {
       console.log('fetched everything');
     });
+   return () => sub.remove();
   }, []);
 
   return (
@@ -67,7 +96,7 @@ function App(): React.JSX.Element {
       <PersistGate loading={null} persistor={persistor}>
         <GestureHandlerRootView style={{flex: 1}}>
           <SafeAreaProvider>
-            <NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
               <StatusBar barStyle="light-content" />
               <Stack.Navigator
                 screenOptions={{
@@ -83,6 +112,7 @@ function App(): React.JSX.Element {
                 <Stack.Screen name="AddDetails" component={AddDetails} />
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth} />
                 <Stack.Screen name="OtpVerification" component={OtpVerification} />
+                <Stack.Screen name="EmailAuth" component={EmailAuth} />
               </Stack.Navigator>
             </NavigationContainer>
           </SafeAreaProvider>

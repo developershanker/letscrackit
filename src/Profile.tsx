@@ -34,17 +34,25 @@ export const Profile: React.FC = () => {
   }, []);
 
   const handleLogout = async () => {
-    try {
-      await auth().signOut();
+  try {
+    const currentUser = auth().currentUser;
+    const isGoogleUser = currentUser?.providerData?.some(
+      p => p.providerId === 'google.com'
+    );
+
+    await auth().signOut();
+
+    if (isGoogleUser) {
       await GoogleSignin.signOut();
-      dispatch(logout());
-      console.log('✅ Successfully signed out');
-      navigation.replace('Login');
-    } catch (error) {
-      console.error('❌ Logout failed:', error);
-      Alert.alert('Logout Failed', 'Something went wrong while signing out.');
     }
-  };
+
+    dispatch(logout());
+    navigation.replace('Login');
+  } catch (error) {
+    console.error('❌ Logout failed:', error);
+    Alert.alert('Logout Failed', 'Something went wrong while signing out.');
+  }
+};
 
   const renderProfileHeader = () => (
     <View style={styles.profileContainer}>

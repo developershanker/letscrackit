@@ -16,7 +16,10 @@ import {Discover} from './src/Discover';
 import {Profile} from './src/Profile';
 import {Login} from './src/Login';
 import {AddDetails} from './src/AddDetails';
+import {PhoneAuth} from './src/PhoneAuth';
+import {OtpVerification} from './src/OtpVerification';
 import {initiateFirebaseConfig} from './src/utils/helpers';
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -26,6 +29,11 @@ export type RootStackParamList = {
   TabBar: undefined;
   Login: undefined;
   AddDetails: undefined;
+  PhoneAuth: undefined;
+  OtpVerification: {
+    confirmation: FirebaseAuthTypes.ConfirmationResult;
+    phoneNumber: string;
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -73,6 +81,8 @@ function App(): React.JSX.Element {
                 <Stack.Screen name="TabBar" component={TabBar} />
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="AddDetails" component={AddDetails} />
+                <Stack.Screen name="PhoneAuth" component={PhoneAuth} />
+                <Stack.Screen name="OtpVerification" component={OtpVerification} />
               </Stack.Navigator>
             </NavigationContainer>
           </SafeAreaProvider>

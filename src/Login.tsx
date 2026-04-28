@@ -52,9 +52,14 @@ export const Login: React.FC = () => {
             <ActivityIndicator size={'large'} color={colors.WHITE} />
           </View>
         ) : (
+          <View style={{gap: 12}}>
           <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
             <Text style={styles.loginText}>Login with Google</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('PhoneAuth')} style={styles.loginButton}>
+            <Text style={styles.loginText}>Login with Phone Number</Text>
+          </TouchableOpacity>
+          </View>
         )}
       </View>
     </ScrollView>
@@ -74,6 +79,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 8,
     elevation: 2,
+    alignItems: 'center'
   },
   loginText: {
     color: 'black',

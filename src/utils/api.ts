@@ -162,3 +162,28 @@ export const completeEmailSignIn = async (email: string, emailLink: string) => {
 
   return user;
 };
+
+
+export const deleteAccount = async (): Promise<void> => {
+  const currentUser = auth().currentUser;
+  if (!currentUser) throw new Error('No user logged in');
+
+  const uid = currentUser.uid;
+
+  // Delete bmiHistory subcollection
+  const bmiSnap = await firestore()
+    .collection('users')
+    .doc(uid)
+    .collection('bmiHistory')
+    .get();
+
+  const batch = firestore().batch();
+  bmiSnap.docs.forEach(doc => batch.delete(doc.ref));
+  await batch.commit();
+
+  // Delete user document
+  await firestore().collection('users').doc(uid).delete();
+
+  // Delete Firebase Auth account
+  await currentUser.delete();
+};

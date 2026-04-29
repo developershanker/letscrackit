@@ -18,6 +18,7 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { capitalizeWords, getCategory } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { deleteAccount } from './utils/api';
 
 export const Profile: React.FC = () => {
   const navigation = useNavigation();
@@ -52,6 +53,51 @@ export const Profile: React.FC = () => {
     console.error('❌ Logout failed:', error);
     Alert.alert('Logout Failed', 'Something went wrong while signing out.');
   }
+};
+
+const handleDeleteAccount = () => {
+  Alert.alert(
+    'Delete Account',
+    'Are you sure you want to delete your account?',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Yes, Proceed',
+        style: 'destructive',
+        onPress: () => {
+          Alert.alert(
+            'Final Confirmation',
+            'This will permanently delete your account and all your data. This cannot be undone.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              {
+                text: 'Delete My Account',
+                style: 'destructive',
+                onPress: async () => {
+                  try {
+                    const currentUser = auth().currentUser;
+                    const isGoogleUser = currentUser?.providerData?.some(
+                      p => p.providerId === 'google.com'
+                    );
+                    await deleteAccount();
+                    if (isGoogleUser) {
+                      await GoogleSignin.signOut();
+                    }
+                    dispatch(logout());
+                    navigation.replace('Login');
+                  } catch (error) {
+                    console.log('error', error)
+                    console.error('❌ Delete account failed:', error);
+                    Alert.alert('Error', 'Failed to delete account. Please try again.');
+                  }
+                },
+              },
+            ]
+          );
+        },
+      },
+    ]
+  );
 };
 
   const renderProfileHeader = () => (
@@ -110,6 +156,11 @@ export const Profile: React.FC = () => {
   <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
     <Text style={styles.logOutText}>LOGOUT</Text>
   </TouchableOpacity>
+  <TouchableOpacity
+  style={[styles.logoutButton, styles.deleteButton]}
+  onPress={handleDeleteAccount}>
+  <Text style={[styles.logOutText, styles.deleteButtonText]}>DELETE ACCOUNT</Text>
+</TouchableOpacity>
 </View>
       </View>
     </SafeAreaView>
@@ -223,4 +274,12 @@ const styles = StyleSheet.create({
     color: colors.APP_COLOR,
     ...fonts.PoppinsSemiBold(16),
   },  
+  deleteButton: {
+  borderWidth: 1,
+  borderColor: '#FF3B30',
+  marginTop: 4,
+},
+deleteButtonText: {
+  color: '#FF3B30',
+},
 });

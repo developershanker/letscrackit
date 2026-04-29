@@ -18,7 +18,7 @@ import {Login} from './src/Login';
 import {AddDetails} from './src/AddDetails';
 import {PhoneAuth} from './src/PhoneAuth';
 import {OtpVerification} from './src/OtpVerification';
-import {initiateFirebaseConfig} from './src/utils/helpers';
+import {initiateFirebaseConfig, reportError} from './src/utils/helpers';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {EmailAuth} from './src/EmailAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -67,8 +67,8 @@ function App(): React.JSX.Element {
     if (navigationRef.isReady()) {
       navigationRef.navigate('TabBar');
     }
-  } catch (e) {
-    console.log('Email link sign-in failed:', e);
+  } catch (error) {
+    reportError(error, "handleEmailLink_App.tsx")
   }
  };
 
@@ -76,7 +76,7 @@ function App(): React.JSX.Element {
     try {
       await initiateFirebaseConfig();
     } catch (error) {
-      console.log('error fetchFirebaseRemoteConfigValues', error);
+      reportError(error, "fetchFirebaseRemoteConfigValues_App.tsx")
     }
   };
 
@@ -85,9 +85,7 @@ function App(): React.JSX.Element {
     Linking.getInitialURL().then(url => { if (url) handleEmailLink(url); });
     const sub = Linking.addEventListener('url', ({ url }) => handleEmailLink(url));
 
-    fetchFirebaseRemoteConfigValues().finally(() => {
-      console.log('fetched everything');
-    });
+    fetchFirebaseRemoteConfigValues().finally();
    return () => sub.remove();
   }, []);
 

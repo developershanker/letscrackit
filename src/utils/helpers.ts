@@ -1,4 +1,5 @@
 import remoteConfig from '@react-native-firebase/remote-config';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export const initiateFirebaseConfig = async () => {
   await remoteConfig().activate();
@@ -7,15 +8,15 @@ export const initiateFirebaseConfig = async () => {
   if (!areFirebaseKeysAvailable) {
     try {
       await remoteConfig().fetchAndActivate();
-    } catch (e) {
-      console.log('e fetchAndActivate', e);
+    } catch (error) {
+      reportError(error, "initiateFirebaseConfig_helpers.ts")
       try {
         await remoteConfig().setDefaults({
           DEMO_KEY: 'Default key',
         });
         await remoteConfig().activate();
-      } catch (e) {
-        console.log('e setDefaults', e);
+      } catch (error) {
+        reportError(error, "initiateFirebaseConfig_helpers.ts")
       }
     }
   }
@@ -33,7 +34,7 @@ export const fetchAndActivateAlongWithUpdateListener = async () => {
         });
     });
   } catch (error) {
-    console.log('error fetchAndActivateAlongWithUpdateListener', error);
+    reportError(error, "fetchAndActivateAlongWithUpdateListener_helpers.ts");
   }
 };
 
@@ -61,6 +62,9 @@ export const getCategory = (bmi: number) => {
   return category;
 }
 
-
-
+export const reportError = (error: unknown, context?: string): void => {
+  const err = error instanceof Error ? error : new Error(String(error));
+  if (context) crashlytics().setAttribute('context', context);
+  crashlytics().recordError(err);
+};
 

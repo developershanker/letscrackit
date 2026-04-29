@@ -1,29 +1,28 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { reportError } from './helpers';
 
 export const signInWithGoogle = async () => {
   try {
-    console.log('🚀 1. Checking Play Services...');
     await GoogleSignin.hasPlayServices();
-
-    console.log('🚀 2. Signing in...');
     const response = await GoogleSignin.signIn();
-    console.log('✅ Google Sign-in response:', response);
-
-    if (response.type !== 'success') throw new Error(`Sign-in not completed: ${response.type}`);
+    if (response.type !== 'success') {
+      reportError(`Sign-in not completed: ${response.type}`, "signInWithGoogle_api.ts")
+      return;
+    };
     const idToken = response.data?.idToken;
-    if (!idToken) throw new Error('Missing idToken in Google response');
-
-    console.log('🚀 3. Creating Google credential...');
+    if (!idToken) {
+      reportError("Missing idToken in Google response", "signInWithGoogle_api.ts")
+      return;
+    };
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    console.log('🚀 4. Signing in with credential...');
     const userCredential = await auth().signInWithCredential(googleCredential);
     const user = userCredential?.user;
-    if (!user) throw new Error('Firebase Auth failed: No user returned');
-
-    console.log('🚀 5. Writing to Firestore...');
+    if (!user) {
+      reportError('Firebase Auth failed: No user returned', "signInWithGoogle_api.tsx")
+      return;
+    };
     const { uid, email, displayName, photoURL } = user;
 
     await firestore()
@@ -41,13 +40,12 @@ export const signInWithGoogle = async () => {
         console.log('✅ Firestore write successful');
       })
       .catch((err) => {
-        console.error('❌ Firestore write failed:', err);
+        reportError(err, "signInWithGoogle_api.ts")
       });
-
-    console.log('✅ Firebase User:', JSON.stringify(user, null, 2));
     return user;
   } catch (error) {
-    console.error('❌ Google Sign-In failed:', error);
+    console.error();
+    reportError(`Google Sign-In failed: ${error}`, "signInWithGoogle_api.ts")
     throw error;
   }
 };
@@ -147,7 +145,6 @@ export const sendEmailLink = async (email: string) => {
 };
 
 export const completeEmailSignIn = async (email: string, emailLink: string) => {
-  console.log('emailLink', emailLink)
   if (!auth().isSignInWithEmailLink(emailLink)) {
     throw new Error('Invalid sign-in link');
   }
@@ -161,4 +158,29 @@ export const completeEmailSignIn = async (email: string, emailLink: string) => {
     .set({ email }, { merge: true });
 
   return user;
+};
+
+
+export const deleteAccount = async (): Promise<void> => {
+  const currentUser = auth().currentUser;
+  if (!currentUser) throw new Error('No user logged in');
+
+  const uid = currentUser.uid;
+
+  // Delete bmiHistory subcollection
+  const bmiSnap = await firestore()
+    .collection('users')
+    .doc(uid)
+    .collection('bmiHistory')
+    .get();
+
+  const batch = firestore().batch();
+  bmiSnap.docs.forEach(doc => batch.delete(doc.ref));
+  await batch.commit();
+
+  // Delete user document
+  await firestore().collection('users').doc(uid).delete();
+
+  // Delete Firebase Auth account
+  await currentUser.delete();
 };

@@ -13,6 +13,7 @@ import { colors, fonts } from './utils/constants';
 import { getBMIHistory, signInWithGoogle } from './utils/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData, setUserPhysicalData } from './store/slices/userSlice';
+import { reportError } from './utils/helpers';
 
 export const Login: React.FC = () => {
   const navigation = useNavigation();
@@ -37,8 +38,8 @@ export const Login: React.FC = () => {
       const getUserPhysicalData = await getBMIHistory();
       dispatch(setUserPhysicalData(getUserPhysicalData));
       navigation.navigate("TabBar")
-    } catch (e) {
-      console.log('Login failed:', e);
+    } catch (error) {
+      reportError(error, "handleLogin_Login.tsx")
     } finally{
       setIsLoading(false)
     }

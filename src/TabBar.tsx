@@ -1,19 +1,21 @@
 import {Home} from './Home';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Profile} from './Profile';
-import {Discover} from './Discover';
 import * as React from 'react';
 import {colors} from './utils/constants';
 import DynamicIcon from './icons/iconsList';
 import {TouchableOpacity, View} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const TabBar: React.FC = () => {
   const Tab = createBottomTabNavigator();
   const activeColor = colors.LIGHT_YELLOW;
   const inActiveColor = colors.WHITE;
   const MyTabBar = ({state, descriptors, navigation}) => {
+    const insets = useSafeAreaInsets();
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', paddingBottom: insets.bottom, // 👈 KEY FIX
+        backgroundColor: colors.APP_COLOR,}}>
         {state.routes.map((route, index) => {
           const {options} = descriptors[route.key];
           const isFocused = state.index === index;
@@ -62,7 +64,6 @@ export const TabBar: React.FC = () => {
         tabBarActiveTintColor: colors.APP_COLOR,
         tabBarStyle: {
           backgroundColor: colors.LIGHT_YELLOW,
-          position: 'absolute',
           borderTopLeftRadius: 8,
           borderTopRightRadius: 8,
         },
@@ -74,16 +75,6 @@ export const TabBar: React.FC = () => {
           tabBarLabel: 'Home',
           tabBarIcon: ({color, size}) => (
             <DynamicIcon name="home-outline" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Discover"
-        component={Discover}
-        options={{
-          tabBarLabel: 'Discover',
-          tabBarIcon: ({color, size}) => (
-            <DynamicIcon name="disc-outline" color={color} size={size} />
           ),
         }}
       />

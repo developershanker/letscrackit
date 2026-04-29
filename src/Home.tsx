@@ -40,7 +40,7 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.homeContainer}>
+    <SafeAreaView style={styles.homeContainer} edges={['bottom', 'top']}>
       <Header
         leftIconImage={userData?.photoURL}
         onPressLeftIcon={() => navigation.navigate('Profile')}

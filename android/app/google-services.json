@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "113606866455-dok6b7hji6l9dgcmtif8fd002k5v7e71.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letscrackit",
+            "certificate_hash": "59ddf564bbfa12e0fea5a535ccd44676050e1b99"
+          }
+        },
+        {
           "client_id": "113606866455-vu230rs0j1k1hoe93rqrp2mlei0lbp39.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -4,6 +4,7 @@ import {useEffect} from 'react';
 import {colors} from './utils/constants';
 import {useNavigation} from '@react-navigation/native';
 import Header from './components/Header';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Discover: React.FC = () => {
   const navigation = useNavigation();
@@ -20,14 +21,13 @@ return () => subscription.remove();
     return true;
   };
   return (
-    <ScrollView style={styles.homeContainer}>
+    <SafeAreaView style={styles.homeContainer}>
       <Header
         leftIconName={'chevron-back-outline'}
         leftIconSize={25}
         onPressLeftIcon={handleBack}
       />
-      <View></View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

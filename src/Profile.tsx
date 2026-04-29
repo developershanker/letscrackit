@@ -16,7 +16,7 @@ import { selectUserData, selectUserPhysicalData } from './store/selectors/userSe
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { capitalizeWords, getCategory } from './utils/helpers';
+import { capitalizeWords, getCategory, reportError } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -86,8 +86,7 @@ const handleDeleteAccount = () => {
                     dispatch(logout());
                     navigation.replace('Login');
                   } catch (error) {
-                    console.log('error', error)
-                    console.error('❌ Delete account failed:', error);
+                    reportError(error, "handleDeleteAccount_Profile.tsx")
                     Alert.alert('Error', 'Failed to delete account. Please try again.');
                   }
                 },

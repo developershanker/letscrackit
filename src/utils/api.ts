@@ -44,9 +44,7 @@ export const signInWithGoogle = async () => {
       });
     return user;
   } catch (error) {
-    console.error();
     reportError(`Google Sign-In failed: ${error}`, "signInWithGoogle_api.ts")
-    throw error;
   }
 };
 

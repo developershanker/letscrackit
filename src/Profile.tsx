@@ -28,140 +28,144 @@ export const Profile: React.FC = () => {
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      navigation.goBack();
+      BackHandler.exitApp();
       return true;
     });
     return () => backHandler.remove();
   }, []);
 
   const handleLogout = async () => {
-  try {
-    const currentUser = auth().currentUser;
-    const isGoogleUser = currentUser?.providerData?.some(
-      p => p.providerId === 'google.com'
-    );
-
-    await auth().signOut();
-
-    if (isGoogleUser) {
-      await GoogleSignin.signOut();
+    try {
+      const currentUser = auth().currentUser;
+      const isGoogleUser = currentUser?.providerData?.some(
+        p => p.providerId === 'google.com'
+      );
+      await auth().signOut();
+      if (isGoogleUser) await GoogleSignin.signOut();
+      dispatch(logout());
+      navigation.replace('Login');
+    } catch (error) {
+      Alert.alert('Logout Failed', 'Something went wrong while signing out.');
     }
+  };
 
-    dispatch(logout());
-    navigation.replace('Login');
-  } catch (error) {
-    console.error('❌ Logout failed:', error);
-    Alert.alert('Logout Failed', 'Something went wrong while signing out.');
-  }
-};
-
-const handleDeleteAccount = () => {
-  Alert.alert(
-    'Delete Account',
-    'Are you sure you want to delete your account?',
-    [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Yes, Proceed',
-        style: 'destructive',
-        onPress: () => {
-          Alert.alert(
-            'Final Confirmation',
-            'This will permanently delete your account and all your data. This cannot be undone.',
-            [
-              { text: 'Cancel', style: 'cancel' },
-              {
-                text: 'Delete My Account',
-                style: 'destructive',
-                onPress: async () => {
-                  try {
-                    const currentUser = auth().currentUser;
-                    const isGoogleUser = currentUser?.providerData?.some(
-                      p => p.providerId === 'google.com'
-                    );
-                    await deleteAccount();
-                    if (isGoogleUser) {
-                      await GoogleSignin.signOut();
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Yes, Proceed',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Final Confirmation',
+              'This will permanently delete your account and all your data. This cannot be undone.',
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Delete My Account',
+                  style: 'destructive',
+                  onPress: async () => {
+                    try {
+                      const currentUser = auth().currentUser;
+                      const isGoogleUser = currentUser?.providerData?.some(
+                        p => p.providerId === 'google.com'
+                      );
+                      await deleteAccount();
+                      if (isGoogleUser) await GoogleSignin.signOut();
+                      dispatch(logout());
+                      navigation.replace('Login');
+                    } catch (error) {
+                      reportError(error, 'handleDeleteAccount_Profile.tsx');
+                      Alert.alert('Error', 'Failed to delete account. Please try again.');
                     }
-                    dispatch(logout());
-                    navigation.replace('Login');
-                  } catch (error) {
-                    reportError(error, "handleDeleteAccount_Profile.tsx")
-                    Alert.alert('Error', 'Failed to delete account. Please try again.');
-                  }
+                  },
                 },
-              },
-            ]
-          );
+              ]
+            );
+          },
         },
-      },
-    ]
-  );
-};
-
-  const renderProfileHeader = () => (
-    <View style={styles.profileContainer}>
-      {userData?.photoURL ? (
-        <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
-      ) : (
-        <View style={[styles.profileImage, styles.imageFallback]}>
-          <Text style={{ color: colors.APP_COLOR, fontSize: 32 }}>
-            {userData?.displayName?.[0]?.toUpperCase() || 'U'}
-          </Text>
-        </View>
-      )}
-      <View style={styles.profileTextContainer}>
-        <Text style={styles.userStyles}>{capitalizeWords(userData?.displayName)}</Text>
-        <Text style={styles.userEmailStyles}>{userData?.email}</Text>
-      </View>
-    </View>
-  );
-  const renderBMIBlock = () => {
-    const latestEntry = userPhysicalData?.[0];
-    const bmi = latestEntry?.bmi;
-
-    return (
-      <View style={styles.bmiContainer}>
-        <Text style={styles.bmiText}>Body Mass Index</Text>
-        <Text style={styles.bmiValueText}>{bmi ?? '--'}</Text>
-        <Text style={styles.bmiCategoryText}>{bmi ? getCategory(bmi) : 'No data'}</Text>
-      </View>
+      ]
     );
   };
-  const renderAddOrUpdateButton = () => {
-    const hasData = userPhysicalData?.length > 0;
-    const label = hasData ? 'Update Details' : 'Add Details';
-  
-    return (
-      <TouchableOpacity
-        style={styles.actionButton}
-        onPress={() => navigation.navigate('AddDetails')}>
-        <Text style={styles.actionButtonText}>{label}</Text>
-      </TouchableOpacity>
-    );
+
+  const latestEntry = userPhysicalData?.[0];
+  const bmi = latestEntry?.bmi;
+  const category = bmi ? getCategory(bmi) : null;
+  const hasData = userPhysicalData?.length > 0;
+
+  const bmiColor = () => {
+    if (!bmi) return colors.APP_COLOR_LIGHT;
+    if (bmi < 18.5) return '#60a5fa';
+    if (bmi < 25) return '#4ade80';
+    if (bmi < 30) return '#facc15';
+    return '#f87171';
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-  {renderProfileHeader()}
-  {userPhysicalData.length > 0 ? renderBMIBlock() : null}
-</ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-{/* Always show Add/Update button */}
-<View style={styles.bottomButtonContainer}>
-  {renderAddOrUpdateButton()}
-  <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-    <Text style={styles.logOutText}>LOGOUT</Text>
-  </TouchableOpacity>
+        {/* Avatar card */}
+        <View style={styles.avatarCard}>
+          {userData?.photoURL ? (
+            <Image source={{ uri: userData.photoURL }} style={styles.avatar} />
+          ) : (
+            <View style={styles.avatarFallback}>
+              <Text style={styles.avatarInitial}>
+                {userData?.displayName?.[0]?.toUpperCase() || 'U'}
+              </Text>
+            </View>
+          )}
+          <Text style={styles.userName}>{capitalizeWords(userData?.displayName)}</Text>
+          <Text style={styles.userEmail}>{userData?.email}</Text>
+        </View>
+
+        {/* BMI card */}
+        {hasData && bmi ? (
+          <View style={styles.bmiCard}>
+            <Text style={styles.bmiLabel}>Body Mass Index</Text>
+            <Text style={[styles.bmiValue, { color: bmiColor() }]}>{bmi}</Text>
+            <View style={[styles.categoryBadge, { backgroundColor: bmiColor() + '22', borderColor: bmiColor() }]}>
+              <Text style={[styles.categoryText, { color: bmiColor() }]}>{category}</Text>
+            </View>
+            <Text style={styles.bmiMeta}>
+              {latestEntry?.weight ? `${latestEntry.weight} kg` : ''}
+              {latestEntry?.height ? `  ·  ${latestEntry.height} cm` : ''}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.emptyBmiCard}>
+            <Text style={styles.emptyBmiIcon}>📊</Text>
+            <Text style={styles.emptyBmiTitle}>No BMI data yet</Text>
+            <Text style={styles.emptyBmiSubtitle}>Add your weight & height to track your BMI</Text>
+          </View>
+        )}
+
+      </ScrollView>
+
+      {/* Bottom CTAs */}
+<View style={styles.bottomSection}>
   <TouchableOpacity
-  style={[styles.logoutButton, styles.deleteButton]}
-  onPress={handleDeleteAccount}>
-  <Text style={[styles.logOutText, styles.deleteButtonText]}>DELETE ACCOUNT</Text>
-</TouchableOpacity>
+    style={styles.primaryButton}
+    onPress={() => navigation.navigate('AddDetails')}
+    activeOpacity={0.85}>
+    <Text style={styles.primaryButtonText}>
+      {hasData ? 'Update Details' : 'Add Details'}
+    </Text>
+  </TouchableOpacity>
+
+  <View style={styles.secondaryRow}>
+    <TouchableOpacity onPress={handleDeleteAccount} style={styles.deleteBtn}>
+      <Text style={styles.deleteText}>Delete Account</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.signOutBtn} onPress={handleLogout} activeOpacity={0.85}>
+      <Text style={styles.signOutText}>Sign Out</Text>
+    </TouchableOpacity>
+  </View>
 </View>
-      </View>
     </SafeAreaView>
   );
 };
@@ -172,113 +176,155 @@ const styles = StyleSheet.create({
     backgroundColor: colors.APP_COLOR,
   },
   scrollContent: {
-    flexGrow: 1,
-    backgroundColor: colors.APP_COLOR,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
-  profileContainer: {
-    flexDirection: 'row',
+  // Avatar
+  avatarCard: {
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 32,
+    paddingTop: 36,
+    paddingBottom: 28,
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: 'white',
+  avatar: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    borderWidth: 3,
+    borderColor: colors.LIGHT_YELLOW,
+    marginBottom: 14,
+  },
+  avatarFallback: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: '#0d1e35',
+    borderWidth: 3,
+    borderColor: colors.LIGHT_YELLOW,
+    alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 14,
+  },
+  avatarInitial: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsBold(36),
+  },
+  userName: {
+    color: colors.WHITE,
+    ...fonts.PoppinsBold(20),
+    marginBottom: 4,
+  },
+  userEmail: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(13),
+  },
+  // BMI card
+  bmiCard: {
+    backgroundColor: '#0d1e35',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#1c3150',
+    paddingVertical: 28,
     alignItems: 'center',
+    marginBottom: 16,
   },
-  imageFallback: {
-    backgroundColor: 'white',
-  },
-  profileTextContainer: {
-    marginLeft: 16,
-    flexDirection: 'column',
-    gap: 8,
-  },
-  userStyles: {
-    color: 'white',
-    ...fonts.RubikSemiBold(18),
-    lineHeight: 24,
-  },
-  userEmailStyles: {
-    color: 'white',
-    ...fonts.RubicItalics(16),
-  },
-  bmiContainer: {
-    marginTop: 32,
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  bmiText: {
-    color: 'white',
-    ...fonts.RubikSemiBold(20),
+  bmiLabel: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsMedium(12),
+    textTransform: 'uppercase',
+    letterSpacing: 1,
     marginBottom: 8,
   },
-  bmiValueText: {
-    color: 'white',
-    ...fonts.RubikSemiBold(48),
+  bmiValue: {
+    ...fonts.PoppinsBold(56),
+    lineHeight: 64,
+    marginBottom: 10,
   },
-  bmiCategoryText: {
-    color: 'white',
-    ...fonts.RubikSemiBold(16),
-    marginTop: 4,
-  },
-  addDetailsContainer: {
-    marginTop: 40,
-    backgroundColor: 'white',
-    marginHorizontal: 40,
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  addDetailsText: {
-    color: colors.APP_COLOR,
-    ...fonts.PoppinsSemiBold(16),
-    letterSpacing: 1,
-  },
-  logoutButtonContainer: {
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.APP_COLOR,
-  },
-  logoutButton: {
-    backgroundColor: colors.APP_COLOR,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  logOutText: {
-    color: colors.WHITE,
-    ...fonts.PoppinsSemiBold(18),
-    letterSpacing: 2,
-  },
-  bottomButtonContainer: {
-    padding: 16,
-    backgroundColor: colors.APP_COLOR,
-  },
-  actionButton: {
-    backgroundColor: 'white',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
+  categoryBadge: {
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
     marginBottom: 12,
-    alignItems: 'center',
   },
-  actionButtonText: {
-    color: colors.APP_COLOR,
+  categoryText: {
+    ...fonts.PoppinsSemiBold(13),
+  },
+  bmiMeta: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(12),
+  },
+  // Empty state
+  emptyBmiCard: {
+    backgroundColor: '#0d1e35',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#1c3150',
+    paddingVertical: 36,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  emptyBmiIcon: {
+    fontSize: 40,
+    marginBottom: 12,
+  },
+  emptyBmiTitle: {
+    color: colors.WHITE,
     ...fonts.PoppinsSemiBold(16),
-  },  
-  deleteButton: {
-  borderWidth: 1,
-  borderColor: '#FF3B30',
-  marginTop: 4,
+    marginBottom: 6,
+  },
+  emptyBmiSubtitle: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(13),
+    textAlign: 'center',
+    paddingHorizontal: 24,
+    lineHeight: 20,
+  },
+  // Bottom CTAs
+  bottomSection: {
+  paddingHorizontal: 20,
+  paddingBottom: 16,
+  paddingTop: 10,
+  borderTopWidth: 1,
+  borderTopColor: '#1c3150',
+  gap: 10,
 },
-deleteButtonText: {
-  color: '#FF3B30',
+primaryButton: {
+  backgroundColor: colors.LIGHT_YELLOW,
+  borderRadius: 10,
+  paddingVertical: 12,
+  alignItems: 'center',
+},
+primaryButtonText: {
+  color: colors.APP_COLOR,
+  ...fonts.PoppinsSemiBold(14),
+},
+secondaryRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 8,
+},
+signOutBtn: {
+  flex: 1,
+  borderWidth: 1,
+  borderColor: '#1c3150',
+  borderRadius: 10,
+  paddingVertical: 10,
+  alignItems: 'center',
+},
+signOutText: {
+  color: colors.APP_COLOR_LIGHT,
+  ...fonts.PoppinsMedium(13),
+},
+deleteBtn: {
+  flex: 1,
+  borderWidth: 1,
+  borderColor: '#2a1a1a',
+  borderRadius: 10,
+  paddingVertical: 10,
+  alignItems: 'center',
+},
+deleteText: {
+  color: '#f87171',
+  ...fonts.PoppinsMedium(13),
 },
 });

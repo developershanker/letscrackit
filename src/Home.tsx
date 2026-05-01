@@ -1,65 +1,318 @@
+import React, { useEffect, useState } from 'react';
 import {
   BackHandler,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import * as React from 'react';
-import {useEffect, useState} from 'react';
-import Header from './components/Header';
-import {colors, fonts} from './utils/constants';
-import {useNavigation} from '@react-navigation/native';
-import { capitalizeWords, firebaseRemoteConfigData} from './utils/helpers';
+import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { selectUserData } from './store/selectors/userSelectors';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Header from './components/Header';
+import { colors, fonts } from './utils/constants';
+import { capitalizeWords, firebaseRemoteConfigData, getCategory } from './utils/helpers';
+import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good Morning';
+  if (h < 17) return 'Good Afternoon';
+  return 'Good Evening';
+};
+
+const bmiColor = (bmi: number) => {
+  if (bmi < 18.5) return '#60a5fa';
+  if (bmi < 25)   return '#4ade80';
+  if (bmi < 30)   return '#facc15';
+  return '#f87171';
+};
 
 export const Home: React.FC = () => {
   const navigation = useNavigation();
-  const [heading, setHeading] = useState('');
+  const [heading, setHeading]       = useState('');
   const [subHeading, setSubHeading] = useState('');
-  const userData: any = useSelector(selectUserData);
+  const userData: any    = useSelector(selectUserData);
+  const physicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
+
+  const latest    = physicalData?.[0];
+  const bmi       = latest?.bmi;
+  const firstName = userData?.displayName?.split(' ')[0] || 'there';
+
   useEffect(() => {
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBack
-    );
-    return () => subscription.remove();
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      BackHandler.exitApp();
+      return true;
+    });
+    return () => sub.remove();
   }, []);
-  const handleBack = () => {
-    BackHandler.exitApp();
-    return true;
-  };
-  const getData = async () => {
-    const headingText = await firebaseRemoteConfigData('DEMO_KEY');
-    setHeading(headingText?.heading?.replace('{{user}}', userData?.displayName));
-    setSubHeading(headingText?.subHeading)
-  };
+
   useEffect(() => {
-    getData();
+    const load = async () => {
+      const data = await firebaseRemoteConfigData('DEMO_KEY');
+      setHeading(data?.heading?.replace('{{user}}', userData?.displayName) || '');
+      setSubHeading(data?.subHeading || '');
+    };
+    load();
   }, []);
 
   return (
-    <SafeAreaView style={styles.homeContainer} edges={['bottom', 'top']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <Header
         leftIconImage={userData?.photoURL}
         onPressLeftIcon={() => navigation.navigate('Profile')}
       />
-      <ScrollView>
-        <Text style={styles.headingText}>{capitalizeWords(heading)}</Text>
-        <Text style={styles.headingText2}>{subHeading}</Text>
+
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+
+        {/* Greeting */}
+        <View style={styles.greetingSection}>
+          <Text style={styles.greetingLine}>{getGreeting()} 👋</Text>
+          <Text style={styles.greetingName}>{firstName}</Text>
+        </View>
+
+        {/* BMI card */}
+        {bmi ? (
+          <View style={styles.bmiCard}>
+            <View>
+              <Text style={styles.cardLabel}>Current BMI</Text>
+              <Text style={[styles.bmiValue, { color: bmiColor(bmi) }]}>{bmi}</Text>
+              <View style={[styles.categoryPill, { backgroundColor: bmiColor(bmi) + '22', borderColor: bmiColor(bmi) }]}>
+                <Text style={[styles.categoryPillText, { color: bmiColor(bmi) }]}>{getCategory(bmi)}</Text>
+              </View>
+            </View>
+
+            <View style={styles.bmiRight}>
+              {latest?.weight ? (
+                <View style={styles.metaRow}>
+                  <Ionicons name="barbell-outline" size={15} color={colors.APP_COLOR_LIGHT} />
+                  <Text style={styles.metaText}>{latest.weight} kg</Text>
+                </View>
+              ) : null}
+              {latest?.height ? (
+                <View style={styles.metaRow}>
+                  <Ionicons name="body-outline" size={15} color={colors.APP_COLOR_LIGHT} />
+                  <Text style={styles.metaText}>{latest.height} cm</Text>
+                </View>
+              ) : null}
+              <TouchableOpacity
+                style={styles.updateBtn}
+                onPress={() => navigation.navigate('AddDetails')}>
+                <Text style={styles.updateBtnText}>Update</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.emptyBmiCard}
+            onPress={() => navigation.navigate('AddDetails')}
+            activeOpacity={0.85}>
+            <View style={styles.emptyLeft}>
+              <Text style={styles.emptyIcon}>📊</Text>
+              <View>
+                <Text style={styles.emptyTitle}>Track your BMI</Text>
+                <Text style={styles.emptySubtitle}>Add weight & height to get started</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={colors.LIGHT_YELLOW} />
+          </TouchableOpacity>
+        )}
+
+        {/* Firebase content */}
+        {(heading || subHeading) ? (
+          <View style={styles.contentCard}>
+            <View style={styles.contentCardHeader}>
+              <Ionicons name="flash-outline" size={16} color={colors.LIGHT_YELLOW} />
+              <Text style={styles.contentTag}>Today's Focus</Text>
+            </View>
+            {heading    ? <Text style={styles.contentHeading}>{capitalizeWords(heading)}</Text>    : null}
+            {subHeading ? <Text style={styles.contentSubHeading}>{subHeading}</Text> : null}
+          </View>
+        ) : null}
+
+        {/* Quick actions */}
+        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <View style={styles.quickRow}>
+          {[
+            { icon: 'scale-outline',      label: 'Log BMI',  onPress: () => navigation.navigate('AddDetails') },
+            { icon: 'person-outline',     label: 'Profile',  onPress: () => navigation.navigate('Profile') },
+            { icon: 'trending-up-outline',label: 'Progress', onPress: () => {} },
+          ].map(({ icon, label, onPress }) => (
+            <TouchableOpacity key={label} style={styles.quickCard} onPress={onPress} activeOpacity={0.8}>
+              <Ionicons name={icon} size={26} color={colors.LIGHT_YELLOW} />
+              <Text style={styles.quickLabel}>{label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  homeContainer: {
+  container: {
     flex: 1,
     backgroundColor: colors.APP_COLOR,
   },
-  headingText: { 
-      ...fonts.RubicItalics(20), color: colors.WHITE, textAlign: 'center', width: '86%', alignSelf: 'center', lineHeight: 24},
-  headingText2: { 
-      ...fonts.RubikSemiBold(20), color: colors.WHITE, textAlign: 'center', width: '86%', alignSelf: 'center', padding : 16}
+  scroll: {
+    paddingHorizontal: 20,
+    paddingBottom: 36,
+  },
+  // Greeting
+  greetingSection: {
+    marginTop: 4,
+    marginBottom: 20,
+  },
+  greetingLine: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(14),
+    marginBottom: 2,
+  },
+  greetingName: {
+    color: colors.WHITE,
+    ...fonts.PoppinsBold(26),
+  },
+  // BMI card — has data
+  bmiCard: {
+    backgroundColor: '#0d1e35',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#1c3150',
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  cardLabel: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsMedium(11),
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 4,
+  },
+  bmiValue: {
+    ...fonts.PoppinsBold(52),
+    lineHeight: 58,
+    marginBottom: 8,
+  },
+  categoryPill: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 3,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  categoryPillText: {
+    ...fonts.PoppinsMedium(12),
+  },
+  bmiRight: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  metaText: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(13),
+  },
+  updateBtn: {
+    borderWidth: 1,
+    borderColor: colors.LIGHT_YELLOW,
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+  },
+  updateBtnText: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsMedium(12),
+  },
+  // BMI card — empty
+  emptyBmiCard: {
+    backgroundColor: '#0d1e35',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#1c3150',
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  emptyLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  emptyIcon: { fontSize: 30 },
+  emptyTitle: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(14),
+    marginBottom: 2,
+  },
+  emptySubtitle: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(12),
+  },
+  // Firebase content card
+  contentCard: {
+    backgroundColor: '#0d1e35',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#1c3150',
+    padding: 20,
+    marginBottom: 24,
+  },
+  contentCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 10,
+  },
+  contentTag: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsMedium(11),
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+  },
+  contentHeading: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(16),
+    marginBottom: 6,
+    lineHeight: 24,
+  },
+  contentSubHeading: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(13),
+    lineHeight: 20,
+  },
+  // Quick actions
+  sectionTitle: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(14),
+    marginBottom: 12,
+  },
+  quickRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  quickCard: {
+    flex: 1,
+    backgroundColor: '#0d1e35',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#1c3150',
+    paddingVertical: 18,
+    alignItems: 'center',
+    gap: 8,
+  },
+  quickLabel: {
+    color: colors.APP_COLOR_LIGHT,
+    ...fonts.PoppinsRegular(12),
+  },
 });

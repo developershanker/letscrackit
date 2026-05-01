@@ -53,7 +53,7 @@ export const SplashScreen = ({ navigation }) => {
 
     const nav = setTimeout(() => {
       navigation.replace(userData ? 'TabBar' : 'Login');
-    }, 10000);
+    }, 5000);
 
     return () => clearTimeout(nav);
   }, []);

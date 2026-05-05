@@ -198,6 +198,19 @@ export const deleteAccount = async (): Promise<void> => {
   const currentUser = auth().currentUser;
   if (!currentUser) throw new Error('No user logged in');
 
+  const isGoogleUser = currentUser.providerData?.some(p => p.providerId === 'google.com');
+
+  if (isGoogleUser) {
+    await GoogleSignin.hasPlayServices();
+    const response = await GoogleSignin.signIn();
+    if (response.type !== 'success' || !response.data?.idToken) {
+      reportError('Google re-authentication cancelled', 'deleteAccount_api.ts')
+      throw new Error('Google re-authentication cancelled');
+    }
+    const credential = auth.GoogleAuthProvider.credential(response.data.idToken);
+    await currentUser.reauthenticateWithCredential(credential);
+  }
+
   const uid = currentUser.uid;
 
   // Delete bmiHistory subcollection

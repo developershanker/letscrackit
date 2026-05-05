@@ -78,9 +78,16 @@ export const Profile: React.FC = () => {
                       if (isGoogleUser) await GoogleSignin.signOut();
                       dispatch(logout());
                       navigation.replace('Login');
-                    } catch (error) {
-                      reportError(error, 'handleDeleteAccount_Profile.tsx');
-                      Alert.alert('Error', 'Failed to delete account. Please try again.');
+                    } catch (error: any) {
+                      if (error?.code === 'auth/requires-recent-login') {
+                        Alert.alert(
+                          'Sign In Required',
+                          'For security, please sign out and sign back in, then try deleting your account again.'
+                        );
+                      } else {
+                        reportError(error, 'handleDeleteAccount_Profile.tsx');
+                        Alert.alert('Error', 'Failed to delete account. Please try again.');
+                      }
                     }
                   },
                 },

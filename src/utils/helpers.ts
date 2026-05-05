@@ -138,10 +138,25 @@ export const calcBMIPercentile = (
   sex: 'male' | 'female',
 ): number => {
   const table = sex === 'male' ? LMS_BOYS : LMS_GIRLS;
-  const entry = table.reduce((prev, curr) =>
-    Math.abs(curr.ageMonths - ageMonths) < Math.abs(prev.ageMonths - ageMonths) ? curr : prev,
-  );
-  const { L, M, S } = entry;
+
+  // Clamp to table bounds
+  const clamped = Math.max(table[0].ageMonths, Math.min(table[table.length - 1].ageMonths, ageMonths));
+
+  // Find surrounding entries and linearly interpolate L, M, S
+  const hiIdx = table.findIndex(e => e.ageMonths >= clamped);
+  let L: number, M: number, S: number;
+  if (hiIdx <= 0) {
+    ({ L, M, S } = table[0]);
+  } else if (hiIdx >= table.length - 1) {
+    ({ L, M, S } = table[table.length - 1]);
+  } else {
+    const lo = table[hiIdx - 1];
+    const hi = table[hiIdx];
+    const t = (clamped - lo.ageMonths) / (hi.ageMonths - lo.ageMonths);
+    L = lo.L + t * (hi.L - lo.L);
+    M = lo.M + t * (hi.M - lo.M);
+    S = lo.S + t * (hi.S - lo.S);
+  }
   const z = L !== 0
     ? (Math.pow(bmi / M, L) - 1) / (L * S)
     : Math.log(bmi / M) / S;

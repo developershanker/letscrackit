@@ -38,6 +38,7 @@ export const LMS_BOYS: LMSEntry[] = [
   { ageMonths: 204, L: -2.0942, M: 22.2069, S: 0.12483 },
   { ageMonths: 216, L: -2.0532, M: 22.6384, S: 0.12533 },
   { ageMonths: 228, L: -2.0160, M: 23.0210, S: 0.12580 },
+  { ageMonths: 240, L: -1.9788, M: 23.3940, S: 0.12627 },
 ];
 
 export const LMS_GIRLS: LMSEntry[] = [
@@ -59,4 +60,5 @@ export const LMS_GIRLS: LMSEntry[] = [
   { ageMonths: 204, L: -1.3884, M: 22.5523, S: 0.14963 },
   { ageMonths: 216, L: -1.3402, M: 22.9800, S: 0.15090 },
   { ageMonths: 228, L: -1.3043, M: 23.3549, S: 0.15140 },
+  { ageMonths: 240, L: -1.2684, M: 23.7300, S: 0.15190 },
 ];

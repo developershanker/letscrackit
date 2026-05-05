@@ -16,7 +16,7 @@ import { selectUserData, selectUserPhysicalData } from './store/selectors/userSe
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { capitalizeWords, getBMIInfo, reportError } from './utils/helpers';
+import { capitalizeWords, reportError } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -92,17 +92,21 @@ export const Profile: React.FC = () => {
   };
 
   const latestEntry = userPhysicalData?.[0];
-  const bmi = latestEntry?.bmi;
-  const category = bmi ? getBMIInfo(bmi).category : null;
-  const hasData = userPhysicalData?.length > 0;
+  const bmi         = latestEntry?.bmi;
+  const entryColor  = latestEntry?.color  ?? colors.POWDER_BLUE;
+  const entryCategory = latestEntry?.category ?? null;
+  const hasData     = userPhysicalData?.length > 0;
 
-  const bmiColor = () => {
-    if (!bmi) return colors.POWDER_BLUE;
-    if (bmi < 18.5) return colors.SKY_BLUE;
-    if (bmi < 25) return colors.MINT_GREEN;
-    if (bmi < 30) return colors.AMBER;
-    return colors.CORAL;
+  const formatMetric = () => {
+    if (latestEntry?.metric == null) return null;
+    if (latestEntry.method === 'bodyFat') return `${latestEntry.metric}%`;
+    const n = latestEntry.metric;
+    const suffix = n === 11 || n === 12 || n === 13 ? 'th'
+      : n % 10 === 1 ? 'st' : n % 10 === 2 ? 'nd' : n % 10 === 3 ? 'rd' : 'th';
+    return `${n}${suffix}`;
   };
+
+  const metricLabel = latestEntry?.method === 'bodyFat' ? 'Body Fat' : 'Percentile';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,10 +131,18 @@ export const Profile: React.FC = () => {
         {hasData && bmi ? (
           <View style={styles.bmiCard}>
             <Text style={styles.bmiLabel}>Body Mass Index</Text>
-            <Text style={[styles.bmiValue, { color: bmiColor() }]}>{bmi}</Text>
-            <View style={[styles.categoryBadge, { backgroundColor: bmiColor() + '22', borderColor: bmiColor() }]}>
-              <Text style={[styles.categoryText, { color: bmiColor() }]}>{category}</Text>
+            <Text style={[styles.bmiValue, { color: entryColor }]}>{bmi}</Text>
+            <View style={[styles.categoryBadge, { backgroundColor: entryColor + '22', borderColor: entryColor }]}>
+              <Text style={[styles.categoryText, { color: entryColor }]}>{entryCategory}</Text>
             </View>
+
+            {formatMetric() != null && (
+              <View style={styles.metricRow}>
+                <Text style={styles.metricLabel}>{metricLabel}</Text>
+                <Text style={[styles.metricValue, { color: entryColor }]}>{formatMetric()}</Text>
+              </View>
+            )}
+
             <Text style={styles.bmiMeta}>
               {latestEntry?.weight ? `${latestEntry.weight} kg` : ''}
               {latestEntry?.height ? `  ·  ${latestEntry.height} cm` : ''}
@@ -248,6 +260,21 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     ...fonts.PoppinsSemiBold(13),
+  },
+  metricRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 10,
+  },
+  metricLabel: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(12),
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+  },
+  metricValue: {
+    ...fonts.PoppinsBold(14),
   },
   bmiMeta: {
     color: colors.POWDER_BLUE,

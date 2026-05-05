@@ -16,7 +16,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { colors, fonts } from './utils/constants';
-import { verifyPhoneOtp, sendPhoneOtp, getBMIHistory } from './utils/api';
+import { verifyPhoneOtp, sendPhoneOtp, getBMIHistory, fetchUserProfile } from './utils/api';
 import { setUserData, setUserPhysicalData } from './store/slices/userSlice';
 import { RootStackParamList } from '../App';
 
@@ -49,7 +49,7 @@ export const OtpVerification: React.FC = () => {
   };
 
   const handleKeyPress = (
-    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    e: any,
     index: number
   ) => {
     if (e.nativeEvent.key === 'Backspace' && !digits[index] && index > 0) {
@@ -66,10 +66,11 @@ export const OtpVerification: React.FC = () => {
     setIsLoading(true);
     try {
       const user = await verifyPhoneOtp(currentConfirmation, otp);
-      dispatch(setUserData(user));
+      const profile = await fetchUserProfile(user.uid);
+      dispatch(setUserData({ uid: user.uid, phoneNumber: user.phoneNumber, ...profile }));
       const physicalData = await getBMIHistory();
       dispatch(setUserPhysicalData(physicalData));
-      navigation.navigate('TabBar');
+     navigation.navigate(profile?.profileComplete ? 'TabBar' : 'OnboardingDetails');
     } catch (e: any) {
       Alert.alert('Invalid OTP', e?.message ?? 'The OTP entered is incorrect. Please try again.');
       setDigits(Array(OTP_LENGTH).fill(''));

@@ -158,6 +158,27 @@ export const completeEmailSignIn = async (email: string, emailLink: string) => {
   return user;
 };
 
+export const fetchUserProfile = async (uid: string) => {
+  const doc = await firestore().collection('users').doc(uid).get();
+  const data = doc.data();
+  return {
+    profileComplete: data?.profileComplete ?? false,
+    dob: data?.dob ?? null,
+    sex: data?.sex ?? null,
+  };
+};
+
+export const saveUserProfile = async (dob: string, sex: 'male' | 'female') => {
+  const user = auth().currentUser;
+  if (!user) throw new Error('Not authenticated');
+  await firestore()
+    .collection('users')
+    .doc(user.uid)
+    .set({ dob, sex, profileComplete: true }, { merge: true });
+};
+
+
+
 
 export const deleteAccount = async (): Promise<void> => {
   const currentUser = auth().currentUser;

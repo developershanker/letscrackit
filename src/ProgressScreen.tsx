@@ -23,6 +23,10 @@ interface BMIEntry {
   height: number;
   bmi: number;
   createdAt?: Date;
+  method: 'bodyFat' | 'percentile' | 'simple';
+  metric: number | null;
+  category: string;
+  color: string;
 }
 
 export const ProgressScreen: React.FC = () => {

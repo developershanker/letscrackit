@@ -1,7 +1,7 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { reportError } from './helpers';
+import { reportError, getBMIInfo, calcAgeAwareBMI } from './helpers';
 
 export const signInWithGoogle = async () => {
   try {
@@ -68,24 +68,40 @@ export const getBMIHistory = async () => {
   const user = auth().currentUser;
   if (!user) throw new Error("Not authenticated");
 
-  const snapshot = await firestore()
-    .collection('users')
-    .doc(user.uid)
-    .collection('bmiHistory')
-    .orderBy('createdAt', 'desc') // newest first
-    .get();
+  const [userDoc, snapshot] = await Promise.all([
+    firestore().collection('users').doc(user.uid).get(),
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('bmiHistory')
+      .orderBy('createdAt', 'desc')
+      .get(),
+  ]);
+
+  const { dob, sex } = userDoc.data() ?? {};
 
   return snapshot.docs.map(doc => {
     const data = doc.data();
     const heightM = data.height / 100;
-    const bmi = data.weight / (heightM * heightM);
+    const bmi = parseFloat((data.weight / (heightM * heightM)).toFixed(1));
+    const entryDate: Date = data.createdAt?.toDate() ?? new Date();
+
+    const ageAware = (dob && sex)
+      ? calcAgeAwareBMI(bmi, dob, entryDate, sex as 'male' | 'female')
+      : null;
+
+    const fallback = getBMIInfo(bmi);
 
     return {
       id: doc.id,
       weight: data.weight,
       height: data.height,
-      createdAt: data.createdAt?.toDate(),
-      bmi: parseFloat(bmi.toFixed(1)),
+      createdAt: entryDate,
+      bmi,
+      method:   ageAware?.method   ?? 'simple',
+      metric:   ageAware?.metric   ?? null,
+      category: ageAware?.category ?? fallback.category,
+      color:    ageAware?.color    ?? fallback.color,
     };
   });
 };

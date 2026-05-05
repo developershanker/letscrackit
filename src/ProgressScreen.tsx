@@ -7,6 +7,7 @@ import {colors, fonts} from './utils/constants';
 import Header from './components/Header';
 import {selectUserPhysicalData} from './store/selectors/userSelectors';
 import {formatBMIMetric} from './utils/helpers';
+import {BMIEntry} from './store/slices/userSlice';
 
 const {width: winWidth} = Dimensions.get('window');
 
@@ -16,18 +17,6 @@ const formatDate = (date?: Date) => {
   if (isNaN(d.getTime())) return '';
   return d?.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
 };
-
-interface BMIEntry {
-  id: string;
-  weight: number;
-  height: number;
-  bmi: number;
-  createdAt?: Date;
-  method: 'bodyFat' | 'percentile' | 'simple';
-  metric: number | null;
-  category: string;
-  color: string;
-}
 
 export const ProgressScreen: React.FC = () => {
   const navigation = useNavigation();

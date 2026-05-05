@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUserData } from './store/selectors/userSelectors';
 import { addBMIEntry, getBMIHistory } from './utils/api';
 import { setUserPhysicalData } from './store/slices/userSlice';
+import { calcAgeAwareBMI, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from './components/Header';
 
@@ -130,14 +131,23 @@ export const AddDetails: React.FC = () => {
           </View>
 
           {/* BMI preview */}
-          {weight && height && !isNaN(parseFloat(weight)) && !isNaN(parseFloat(height)) && (
-            <View style={styles.previewCard}>
-              <Text style={styles.previewLabel}>Estimated BMI</Text>
-              <Text style={styles.previewValue}>
-                {(parseFloat(weight) / Math.pow(parseFloat(height) / 100, 2)).toFixed(1)}
-              </Text>
-            </View>
-          )}
+          {weight && height && !isNaN(parseFloat(weight)) && !isNaN(parseFloat(height)) && (() => {
+            const rawBMI = parseFloat(weight) / Math.pow(parseFloat(height) / 100, 2);
+            const preview = userData?.dob && userData?.sex
+              ? calcAgeAwareBMI(rawBMI, userData.dob, new Date(), userData.sex)
+              : null;
+            const metricStr = preview ? formatBMIMetric(preview.method, preview.metric) : null;
+            const metricLabel = preview?.method ? BMI_METHOD_LABEL[preview.method] : null;
+            return (
+              <View style={styles.previewCard}>
+                <Text style={styles.previewLabel}>Estimated BMI</Text>
+                <Text style={styles.previewValue}>{rawBMI.toFixed(1)}</Text>
+                {metricStr != null && metricLabel && (
+                  <Text style={styles.previewMetric}>{metricLabel}  {metricStr}</Text>
+                )}
+              </View>
+            );
+          })()}
 
         </ScrollView>
 
@@ -268,6 +278,13 @@ const styles = StyleSheet.create({
   previewValue: {
     color: colors.LIGHT_YELLOW,
     ...fonts.PoppinsBold(40),
+  },
+  previewMetric: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsMedium(12),
+    marginTop: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
   },
   bottomSection: {
     paddingHorizontal: 20,

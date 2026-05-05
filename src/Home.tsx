@@ -15,6 +15,7 @@ import Header from './components/Header';
 import { colors, fonts } from './utils/constants';
 import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
+import { BMIEntry } from './store/slices/userSlice';
 
 const getGreeting = () => {
   const h = new Date().getHours();
@@ -27,8 +28,8 @@ export const Home: React.FC = () => {
   const navigation = useNavigation();
   const [heading, setHeading]       = useState('');
   const [subHeading, setSubHeading] = useState('');
-  const userData: any    = useSelector(selectUserData);
-  const physicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
+  const userData: any       = useSelector(selectUserData);
+  const physicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
 
   const latest          = physicalData?.[0];
   const bmi             = latest?.bmi;

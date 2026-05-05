@@ -17,6 +17,7 @@ import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { capitalizeWords, reportError, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
+import { BMIEntry } from './store/slices/userSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -24,7 +25,7 @@ export const Profile: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userData: any = useSelector(selectUserData);
-  const userPhysicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
+  const userPhysicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -159,6 +160,13 @@ export const Profile: React.FC = () => {
     <Text style={styles.primaryButtonText}>
       {hasData ? 'Update Details' : 'Add Details'}
     </Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.editProfileBtn}
+    onPress={() => navigation.navigate('OnboardingDetails')}
+    activeOpacity={0.85}>
+    <Text style={styles.editProfileText}>Edit Profile Info</Text>
   </TouchableOpacity>
 
   <View style={styles.secondaryRow}>
@@ -321,6 +329,17 @@ secondaryRow: {
   flexDirection: 'row',
   alignItems: 'center',
   gap: 8,
+},
+editProfileBtn: {
+  borderWidth: 1,
+  borderColor: colors.NAVY_BLUE,
+  borderRadius: 10,
+  paddingVertical: 10,
+  alignItems: 'center',
+},
+editProfileText: {
+  color: colors.POWDER_BLUE,
+  ...fonts.PoppinsMedium(13),
 },
 signOutBtn: {
   flex: 1,

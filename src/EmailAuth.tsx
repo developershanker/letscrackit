@@ -82,7 +82,7 @@ export const EmailAuth: React.FC = () => {
           <TextInput
             style={styles.input}
             placeholder="you@example.com"
-            placeholderTextColor="#4a6080"
+            placeholderTextColor=colors.PLACEHOLDER
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
@@ -174,9 +174,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
   },
   input: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1.5,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     borderRadius: 12,
     paddingVertical: 15,
     paddingHorizontal: 16,
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1.5,
     borderColor: colors.LIGHT_YELLOW,
     alignItems: 'center',
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
   },
   backButtonText: {
     color: colors.APP_COLOR_LIGHT,

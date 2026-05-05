@@ -1,5 +1,6 @@
 import remoteConfig from '@react-native-firebase/remote-config';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {colors} from './constants';
 
 export const initiateFirebaseConfig = async () => {
   await remoteConfig().activate();
@@ -61,10 +62,10 @@ export const reportError = (error: unknown, context?: string): void => {
 };
 
 const BMI_RANGES = [
-  {max: 18.5, category: 'Underweight',  color: '#60a5fa'},
-  {max: 25,   category: 'Normal weight', color: '#4ade80'},
-  {max: 30,   category: 'Overweight',   color: '#facc15'},
-  {max: Infinity, category: 'Obese',    color: '#f87171'},
+  {max: 18.5, category: 'Underweight',  color: colors.BMI_UNDERWEIGHT},
+  {max: 25,   category: 'Normal weight', color: colors.BMI_NORMAL},
+  {max: 30,   category: 'Overweight',   color: colors.BMI_OVERWEIGHT},
+  {max: Infinity, category: 'Obese',    color: colors.BMI_OBESE},
 ];
 
 export const getBMIInfo = (bmi: number) =>

@@ -95,7 +95,7 @@ export const AddDetails: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="0"
-                  placeholderTextColor="#4a6080"
+                  placeholderTextColor=colors.PLACEHOLDER
                   keyboardType="numeric"
                   value={weight}
                   onChangeText={setWeight}
@@ -115,7 +115,7 @@ export const AddDetails: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="0"
-                  placeholderTextColor="#4a6080"
+                  placeholderTextColor=colors.PLACEHOLDER
                   keyboardType="numeric"
                   value={height}
                   onChangeText={setHeight}
@@ -184,9 +184,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -205,10 +205,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   card: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginBottom: 16,
@@ -235,12 +235,12 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   unitBadge: {
-    backgroundColor: '#162840',
+    backgroundColor: colors.DROPDOWN_BACKGROUND,
     borderRadius: 8,
     paddingVertical: 6,
     paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
   },
   unitText: {
     color: colors.APP_COLOR_LIGHT,
@@ -248,13 +248,13 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#1c3150',
+    backgroundColor: colors.BORDER_COLOR,
   },
   previewCard: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     paddingVertical: 20,
     alignItems: 'center',
   },

@@ -85,10 +85,10 @@ export const ProgressScreen: React.FC = () => {
 
       <View style={styles.legend}>
         {[
-          {label: 'Underweight', color: colors.BMI_UNDERWEIGHT},
-          {label: 'Normal', color: colors.BMI_NORMAL},
-          {label: 'Overweight', color: colors.BMI_OVERWEIGHT},
-          {label: 'Obese', color: colors.BMI_OBESE},
+          {label: 'Underweight', color: colors.SKY_BLUE},
+          {label: 'Normal', color: colors.MINT_GREEN},
+          {label: 'Overweight', color: colors.AMBER},
+          {label: 'Obese', color: colors.CORAL},
         ].map(item => (
           <View key={item.label} style={styles.legendItem}>
             <View style={[styles.legendDot, {backgroundColor: item.color}]} />
@@ -116,7 +116,7 @@ export const ProgressScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
   },
   listContent: {
     paddingHorizontal: 16,
@@ -140,14 +140,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   legendLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(11),
   },
   card: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.PAGE_BACKGROUND,
+    backgroundColor: colors.DEEP_NAVY,
     borderRadius: 12,
     padding: 16,
     marginTop: 10,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   dateText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
   },
   latestBadge: {
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   statLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(11),
   },
   statValue: {
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   statDivider: {
     width: 1,
     height: 28,
-    backgroundColor: colors.CARD_LIGHT_BLUE,
+    backgroundColor: colors.COBALT_BLUE,
   },
   bmiBlock: {
     alignItems: 'center',
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsBold(18),
   },
   emptySubtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     textAlign: 'center',
   },

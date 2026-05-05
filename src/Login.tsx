@@ -108,7 +108,7 @@ export const Login: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
@@ -129,18 +129,18 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   tagline: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     marginTop: 4,
   },
   card: {
     width: '100%',
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 20,
     paddingVertical: 32,
     paddingHorizontal: 24,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
   },
   cardTitle: {
     color: colors.WHITE,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardSubtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     marginBottom: 28,
   },
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   loaderText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
   },
   buttonGroup: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: colors.GOOGLE_BLUE,
+    backgroundColor: colors.CORNFLOWER_BLUE,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsBold(14),
   },
   googleButtonText: {
-    color: colors.NEAR_BLACK,
+    color: colors.CHARCOAL,
     ...fonts.PoppinsSemiBold(15),
     flex: 1,
     textAlign: 'center',
@@ -205,10 +205,10 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: colors.BORDER_COLOR,
+    backgroundColor: colors.NAVY_BLUE,
   },
   dividerLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
   },
   emailButton: {
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     marginTop: 28,
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(11),
     textAlign: 'center',
     lineHeight: 18,

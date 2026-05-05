@@ -97,11 +97,11 @@ export const Profile: React.FC = () => {
   const hasData = userPhysicalData?.length > 0;
 
   const bmiColor = () => {
-    if (!bmi) return colors.APP_COLOR_LIGHT;
-    if (bmi < 18.5) return colors.BMI_UNDERWEIGHT;
-    if (bmi < 25) return colors.BMI_NORMAL;
-    if (bmi < 30) return colors.BMI_OVERWEIGHT;
-    return colors.BMI_OBESE;
+    if (!bmi) return colors.POWDER_BLUE;
+    if (bmi < 18.5) return colors.SKY_BLUE;
+    if (bmi < 25) return colors.MINT_GREEN;
+    if (bmi < 30) return colors.AMBER;
+    return colors.CORAL;
   };
 
   return (
@@ -173,7 +173,7 @@ export const Profile: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderWidth: 3,
     borderColor: colors.LIGHT_YELLOW,
     alignItems: 'center',
@@ -214,21 +214,21 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   userEmail: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
   },
   // BMI card
   bmiCard: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     paddingVertical: 28,
     alignItems: 'center',
     marginBottom: 16,
   },
   bmiLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsMedium(12),
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -250,15 +250,15 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsSemiBold(13),
   },
   bmiMeta: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
   },
   // Empty state
   emptyBmiCard: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     paddingVertical: 36,
     alignItems: 'center',
     marginBottom: 16,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   emptyBmiSubtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     textAlign: 'center',
     paddingHorizontal: 24,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   paddingBottom: 16,
   paddingTop: 10,
   borderTopWidth: 1,
-  borderTopColor: colors.BORDER_COLOR,
+  borderTopColor: colors.NAVY_BLUE,
   gap: 10,
 },
 primaryButton: {
@@ -295,7 +295,7 @@ primaryButton: {
   alignItems: 'center',
 },
 primaryButtonText: {
-  color: colors.APP_COLOR,
+  color: colors.MIDNIGHT_NAVY,
   ...fonts.PoppinsSemiBold(14),
 },
 secondaryRow: {
@@ -306,25 +306,25 @@ secondaryRow: {
 signOutBtn: {
   flex: 1,
   borderWidth: 1,
-  borderColor: colors.BORDER_COLOR,
+  borderColor: colors.NAVY_BLUE,
   borderRadius: 10,
   paddingVertical: 10,
   alignItems: 'center',
 },
 signOutText: {
-  color: colors.APP_COLOR_LIGHT,
+  color: colors.POWDER_BLUE,
   ...fonts.PoppinsMedium(13),
 },
 deleteBtn: {
   flex: 1,
   borderWidth: 1,
-  borderColor: colors.DANGER_BORDER,
+  borderColor: colors.DARK_MAROON,
   borderRadius: 10,
   paddingVertical: 10,
   alignItems: 'center',
 },
 deleteText: {
-  color: colors.BMI_OBESE,
+  color: colors.CORAL,
   ...fonts.PoppinsMedium(13),
 },
 });

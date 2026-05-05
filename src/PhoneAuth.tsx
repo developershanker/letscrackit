@@ -73,7 +73,7 @@ export const PhoneAuth: React.FC = () => {
             <TextInput
               style={styles.input}
               placeholder="10-digit mobile number"
-              placeholderTextColor=colors.PLACEHOLDER
+              placeholderTextColor=colors.SLATE_BLUE
               keyboardType="phone-pad"
               maxLength={10}
               value={phone}
@@ -110,7 +110,7 @@ export const PhoneAuth: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
   },
   inner: {
     flex: 1,
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
     lineHeight: 22,
   },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   inputLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsMedium(12),
     marginBottom: 8,
     textTransform: 'uppercase',
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   countryCode: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderWidth: 1.5,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     borderRadius: 12,
     paddingVertical: 15,
     paddingHorizontal: 14,
@@ -185,9 +185,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderWidth: 1.5,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     borderRadius: 12,
     paddingVertical: 15,
     paddingHorizontal: 16,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsRegular(16),
   },
   inputHint: {
-    color: colors.PLACEHOLDER,
+    color: colors.SLATE_BLUE,
     ...fonts.PoppinsRegular(11),
     lineHeight: 16,
   },
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   loaderText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
   },
   sendButton: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   sendButtonText: {
-    color: colors.APP_COLOR,
+    color: colors.MIDNIGHT_NAVY,
     ...fonts.PoppinsSemiBold(16),
   },
   backLink: {
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backLinkText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
   },
 });

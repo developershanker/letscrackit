@@ -93,7 +93,7 @@ export const SplashScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tagline: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     letterSpacing: 0.2,
     textAlign: 'center',

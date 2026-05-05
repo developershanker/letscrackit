@@ -16,7 +16,7 @@ import { selectUserData, selectUserPhysicalData } from './store/selectors/userSe
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { capitalizeWords, getCategory, reportError } from './utils/helpers';
+import { capitalizeWords, getBMIInfo, reportError } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -93,7 +93,7 @@ export const Profile: React.FC = () => {
 
   const latestEntry = userPhysicalData?.[0];
   const bmi = latestEntry?.bmi;
-  const category = bmi ? getCategory(bmi) : null;
+  const category = bmi ? getBMIInfo(bmi).category : null;
   const hasData = userPhysicalData?.length > 0;
 
   const bmiColor = () => {

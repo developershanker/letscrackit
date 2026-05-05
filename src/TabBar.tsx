@@ -4,8 +4,9 @@ import {Profile} from './Profile';
 import * as React from 'react';
 import {colors} from './utils/constants';
 import DynamicIcon from './icons/iconsList';
-import {TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Discover } from './Discover';
 
 export const TabBar: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -14,8 +15,7 @@ export const TabBar: React.FC = () => {
   const MyTabBar = ({state, descriptors, navigation}) => {
     const insets = useSafeAreaInsets();
     return (
-      <View style={{flexDirection: 'row', paddingBottom: insets.bottom, // 👈 KEY FIX
-        backgroundColor: colors.APP_COLOR,}}>
+      <View style={styles.tabBarContainer(insets)}>
         {state.routes.map((route, index) => {
           const {options} = descriptors[route.key];
           const isFocused = state.index === index;
@@ -79,6 +79,16 @@ export const TabBar: React.FC = () => {
         }}
       />
       <Tab.Screen
+        name="Discover"
+        component={Discover}
+        options={{
+          tabBarLabel: 'Discover',
+          tabBarIcon: ({color, size}) => (
+            <DynamicIcon name="disc-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -91,3 +101,12 @@ export const TabBar: React.FC = () => {
     </Tab.Navigator>
   );
 };
+
+
+const styles = StyleSheet.create({
+  tabBarContainer:(insets: any)=> ({
+    flexDirection: 'row', 
+    paddingBottom: insets.bottom,
+    backgroundColor: colors.APP_COLOR
+  })
+})

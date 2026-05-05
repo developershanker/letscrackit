@@ -24,6 +24,7 @@ import {EmailAuth} from './src/EmailAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { completeEmailSignIn, getBMIHistory } from './src/utils/api';
 import { setUserData, setUserPhysicalData } from './src/store/slices/userSlice';
+import { ProgressScreen } from './src/ProgressScreen';
 
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
@@ -41,6 +42,7 @@ export type RootStackParamList = {
     phoneNumber: string;
   };
   EmailAuth: undefined
+  ProgressScreen: undefined
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -111,6 +113,7 @@ function App(): React.JSX.Element {
                 <Stack.Screen name="PhoneAuth" component={PhoneAuth} />
                 <Stack.Screen name="OtpVerification" component={OtpVerification} />
                 <Stack.Screen name="EmailAuth" component={EmailAuth} />
+                <Stack.Screen name="ProgressScreen" component={ProgressScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </SafeAreaProvider>

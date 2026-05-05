@@ -53,14 +53,6 @@ export const capitalizeWords = (str: string): string => {
   return str?.toLowerCase()?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1))?.join(' ');
 };
 
-export const getCategory = (bmi: number) => {
-  let category = '';
-  if (bmi < 18.5) category = 'Underweight';
-  else if (bmi < 25) category = 'Normal weight';
-  else if (bmi < 30) category = 'Overweight';
-  else category = 'Obese';
-  return category;
-}
 
 export const reportError = (error: unknown, context?: string): void => {
   const err = error instanceof Error ? error : new Error(String(error));
@@ -68,3 +60,12 @@ export const reportError = (error: unknown, context?: string): void => {
   crashlytics().recordError(err);
 };
 
+const BMI_RANGES = [
+  {max: 18.5, category: 'Underweight',  color: '#60a5fa'},
+  {max: 25,   category: 'Normal weight', color: '#4ade80'},
+  {max: 30,   category: 'Overweight',   color: '#facc15'},
+  {max: Infinity, category: 'Obese',    color: '#f87171'},
+];
+
+export const getBMIInfo = (bmi: number) =>
+  BMI_RANGES.find(range => bmi < range?.max)!;

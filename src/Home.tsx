@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from './components/Header';
 import { colors, fonts } from './utils/constants';
-import { capitalizeWords, firebaseRemoteConfigData, getCategory } from './utils/helpers';
+import { capitalizeWords, firebaseRemoteConfigData, getBMIInfo } from './utils/helpers';
 import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
 
 const getGreeting = () => {
@@ -21,13 +21,6 @@ const getGreeting = () => {
   if (h < 12) return 'Good Morning';
   if (h < 17) return 'Good Afternoon';
   return 'Good Evening';
-};
-
-const bmiColor = (bmi: number) => {
-  if (bmi < 18.5) return '#60a5fa';
-  if (bmi < 25)   return '#4ade80';
-  if (bmi < 30)   return '#facc15';
-  return '#f87171';
 };
 
 export const Home: React.FC = () => {
@@ -78,9 +71,9 @@ export const Home: React.FC = () => {
           <View style={styles.bmiCard}>
             <View>
               <Text style={styles.cardLabel}>Current BMI</Text>
-              <Text style={[styles.bmiValue, { color: bmiColor(bmi) }]}>{bmi}</Text>
-              <View style={[styles.categoryPill, { backgroundColor: bmiColor(bmi) + '22', borderColor: bmiColor(bmi) }]}>
-                <Text style={[styles.categoryPillText, { color: bmiColor(bmi) }]}>{getCategory(bmi)}</Text>
+              <Text style={[styles.bmiValue, { color: getBMIInfo(bmi).color }]}>{bmi}</Text>
+              <View style={[styles.categoryPill, { backgroundColor: getBMIInfo(bmi).color + '22', borderColor: getBMIInfo(bmi).color }]}>
+                <Text style={[styles.categoryPillText, { color: getBMIInfo(bmi).color }]}>{getBMIInfo(bmi).category}</Text>
               </View>
             </View>
 
@@ -138,7 +131,7 @@ export const Home: React.FC = () => {
           {[
             { icon: 'scale-outline',      label: 'Log BMI',  onPress: () => navigation.navigate('AddDetails') },
             { icon: 'person-outline',     label: 'Profile',  onPress: () => navigation.navigate('Profile') },
-            { icon: 'trending-up-outline',label: 'Progress', onPress: () => {} },
+            { icon: 'trending-up-outline',label: 'Progress', onPress: () => navigation.navigate('ProgressScreen') },
           ].map(({ icon, label, onPress }) => (
             <TouchableOpacity key={label} style={styles.quickCard} onPress={onPress} activeOpacity={0.8}>
               <Ionicons name={icon} size={26} color={colors.LIGHT_YELLOW} />

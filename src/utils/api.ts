@@ -198,9 +198,20 @@ export const deleteAccount = async (): Promise<void> => {
   const currentUser = auth().currentUser;
   if (!currentUser) throw new Error('No user logged in');
 
+  const isGoogleUser = currentUser.providerData?.some(p => p.providerId === 'google.com');
+
+  if (isGoogleUser) {
+    await GoogleSignin.hasPlayServices();
+    const response = await GoogleSignin.signIn();
+    if (response.type !== 'success' || !response.data?.idToken) {
+      throw new Error('Google re-authentication cancelled');
+    }
+    const credential = auth.GoogleAuthProvider.credential(response.data.idToken);
+    await currentUser.reauthenticateWithCredential(credential);
+  }
+
   const uid = currentUser.uid;
 
-  // Delete bmiHistory subcollection
   const bmiSnap = await firestore()
     .collection('users')
     .doc(uid)
@@ -211,9 +222,6 @@ export const deleteAccount = async (): Promise<void> => {
   bmiSnap.docs.forEach(doc => batch.delete(doc.ref));
   await batch.commit();
 
-  // Delete user document
   await firestore().collection('users').doc(uid).delete();
-
-  // Delete Firebase Auth account
   await currentUser.delete();
 };

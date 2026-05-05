@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux';
 import {colors, fonts} from './utils/constants';
 import Header from './components/Header';
 import {selectUserPhysicalData} from './store/selectors/userSelectors';
-import {getBMIInfo} from './utils/helpers';
 
 const {width: winWidth} = Dimensions.get('window');
 
@@ -43,10 +42,18 @@ export const ProgressScreen: React.FC = () => {
     return () => subscription.remove();
   }, []);
 
+  const formatMetric = (item: BMIEntry): string | null => {
+    if (item.metric == null) return null;
+    if (item.method === 'bodyFat') return `${item.metric}% fat`;
+    const n = item.metric;
+    const suffix = n === 11 || n === 12 || n === 13 ? 'th'
+      : n % 10 === 1 ? 'st' : n % 10 === 2 ? 'nd' : n % 10 === 3 ? 'rd' : 'th';
+    return `${n}${suffix} pct`;
+  };
+
   const renderBMIItem = ({item, index}: {item: BMIEntry; index: number}) => {
-    const color = getBMIInfo(item.bmi).color;
-    const category = getBMIInfo(item.bmi).category;
     const isLatest = index === 0;
+    const metric   = formatMetric(item);
 
     return (
       <View style={styles.card}>
@@ -68,11 +75,14 @@ export const ProgressScreen: React.FC = () => {
           </View>
         </View>
 
-        <View style={[styles.bmiBlock, {borderLeftColor: color}]}>
-          <Text style={[styles.bmiValue, {color}]}>{item.bmi}</Text>
-          <View style={[styles.categoryPill, {backgroundColor: color + '22', borderColor: color}]}>
-            <Text style={[styles.categoryText, {color}]}>{category}</Text>
+        <View style={[styles.bmiBlock, {borderLeftColor: item.color}]}>
+          <Text style={[styles.bmiValue, {color: item.color}]}>{item.bmi}</Text>
+          <View style={[styles.categoryPill, {backgroundColor: item.color + '22', borderColor: item.color}]}>
+            <Text style={[styles.categoryText, {color: item.color}]}>{item.category}</Text>
           </View>
+          {metric != null && (
+            <Text style={[styles.metricLine, {color: item.color}]}>{metric}</Text>
+          )}
         </View>
       </View>
     );
@@ -220,6 +230,10 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     ...fonts.PoppinsSemiBold(10),
+  },
+  metricLine: {
+    ...fonts.PoppinsMedium(10),
+    opacity: 0.85,
   },
   emptyState: {
     marginTop: 80,

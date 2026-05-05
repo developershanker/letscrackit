@@ -1,18 +1,40 @@
-// src/store/slices/userSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+export interface UserData {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  phoneNumber?: string | null;
+  profileComplete: boolean;
+  dob: string | null;
+  sex: 'male' | 'female' | null;
+}
+
+export interface BMIEntry {
+  id: string;
+  weight: number;
+  height: number;
+  bmi: number;
+  createdAt?: Date;
+  method: 'bodyFat' | 'percentile' | 'simple';
+  metric: number | null;
+  category: string;
+  color: string;
+}
 
 interface AuthState {
   isLoggedIn: boolean;
   token: string | null;
-  userData: object | null;
-  userPhysicalData: any[] | null;
+  userData: UserData | null;
+  userPhysicalData: BMIEntry[] | null;
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
   token: null,
   userData: null,
-  userPhysicalData: []
+  userPhysicalData: [],
 };
 
 const userSlice = createSlice({
@@ -23,10 +45,10 @@ const userSlice = createSlice({
       state.isLoggedIn = true;
       state.token = action.payload;
     },
-    setUserData(state, action: PayloadAction<object>) {
+    setUserData(state, action: PayloadAction<UserData>) {
       state.userData = action.payload;
     },
-    setUserPhysicalData(state, action: PayloadAction<any[]>) {
+    setUserPhysicalData(state, action: PayloadAction<BMIEntry[]>) {
       state.userPhysicalData = action.payload;
     },
     logout(state) {

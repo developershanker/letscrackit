@@ -16,7 +16,7 @@ import { selectUserData, selectUserPhysicalData } from './store/selectors/userSe
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { capitalizeWords, reportError } from './utils/helpers';
+import { capitalizeWords, reportError, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -97,16 +97,8 @@ export const Profile: React.FC = () => {
   const entryCategory = latestEntry?.category ?? null;
   const hasData     = userPhysicalData?.length > 0;
 
-  const formatMetric = () => {
-    if (latestEntry?.metric == null) return null;
-    if (latestEntry.method === 'bodyFat') return `${latestEntry.metric}%`;
-    const n = latestEntry.metric;
-    const suffix = n === 11 || n === 12 || n === 13 ? 'th'
-      : n % 10 === 1 ? 'st' : n % 10 === 2 ? 'nd' : n % 10 === 3 ? 'rd' : 'th';
-    return `${n}${suffix}`;
-  };
-
-  const metricLabel = latestEntry?.method === 'bodyFat' ? 'Body Fat' : 'Percentile';
+  const formattedMetric = formatBMIMetric(latestEntry?.method, latestEntry?.metric);
+  const metricLabel = latestEntry?.method ? BMI_METHOD_LABEL[latestEntry.method] : '';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,10 +128,10 @@ export const Profile: React.FC = () => {
               <Text style={[styles.categoryText, { color: entryColor }]}>{entryCategory}</Text>
             </View>
 
-            {formatMetric() != null && (
+            {formattedMetric != null && (
               <View style={styles.metricRow}>
                 <Text style={styles.metricLabel}>{metricLabel}</Text>
-                <Text style={[styles.metricValue, { color: entryColor }]}>{formatMetric()}</Text>
+                <Text style={[styles.metricValue, { color: entryColor }]}>{formattedMetric}</Text>
               </View>
             )}
 

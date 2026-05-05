@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from './components/Header';
 import { colors, fonts } from './utils/constants';
-import { capitalizeWords, firebaseRemoteConfigData, getBMIInfo } from './utils/helpers';
+import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
 
 const getGreeting = () => {
@@ -30,9 +30,14 @@ export const Home: React.FC = () => {
   const userData: any    = useSelector(selectUserData);
   const physicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
 
-  const latest    = physicalData?.[0];
-  const bmi       = latest?.bmi;
-  const firstName = userData?.displayName?.split(' ')[0] || 'there';
+  const latest          = physicalData?.[0];
+  const bmi             = latest?.bmi;
+  const firstName       = userData?.displayName?.split(' ')[0] || 'there';
+  const entryColor      = latest?.color  ?? colors.POWDER_BLUE;
+  const entryCategory   = latest?.category ?? '';
+  const formattedMetric = formatBMIMetric(latest?.method, latest?.metric);
+  const metricLabel     = latest?.method ? BMI_METHOD_LABEL[latest.method] : '';
+  const profileIncomplete = !userData?.profileComplete;
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -66,15 +71,32 @@ export const Home: React.FC = () => {
           <Text style={styles.greetingName}>{firstName}</Text>
         </View>
 
+        {/* Incomplete profile nudge */}
+        {profileIncomplete && (
+          <TouchableOpacity
+            style={styles.nudgeBanner}
+            onPress={() => navigation.navigate('OnboardingDetails')}
+            activeOpacity={0.8}>
+            <Ionicons name="person-circle-outline" size={18} color={colors.LIGHT_YELLOW} />
+            <Text style={styles.nudgeText}>Complete your profile for age-accurate BMI</Text>
+            <Ionicons name="chevron-forward" size={14} color={colors.LIGHT_YELLOW} />
+          </TouchableOpacity>
+        )}
+
         {/* BMI card */}
         {bmi ? (
           <View style={styles.bmiCard}>
             <View>
               <Text style={styles.cardLabel}>Current BMI</Text>
-              <Text style={[styles.bmiValue, { color: getBMIInfo(bmi).color }]}>{bmi}</Text>
-              <View style={[styles.categoryPill, { backgroundColor: getBMIInfo(bmi).color + '22', borderColor: getBMIInfo(bmi).color }]}>
-                <Text style={[styles.categoryPillText, { color: getBMIInfo(bmi).color }]}>{getBMIInfo(bmi).category}</Text>
+              <Text style={[styles.bmiValue, { color: entryColor }]}>{bmi}</Text>
+              <View style={[styles.categoryPill, { backgroundColor: entryColor + '22', borderColor: entryColor }]}>
+                <Text style={[styles.categoryPillText, { color: entryColor }]}>{entryCategory}</Text>
               </View>
+              {formattedMetric != null && (
+                <Text style={[styles.metricLine, { color: entryColor }]}>
+                  {metricLabel}  {formattedMetric}
+                </Text>
+              )}
             </View>
 
             <View style={styles.bmiRight}>
@@ -307,5 +329,27 @@ const styles = StyleSheet.create({
   quickLabel: {
     color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
+  },
+  nudgeBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.DEEP_MIDNIGHT,
+    borderWidth: 1,
+    borderColor: colors.LIGHT_YELLOW + '55',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 12,
+  },
+  nudgeText: {
+    flex: 1,
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsMedium(12),
+  },
+  metricLine: {
+    ...fonts.PoppinsMedium(12),
+    marginTop: 6,
+    opacity: 0.9,
   },
 });

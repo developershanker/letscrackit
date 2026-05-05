@@ -16,7 +16,8 @@ import { selectUserData, selectUserPhysicalData } from './store/selectors/userSe
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { capitalizeWords, reportError } from './utils/helpers';
+import { capitalizeWords, reportError, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
+import { BMIEntry } from './store/slices/userSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -24,7 +25,7 @@ export const Profile: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userData: any = useSelector(selectUserData);
-  const userPhysicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
+  const userPhysicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -97,16 +98,8 @@ export const Profile: React.FC = () => {
   const entryCategory = latestEntry?.category ?? null;
   const hasData     = userPhysicalData?.length > 0;
 
-  const formatMetric = () => {
-    if (latestEntry?.metric == null) return null;
-    if (latestEntry.method === 'bodyFat') return `${latestEntry.metric}%`;
-    const n = latestEntry.metric;
-    const suffix = n === 11 || n === 12 || n === 13 ? 'th'
-      : n % 10 === 1 ? 'st' : n % 10 === 2 ? 'nd' : n % 10 === 3 ? 'rd' : 'th';
-    return `${n}${suffix}`;
-  };
-
-  const metricLabel = latestEntry?.method === 'bodyFat' ? 'Body Fat' : 'Percentile';
+  const formattedMetric = formatBMIMetric(latestEntry?.method, latestEntry?.metric);
+  const metricLabel = latestEntry?.method ? BMI_METHOD_LABEL[latestEntry.method] : '';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,10 +129,10 @@ export const Profile: React.FC = () => {
               <Text style={[styles.categoryText, { color: entryColor }]}>{entryCategory}</Text>
             </View>
 
-            {formatMetric() != null && (
+            {formattedMetric != null && (
               <View style={styles.metricRow}>
                 <Text style={styles.metricLabel}>{metricLabel}</Text>
-                <Text style={[styles.metricValue, { color: entryColor }]}>{formatMetric()}</Text>
+                <Text style={[styles.metricValue, { color: entryColor }]}>{formattedMetric}</Text>
               </View>
             )}
 
@@ -167,6 +160,13 @@ export const Profile: React.FC = () => {
     <Text style={styles.primaryButtonText}>
       {hasData ? 'Update Details' : 'Add Details'}
     </Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.editProfileBtn}
+    onPress={() => navigation.navigate('OnboardingDetails')}
+    activeOpacity={0.85}>
+    <Text style={styles.editProfileText}>Edit Profile Info</Text>
   </TouchableOpacity>
 
   <View style={styles.secondaryRow}>
@@ -329,6 +329,17 @@ secondaryRow: {
   flexDirection: 'row',
   alignItems: 'center',
   gap: 8,
+},
+editProfileBtn: {
+  borderWidth: 1,
+  borderColor: colors.NAVY_BLUE,
+  borderRadius: 10,
+  paddingVertical: 10,
+  alignItems: 'center',
+},
+editProfileText: {
+  color: colors.POWDER_BLUE,
+  ...fonts.PoppinsMedium(13),
 },
 signOutBtn: {
   flex: 1,

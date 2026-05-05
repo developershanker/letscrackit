@@ -155,6 +155,27 @@ export const getPercentileCategory = (percentile: number) => {
   return                      { category: 'Obese',       color: colors.CORAL };
 };
 
+// ─── Shared metric formatter ─────────────────────────────────────────────────
+
+export const formatBMIMetric = (
+  method: 'bodyFat' | 'percentile' | 'simple',
+  metric: number | null,
+): string | null => {
+  if (metric == null || method === 'simple') return null;
+  if (method === 'bodyFat') return `${metric}%`;
+  const suffix = metric === 11 || metric === 12 || metric === 13 ? 'th'
+    : metric % 10 === 1 ? 'st'
+    : metric % 10 === 2 ? 'nd'
+    : metric % 10 === 3 ? 'rd' : 'th';
+  return `${metric}${suffix}`;
+};
+
+export const BMI_METHOD_LABEL: Record<'bodyFat' | 'percentile' | 'simple', string> = {
+  bodyFat:    'Body Fat',
+  percentile: 'Percentile',
+  simple:     '',
+};
+
 // ─── Router: picks method based on age ───────────────────────────────────────
 
 export interface AgeAwareBMIResult {

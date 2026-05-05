@@ -79,10 +79,19 @@ export const OnboardingDetails: React.FC = () => {
   const dispatch = useDispatch();
   const userData = useSelector(selectUserData) as any;
 
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-  const [sex, setSex] = useState<'male' | 'female' | ''>('');
+  const isEditMode = !!(userData?.dob && userData?.sex);
+
+  // Parse existing DOB into parts if editing
+  const initParts = (() => {
+    if (!userData?.dob) return { d: '', m: '', y: '' };
+    const [y, m, d] = userData.dob.split('-');
+    return { d: String(parseInt(d)), m: String(parseInt(m)), y };
+  })();
+
+  const [day, setDay] = useState(initParts.d);
+  const [month, setMonth] = useState(initParts.m);
+  const [year, setYear] = useState(initParts.y);
+  const [sex, setSex] = useState<'male' | 'female' | ''>(userData?.sex ?? '');
   const [openDropdown, setOpenDropdown] = useState<'day' | 'month' | 'year' | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -109,7 +118,7 @@ export const OnboardingDetails: React.FC = () => {
     try {
       await saveUserProfile(dob, sex as 'male' | 'female');
       dispatch(setUserData({ ...userData, dob, sex, profileComplete: true }));
-      navigation.navigate('TabBar' as never);
+      isEditMode ? navigation.goBack() : navigation.navigate('TabBar' as never);
     } catch {
       Alert.alert('Error', 'Failed to save profile. Please try again.');
     } finally {
@@ -125,9 +134,11 @@ export const OnboardingDetails: React.FC = () => {
           <View style={styles.iconCircle}>
             <Text style={styles.iconEmoji}>👤</Text>
           </View>
-          <Text style={styles.title}>About You</Text>
+          <Text style={styles.title}>{isEditMode ? 'Update Profile' : 'About You'}</Text>
           <Text style={styles.subtitle}>
-            We need a few details to give you the most accurate BMI analysis based on your age.
+            {isEditMode
+              ? 'Update your date of birth or biological sex below.'
+              : 'We need a few details to give you the most accurate BMI analysis based on your age.'}
           </Text>
         </View>
 
@@ -205,7 +216,7 @@ export const OnboardingDetails: React.FC = () => {
         >
           {isLoading
             ? <ActivityIndicator color={colors.MIDNIGHT_NAVY} />
-            : <Text style={styles.saveButtonText}>Continue</Text>
+            : <Text style={styles.saveButtonText}>{isEditMode ? 'Save Changes' : 'Continue'}</Text>
           }
         </TouchableOpacity>
       </View>

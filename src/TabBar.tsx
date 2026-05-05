@@ -40,7 +40,7 @@ export const TabBar: React.FC = () => {
               activeOpacity={0.5}
               style={{
                 flex: 1,
-                backgroundColor: colors.APP_COLOR,
+                backgroundColor: colors.MIDNIGHT_NAVY,
                 height: 50,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -61,7 +61,7 @@ export const TabBar: React.FC = () => {
       screenOptions={{
         headerShown: false,
         tabBarInactiveTintColor: colors.DARK_GREY,
-        tabBarActiveTintColor: colors.APP_COLOR,
+        tabBarActiveTintColor: colors.MIDNIGHT_NAVY,
         tabBarStyle: {
           backgroundColor: colors.LIGHT_YELLOW,
           borderTopLeftRadius: 8,
@@ -107,6 +107,6 @@ const styles = StyleSheet.create({
   tabBarContainer:(insets: any)=> ({
     flexDirection: 'row', 
     paddingBottom: insets.bottom,
-    backgroundColor: colors.APP_COLOR
+    backgroundColor: colors.MIDNIGHT_NAVY
   })
 })

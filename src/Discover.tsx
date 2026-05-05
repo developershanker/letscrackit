@@ -33,6 +33,6 @@ return () => subscription.remove();
 const styles = StyleSheet.create({
   homeContainer: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
   },
 });

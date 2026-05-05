@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: colors.APP_COLOR,
+    borderColor: colors.MIDNIGHT_NAVY,
   },
 });
 export default React.memo(Header);

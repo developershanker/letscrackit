@@ -80,13 +80,13 @@ export const Home: React.FC = () => {
             <View style={styles.bmiRight}>
               {latest?.weight ? (
                 <View style={styles.metaRow}>
-                  <Ionicons name="barbell-outline" size={15} color={colors.APP_COLOR_LIGHT} />
+                  <Ionicons name="barbell-outline" size={15} color={colors.POWDER_BLUE} />
                   <Text style={styles.metaText}>{latest.weight} kg</Text>
                 </View>
               ) : null}
               {latest?.height ? (
                 <View style={styles.metaRow}>
-                  <Ionicons name="body-outline" size={15} color={colors.APP_COLOR_LIGHT} />
+                  <Ionicons name="body-outline" size={15} color={colors.POWDER_BLUE} />
                   <Text style={styles.metaText}>{latest.height} cm</Text>
                 </View>
               ) : null}
@@ -148,7 +148,7 @@ export const Home: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
   },
   scroll: {
     paddingHorizontal: 20,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   greetingLine: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
     marginBottom: 2,
   },
@@ -170,17 +170,17 @@ const styles = StyleSheet.create({
   },
   // BMI card — has data
   bmiCard: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 16,
   },
   cardLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsMedium(11),
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   metaText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
   },
   updateBtn: {
@@ -227,10 +227,10 @@ const styles = StyleSheet.create({
   },
   // BMI card — empty
   emptyBmiCard: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -249,15 +249,15 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   emptySubtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
   },
   // Firebase content card
   contentCard: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     padding: 20,
     marginBottom: 24,
   },
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   contentSubHeading: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     lineHeight: 20,
   },
@@ -296,16 +296,16 @@ const styles = StyleSheet.create({
   },
   quickCard: {
     flex: 1,
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     paddingVertical: 18,
     alignItems: 'center',
     gap: 8,
   },
   quickLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
   },
 });

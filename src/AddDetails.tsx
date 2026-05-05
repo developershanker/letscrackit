@@ -95,7 +95,7 @@ export const AddDetails: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="0"
-                  placeholderTextColor=colors.PLACEHOLDER
+                  placeholderTextColor=colors.SLATE_BLUE
                   keyboardType="numeric"
                   value={weight}
                   onChangeText={setWeight}
@@ -115,7 +115,7 @@ export const AddDetails: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="0"
-                  placeholderTextColor=colors.PLACEHOLDER
+                  placeholderTextColor=colors.SLATE_BLUE
                   keyboardType="numeric"
                   value={height}
                   onChangeText={setHeight}
@@ -159,7 +159,7 @@ export const AddDetails: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
   },
   backArrow: {
     width: 44,
@@ -184,9 +184,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -200,15 +200,15 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   subtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     lineHeight: 20,
   },
   card: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     paddingHorizontal: 20,
     paddingVertical: 8,
     marginBottom: 16,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   inputLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsMedium(11),
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -235,31 +235,31 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   unitBadge: {
-    backgroundColor: colors.DROPDOWN_BACKGROUND,
+    backgroundColor: colors.DEEP_MIDNIGHT,
     borderRadius: 8,
     paddingVertical: 6,
     paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
   },
   unitText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsMedium(14),
   },
   divider: {
     height: 1,
-    backgroundColor: colors.BORDER_COLOR,
+    backgroundColor: colors.NAVY_BLUE,
   },
   previewCard: {
-    backgroundColor: colors.CARD_BACKGROUND,
+    backgroundColor: colors.DARK_NAVY,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.BORDER_COLOR,
+    borderColor: colors.NAVY_BLUE,
     paddingVertical: 20,
     alignItems: 'center',
   },
   previewLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsMedium(11),
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   saveButtonText: {
-    color: colors.APP_COLOR,
+    color: colors.MIDNIGHT_NAVY,
     ...fonts.PoppinsSemiBold(16),
   },
 });

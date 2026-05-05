@@ -149,7 +149,7 @@ export const OtpVerification: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.APP_COLOR,
+    backgroundColor: colors.MIDNIGHT_NAVY,
     justifyContent: 'center',
     paddingHorizontal: 28,
   },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
     marginBottom: 36,
     lineHeight: 22,
@@ -177,9 +177,9 @@ const styles = StyleSheet.create({
     width: 46,
     height: 56,
     borderWidth: 1.5,
-    borderColor: colors.BORDER_MEDIUM,
+    borderColor: colors.OCEAN_NAVY,
     borderRadius: 10,
-    backgroundColor: colors.DEEP_BLUE,
+    backgroundColor: colors.DARK_OCEAN,
     color: colors.WHITE,
     textAlign: 'center',
     ...fonts.PoppinsBold(22),
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: colors.APP_COLOR,
+    color: colors.MIDNIGHT_NAVY,
     ...fonts.PoppinsSemiBold(16),
   },
   loader: {
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   resendLabel: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
   },
   resendLink: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backLinkText: {
-    color: colors.APP_COLOR_LIGHT,
+    color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(14),
   },
 });

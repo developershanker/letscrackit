@@ -62,10 +62,10 @@ export const reportError = (error: unknown, context?: string): void => {
 };
 
 const BMI_RANGES = [
-  {max: 18.5, category: 'Underweight',  color: colors.BMI_UNDERWEIGHT},
-  {max: 25,   category: 'Normal weight', color: colors.BMI_NORMAL},
-  {max: 30,   category: 'Overweight',   color: colors.BMI_OVERWEIGHT},
-  {max: Infinity, category: 'Obese',    color: colors.BMI_OBESE},
+  {max: 18.5, category: 'Underweight',  color: colors.SKY_BLUE},
+  {max: 25,   category: 'Normal weight', color: colors.MINT_GREEN},
+  {max: 30,   category: 'Overweight',   color: colors.AMBER},
+  {max: Infinity, category: 'Obese',    color: colors.CORAL},
 ];
 
 export const getBMIInfo = (bmi: number) =>

@@ -1,7 +1,7 @@
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { reportError } from './helpers';
+import { reportError, getBMIInfo, calcAgeAwareBMI } from './helpers';
 
 export const signInWithGoogle = async () => {
   try {
@@ -68,24 +68,40 @@ export const getBMIHistory = async () => {
   const user = auth().currentUser;
   if (!user) throw new Error("Not authenticated");
 
-  const snapshot = await firestore()
-    .collection('users')
-    .doc(user.uid)
-    .collection('bmiHistory')
-    .orderBy('createdAt', 'desc') // newest first
-    .get();
+  const [userDoc, snapshot] = await Promise.all([
+    firestore().collection('users').doc(user.uid).get(),
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('bmiHistory')
+      .orderBy('createdAt', 'desc')
+      .get(),
+  ]);
+
+  const { dob, sex } = userDoc.data() ?? {};
 
   return snapshot.docs.map(doc => {
     const data = doc.data();
     const heightM = data.height / 100;
-    const bmi = data.weight / (heightM * heightM);
+    const bmi = parseFloat((data.weight / (heightM * heightM)).toFixed(1));
+    const entryDate: Date = data.createdAt?.toDate() ?? new Date();
+
+    const ageAware = (dob && sex)
+      ? calcAgeAwareBMI(bmi, dob, entryDate, sex as 'male' | 'female')
+      : null;
+
+    const fallback = getBMIInfo(bmi);
 
     return {
       id: doc.id,
       weight: data.weight,
       height: data.height,
-      createdAt: data.createdAt?.toDate(),
-      bmi: parseFloat(bmi.toFixed(1)),
+      createdAt: entryDate,
+      bmi,
+      method:   ageAware?.method   ?? 'simple',
+      metric:   ageAware?.metric   ?? null,
+      category: ageAware?.category ?? fallback.category,
+      color:    ageAware?.color    ?? fallback.color,
     };
   });
 };
@@ -159,9 +175,41 @@ export const completeEmailSignIn = async (email: string, emailLink: string) => {
 };
 
 
+export const fetchUserProfile = async (uid: string) => {
+  const doc = await firestore().collection('users').doc(uid).get();
+  const data = doc.data();
+  return {
+    profileComplete: data?.profileComplete ?? false,
+    dob: data?.dob ?? null,
+    sex: data?.sex ?? null,
+  };
+};
+
+export const saveUserProfile = async (dob: string, sex: 'male' | 'female') => {
+  const user = auth().currentUser;
+  if (!user) throw new Error('Not authenticated');
+  await firestore()
+    .collection('users')
+    .doc(user.uid)
+    .set({ dob, sex, profileComplete: true }, { merge: true });
+};
+
 export const deleteAccount = async (): Promise<void> => {
   const currentUser = auth().currentUser;
   if (!currentUser) throw new Error('No user logged in');
+
+  const isGoogleUser = currentUser.providerData?.some(p => p.providerId === 'google.com');
+
+  if (isGoogleUser) {
+    await GoogleSignin.hasPlayServices();
+    const response = await GoogleSignin.signIn();
+    if (response.type !== 'success' || !response.data?.idToken) {
+      reportError('Google re-authentication cancelled', 'deleteAccount_api.ts')
+      throw new Error('Google re-authentication cancelled');
+    }
+    const credential = auth.GoogleAuthProvider.credential(response.data.idToken);
+    await currentUser.reauthenticateWithCredential(credential);
+  }
 
   const uid = currentUser.uid;
 

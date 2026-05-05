@@ -82,7 +82,7 @@ export const EmailAuth: React.FC = () => {
           <TextInput
             style={styles.input}
             placeholder="you@example.com"
-            placeholderTextColor=colors.SLATE_BLUE
+            placeholderTextColor={colors.SLATE_BLUE}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}

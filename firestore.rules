@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+
+      // Only the authenticated owner can read their own profile
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // First sign-in: create the document (Google / email / phone auth writes basic fields)
+      allow create: if request.auth != null && request.auth.uid == userId;
+
+      // Profile updates: authenticated owner only, with field-level validation
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && validSex()
+        && validProfileComplete()
+        && validDob();
+
+      // sex must be 'male' or 'female' if present
+      function validSex() {
+        return !('sex' in request.resource.data)
+          || request.resource.data.sex in ['male', 'female'];
+      }
+
+      // profileComplete must be a boolean if present
+      function validProfileComplete() {
+        return !('profileComplete' in request.resource.data)
+          || request.resource.data.profileComplete is bool;
+      }
+
+      // dob must be a string (YYYY-MM-DD) if present
+      function validDob() {
+        return !('dob' in request.resource.data)
+          || request.resource.data.dob is string;
+      }
+
+      // bmiHistory subcollection
+      match /bmiHistory/{entryId} {
+        allow create: if request.auth != null && request.auth.uid == userId;
+        allow read:   if request.auth != null && request.auth.uid == userId;
+        allow delete: if request.auth != null && request.auth.uid == userId;
+        allow update: if false; // BMI entries are immutable once created
+      }
+    }
+  }
+}

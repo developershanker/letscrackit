@@ -16,7 +16,8 @@ import { selectUserData, selectUserPhysicalData } from './store/selectors/userSe
 import { logout } from './store/slices/userSlice';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { capitalizeWords, getBMIInfo, reportError } from './utils/helpers';
+import { capitalizeWords, reportError, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
+import { BMIEntry } from './store/slices/userSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { deleteAccount } from './utils/api';
 
@@ -24,7 +25,7 @@ export const Profile: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userData: any = useSelector(selectUserData);
-  const userPhysicalData: any[] = useSelector(selectUserPhysicalData) ?? [];
+  const userPhysicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -77,9 +78,16 @@ export const Profile: React.FC = () => {
                       if (isGoogleUser) await GoogleSignin.signOut();
                       dispatch(logout());
                       navigation.replace('Login');
-                    } catch (error) {
-                      reportError(error, 'handleDeleteAccount_Profile.tsx');
-                      Alert.alert('Error', 'Failed to delete account. Please try again.');
+                    } catch (error: any) {
+                      if (error?.code === 'auth/requires-recent-login') {
+                        Alert.alert(
+                          'Sign In Required',
+                          'For security, please sign out and sign back in, then try deleting your account again.'
+                        );
+                      } else {
+                        reportError(error, 'handleDeleteAccount_Profile.tsx');
+                        Alert.alert('Error', 'Failed to delete account. Please try again.');
+                      }
                     }
                   },
                 },
@@ -92,17 +100,13 @@ export const Profile: React.FC = () => {
   };
 
   const latestEntry = userPhysicalData?.[0];
-  const bmi = latestEntry?.bmi;
-  const category = bmi ? getBMIInfo(bmi).category : null;
-  const hasData = userPhysicalData?.length > 0;
+  const bmi         = latestEntry?.bmi;
+  const entryColor  = latestEntry?.color  ?? colors.POWDER_BLUE;
+  const entryCategory = latestEntry?.category ?? null;
+  const hasData     = userPhysicalData?.length > 0;
 
-  const bmiColor = () => {
-    if (!bmi) return colors.POWDER_BLUE;
-    if (bmi < 18.5) return colors.SKY_BLUE;
-    if (bmi < 25) return colors.MINT_GREEN;
-    if (bmi < 30) return colors.AMBER;
-    return colors.CORAL;
-  };
+  const formattedMetric = formatBMIMetric(latestEntry?.method, latestEntry?.metric);
+  const metricLabel = latestEntry?.method ? BMI_METHOD_LABEL[latestEntry.method] : '';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,10 +131,18 @@ export const Profile: React.FC = () => {
         {hasData && bmi ? (
           <View style={styles.bmiCard}>
             <Text style={styles.bmiLabel}>Body Mass Index</Text>
-            <Text style={[styles.bmiValue, { color: bmiColor() }]}>{bmi}</Text>
-            <View style={[styles.categoryBadge, { backgroundColor: bmiColor() + '22', borderColor: bmiColor() }]}>
-              <Text style={[styles.categoryText, { color: bmiColor() }]}>{category}</Text>
+            <Text style={[styles.bmiValue, { color: entryColor }]}>{bmi}</Text>
+            <View style={[styles.categoryBadge, { backgroundColor: entryColor + '22', borderColor: entryColor }]}>
+              <Text style={[styles.categoryText, { color: entryColor }]}>{entryCategory}</Text>
             </View>
+
+            {formattedMetric != null && (
+              <View style={styles.metricRow}>
+                <Text style={styles.metricLabel}>{metricLabel}</Text>
+                <Text style={[styles.metricValue, { color: entryColor }]}>{formattedMetric}</Text>
+              </View>
+            )}
+
             <Text style={styles.bmiMeta}>
               {latestEntry?.weight ? `${latestEntry.weight} kg` : ''}
               {latestEntry?.height ? `  ·  ${latestEntry.height} cm` : ''}
@@ -144,9 +156,7 @@ export const Profile: React.FC = () => {
           </View>
         )}
 
-      </ScrollView>
 
-      {/* Bottom CTAs */}
 <View style={styles.bottomSection}>
   <TouchableOpacity
     style={styles.primaryButton}
@@ -166,6 +176,8 @@ export const Profile: React.FC = () => {
     </TouchableOpacity>
   </View>
 </View>
+
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -249,6 +261,21 @@ const styles = StyleSheet.create({
   categoryText: {
     ...fonts.PoppinsSemiBold(13),
   },
+  metricRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 10,
+  },
+  metricLabel: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(12),
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+  },
+  metricValue: {
+    ...fonts.PoppinsBold(14),
+  },
   bmiMeta: {
     color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
@@ -284,8 +311,6 @@ const styles = StyleSheet.create({
   paddingHorizontal: 20,
   paddingBottom: 16,
   paddingTop: 10,
-  borderTopWidth: 1,
-  borderTopColor: colors.NAVY_BLUE,
   gap: 10,
 },
 primaryButton: {
@@ -299,9 +324,21 @@ primaryButtonText: {
   ...fonts.PoppinsSemiBold(14),
 },
 secondaryRow: {
+  marginTop: 18, 
   flexDirection: 'row',
   alignItems: 'center',
   gap: 8,
+},
+editProfileBtn: {
+  borderWidth: 1,
+  borderColor: colors.NAVY_BLUE,
+  borderRadius: 10,
+  paddingVertical: 10,
+  alignItems: 'center',
+},
+editProfileText: {
+  color: colors.POWDER_BLUE,
+  ...fonts.PoppinsMedium(13),
 },
 signOutBtn: {
   flex: 1,

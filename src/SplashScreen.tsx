@@ -52,7 +52,13 @@ export const SplashScreen = ({ navigation }) => {
     pulseDot(dot3, 360);
 
     const nav = setTimeout(() => {
-      navigation.replace(userData ? 'TabBar' : 'Login');
+      if (!userData) {
+        navigation.replace('Login');
+      } else if (!userData.profileComplete) {
+        navigation.replace('OnboardingDetails');
+      } else {
+        navigation.replace('TabBar');
+      }
     }, 5000);
 
     return () => clearTimeout(nav);

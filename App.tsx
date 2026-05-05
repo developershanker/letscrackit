@@ -22,9 +22,10 @@ import {initiateFirebaseConfig, reportError} from './src/utils/helpers';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {EmailAuth} from './src/EmailAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { completeEmailSignIn, getBMIHistory } from './src/utils/api';
+import { completeEmailSignIn, fetchUserProfile, getBMIHistory } from './src/utils/api';
 import { setUserData, setUserPhysicalData } from './src/store/slices/userSlice';
 import { ProgressScreen } from './src/ProgressScreen';
+import { OnboardingDetails } from './src/OnboardingDetails';
 
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
@@ -41,8 +42,9 @@ export type RootStackParamList = {
     confirmation: FirebaseAuthTypes.ConfirmationResult;
     phoneNumber: string;
   };
-  EmailAuth: undefined
-  ProgressScreen: undefined
+  EmailAuth: undefined;
+  ProgressScreen: undefined;
+  OnboardingDetails: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -60,14 +62,15 @@ function App(): React.JSX.Element {
     const email = await AsyncStorage.getItem('emailForSignIn');
     if (!email) return;
     const user = await completeEmailSignIn(email, url);
-    store.dispatch(setUserData(user));
+    const profile = await fetchUserProfile(user.uid);
+    store.dispatch(setUserData({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL, ...profile }));
     const physicalData = await getBMIHistory();
     store.dispatch(setUserPhysicalData(physicalData));
     await AsyncStorage.removeItem('emailForSignIn');
 
     // Navigate after sign-in is complete
     if (navigationRef.isReady()) {
-      navigationRef.navigate('TabBar');
+      navigationRef.navigate(profile?.profileComplete ? 'TabBar' : 'OnboardingDetails');
     }
   } catch (error) {
     reportError(error, "handleEmailLink_App.tsx")
@@ -114,6 +117,7 @@ function App(): React.JSX.Element {
                 <Stack.Screen name="OtpVerification" component={OtpVerification} />
                 <Stack.Screen name="EmailAuth" component={EmailAuth} />
                 <Stack.Screen name="ProgressScreen" component={ProgressScreen} />
+                <Stack.Screen name="OnboardingDetails" component={OnboardingDetails} />
               </Stack.Navigator>
             </NavigationContainer>
           </SafeAreaProvider>

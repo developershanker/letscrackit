@@ -6,7 +6,8 @@ import {useSelector} from 'react-redux';
 import {colors, fonts} from './utils/constants';
 import Header from './components/Header';
 import {selectUserPhysicalData} from './store/selectors/userSelectors';
-import {getBMIInfo} from './utils/helpers';
+import {formatBMIMetric} from './utils/helpers';
+import {BMIEntry} from './store/slices/userSlice';
 
 const {width: winWidth} = Dimensions.get('window');
 
@@ -16,14 +17,6 @@ const formatDate = (date?: Date) => {
   if (isNaN(d.getTime())) return '';
   return d?.toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'});
 };
-
-interface BMIEntry {
-  id: string;
-  weight: number;
-  height: number;
-  bmi: number;
-  createdAt?: Date;
-}
 
 export const ProgressScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -40,9 +33,11 @@ export const ProgressScreen: React.FC = () => {
   }, []);
 
   const renderBMIItem = ({item, index}: {item: BMIEntry; index: number}) => {
-    const color = getBMIInfo(item.bmi).color;
-    const category = getBMIInfo(item.bmi).category;
     const isLatest = index === 0;
+    const metric   = formatBMIMetric(item.method, item.metric);
+    const metricDisplay = metric
+      ? item.method === 'bodyFat' ? `${metric} fat` : `${metric} pct`
+      : null;
 
     return (
       <View style={styles.card}>
@@ -64,11 +59,14 @@ export const ProgressScreen: React.FC = () => {
           </View>
         </View>
 
-        <View style={[styles.bmiBlock, {borderLeftColor: color}]}>
-          <Text style={[styles.bmiValue, {color}]}>{item.bmi}</Text>
-          <View style={[styles.categoryPill, {backgroundColor: color + '22', borderColor: color}]}>
-            <Text style={[styles.categoryText, {color}]}>{category}</Text>
+        <View style={[styles.bmiBlock, {borderLeftColor: item.color}]}>
+          <Text style={[styles.bmiValue, {color: item.color}]}>{item.bmi}</Text>
+          <View style={[styles.categoryPill, {backgroundColor: item.color + '22', borderColor: item.color}]}>
+            <Text style={[styles.categoryText, {color: item.color}]}>{item.category}</Text>
           </View>
+          {metricDisplay != null && (
+            <Text style={[styles.metricLine, {color: item.color}]}>{metricDisplay}</Text>
+          )}
         </View>
       </View>
     );
@@ -216,6 +214,10 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     ...fonts.PoppinsSemiBold(10),
+  },
+  metricLine: {
+    ...fonts.PoppinsMedium(10),
+    opacity: 0.85,
   },
   emptyState: {
     marginTop: 80,

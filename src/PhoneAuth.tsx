@@ -73,7 +73,7 @@ export const PhoneAuth: React.FC = () => {
             <TextInput
               style={styles.input}
               placeholder="10-digit mobile number"
-              placeholderTextColor=colors.SLATE_BLUE
+              placeholderTextColor={colors.SLATE_BLUE}
               keyboardType="phone-pad"
               maxLength={10}
               value={phone}

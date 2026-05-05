@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colors, fonts } from './utils/constants';
-import { getBMIHistory, signInWithGoogle } from './utils/api';
+import { fetchUserProfile, getBMIHistory, signInWithGoogle } from './utils/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData, setUserPhysicalData } from './store/slices/userSlice';
 import { reportError } from './utils/helpers';
@@ -36,10 +36,11 @@ export const Login: React.FC = () => {
     setIsLoading(true);
     try {
       const user = await signInWithGoogle();
-      dispatch(setUserData(user));
+      const profile = await fetchUserProfile(user.uid);
+      dispatch(setUserData({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL, ...profile }));
       const getUserPhysicalData = await getBMIHistory();
       dispatch(setUserPhysicalData(getUserPhysicalData));
-      navigation.navigate('TabBar');
+      navigation.navigate(profile.profileComplete ? 'TabBar' : 'OnboardingDetails');
     } catch (error) {
       reportError(error, 'handleLogin_Login.tsx');
     } finally {

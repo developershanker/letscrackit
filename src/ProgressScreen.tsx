@@ -85,10 +85,10 @@ export const ProgressScreen: React.FC = () => {
 
       <View style={styles.legend}>
         {[
-          {label: 'Underweight', color: '#60a5fa'},
-          {label: 'Normal', color: '#4ade80'},
-          {label: 'Overweight', color: '#facc15'},
-          {label: 'Obese', color: '#f87171'},
+          {label: 'Underweight', color: colors.BMI_UNDERWEIGHT},
+          {label: 'Normal', color: colors.BMI_NORMAL},
+          {label: 'Overweight', color: colors.BMI_OVERWEIGHT},
+          {label: 'Obese', color: colors.BMI_OBESE},
         ].map(item => (
           <View key={item.label} style={styles.legendItem}>
             <View style={[styles.legendDot, {backgroundColor: item.color}]} />
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#0d1e38',
+    backgroundColor: colors.PAGE_BACKGROUND,
     borderRadius: 12,
     padding: 16,
     marginTop: 10,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   statDivider: {
     width: 1,
     height: 28,
-    backgroundColor: '#1e3a5f',
+    backgroundColor: colors.CARD_LIGHT_BLUE,
   },
   bmiBlock: {
     alignItems: 'center',

@@ -10,6 +10,21 @@ export const colors = {
   APP_COLOR: '#010e24',
   APP_COLOR_LIGHT: '#b6c2d6',
   DARK_GREY: '#363738',
+  CARD_BACKGROUND: '#0d1e35',
+  BORDER_COLOR: '#1c3150',
+  PLACEHOLDER: '#4a6080',
+  DEEP_BLUE: '#1a2d4a',
+  BORDER_MEDIUM: '#2a4060',
+  DROPDOWN_BACKGROUND: '#162840',
+  GOOGLE_BLUE: '#4285F4',
+  NEAR_BLACK: '#1a1a1a',
+  BMI_UNDERWEIGHT: '#60a5fa',
+  BMI_NORMAL: '#4ade80',
+  BMI_OVERWEIGHT: '#facc15',
+  BMI_OBESE: '#f87171',
+  DANGER_BORDER: '#2a1a1a',
+  PAGE_BACKGROUND: '#0d1e38',
+  CARD_LIGHT_BLUE: '#1e3a5f',
 };
 
 export const fontsNames = {

@@ -98,10 +98,10 @@ export const Profile: React.FC = () => {
 
   const bmiColor = () => {
     if (!bmi) return colors.APP_COLOR_LIGHT;
-    if (bmi < 18.5) return '#60a5fa';
-    if (bmi < 25) return '#4ade80';
-    if (bmi < 30) return '#facc15';
-    return '#f87171';
+    if (bmi < 18.5) return colors.BMI_UNDERWEIGHT;
+    if (bmi < 25) return colors.BMI_NORMAL;
+    if (bmi < 30) return colors.BMI_OVERWEIGHT;
+    return colors.BMI_OBESE;
   };
 
   return (
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 3,
     borderColor: colors.LIGHT_YELLOW,
     alignItems: 'center',
@@ -219,10 +219,10 @@ const styles = StyleSheet.create({
   },
   // BMI card
   bmiCard: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     paddingVertical: 28,
     alignItems: 'center',
     marginBottom: 16,
@@ -255,10 +255,10 @@ const styles = StyleSheet.create({
   },
   // Empty state
   emptyBmiCard: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     paddingVertical: 36,
     alignItems: 'center',
     marginBottom: 16,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   paddingBottom: 16,
   paddingTop: 10,
   borderTopWidth: 1,
-  borderTopColor: '#1c3150',
+  borderTopColor: colors.BORDER_COLOR,
   gap: 10,
 },
 primaryButton: {
@@ -306,7 +306,7 @@ secondaryRow: {
 signOutBtn: {
   flex: 1,
   borderWidth: 1,
-  borderColor: '#1c3150',
+  borderColor: colors.BORDER_COLOR,
   borderRadius: 10,
   paddingVertical: 10,
   alignItems: 'center',
@@ -318,13 +318,13 @@ signOutText: {
 deleteBtn: {
   flex: 1,
   borderWidth: 1,
-  borderColor: '#2a1a1a',
+  borderColor: colors.DANGER_BORDER,
   borderRadius: 10,
   paddingVertical: 10,
   alignItems: 'center',
 },
 deleteText: {
-  color: '#f87171',
+  color: colors.BMI_OBESE,
   ...fonts.PoppinsMedium(13),
 },
 });

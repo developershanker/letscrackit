@@ -135,12 +135,12 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 20,
     paddingVertical: 32,
     paddingHorizontal: 24,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
   },
   cardTitle: {
     color: colors.WHITE,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 20,
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: colors.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#4285F4',
+    backgroundColor: colors.GOOGLE_BLUE,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsBold(14),
   },
   googleButtonText: {
-    color: '#1a1a1a',
+    color: colors.NEAR_BLACK,
     ...fonts.PoppinsSemiBold(15),
     flex: 1,
     textAlign: 'center',
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#1c3150',
+    backgroundColor: colors.BORDER_COLOR,
   },
   dividerLabel: {
     color: colors.APP_COLOR_LIGHT,

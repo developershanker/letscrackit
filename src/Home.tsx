@@ -170,10 +170,10 @@ const styles = StyleSheet.create({
   },
   // BMI card — has data
   bmiCard: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -227,10 +227,10 @@ const styles = StyleSheet.create({
   },
   // BMI card — empty
   emptyBmiCard: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -254,10 +254,10 @@ const styles = StyleSheet.create({
   },
   // Firebase content card
   contentCard: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     padding: 20,
     marginBottom: 24,
   },
@@ -296,10 +296,10 @@ const styles = StyleSheet.create({
   },
   quickCard: {
     flex: 1,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     paddingVertical: 18,
     alignItems: 'center',
     gap: 8,

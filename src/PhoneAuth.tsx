@@ -73,7 +73,7 @@ export const PhoneAuth: React.FC = () => {
             <TextInput
               style={styles.input}
               placeholder="10-digit mobile number"
-              placeholderTextColor="#4a6080"
+              placeholderTextColor=colors.PLACEHOLDER
               keyboardType="phone-pad"
               maxLength={10}
               value={phone}
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   countryCode: {
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1.5,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     borderRadius: 12,
     paddingVertical: 15,
     paddingHorizontal: 14,
@@ -185,9 +185,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#0d1e35',
+    backgroundColor: colors.CARD_BACKGROUND,
     borderWidth: 1.5,
-    borderColor: '#1c3150',
+    borderColor: colors.BORDER_COLOR,
     borderRadius: 12,
     paddingVertical: 15,
     paddingHorizontal: 16,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsRegular(16),
   },
   inputHint: {
-    color: '#4a6080',
+    color: colors.PLACEHOLDER,
     ...fonts.PoppinsRegular(11),
     lineHeight: 16,
   },

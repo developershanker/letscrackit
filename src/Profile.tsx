@@ -149,9 +149,7 @@ export const Profile: React.FC = () => {
           </View>
         )}
 
-      </ScrollView>
 
-      {/* Bottom CTAs */}
 <View style={styles.bottomSection}>
   <TouchableOpacity
     style={styles.primaryButton}
@@ -160,13 +158,6 @@ export const Profile: React.FC = () => {
     <Text style={styles.primaryButtonText}>
       {hasData ? 'Update Details' : 'Add Details'}
     </Text>
-  </TouchableOpacity>
-
-  <TouchableOpacity
-    style={styles.editProfileBtn}
-    onPress={() => navigation.navigate('OnboardingDetails')}
-    activeOpacity={0.85}>
-    <Text style={styles.editProfileText}>Edit Profile Info</Text>
   </TouchableOpacity>
 
   <View style={styles.secondaryRow}>
@@ -178,6 +169,8 @@ export const Profile: React.FC = () => {
     </TouchableOpacity>
   </View>
 </View>
+
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -311,8 +304,6 @@ const styles = StyleSheet.create({
   paddingHorizontal: 20,
   paddingBottom: 16,
   paddingTop: 10,
-  borderTopWidth: 1,
-  borderTopColor: colors.NAVY_BLUE,
   gap: 10,
 },
 primaryButton: {
@@ -326,6 +317,7 @@ primaryButtonText: {
   ...fonts.PoppinsSemiBold(14),
 },
 secondaryRow: {
+  marginTop: 18, 
   flexDirection: 'row',
   alignItems: 'center',
   gap: 8,

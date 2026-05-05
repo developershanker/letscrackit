@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { completeEmailSignIn, fetchUserProfile, getBMIHistory } from './src/utils/api';
 import { setUserData, setUserPhysicalData } from './src/store/slices/userSlice';
 import { ProgressScreen } from './src/ProgressScreen';
+import { OnboardingDetails } from './src/OnboardingDetails';
 
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();

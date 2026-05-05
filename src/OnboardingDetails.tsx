@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
-  SafeAreaView,
   Alert,
   ScrollView,
   ActivityIndicator,
@@ -17,6 +16,7 @@ import { colors, fonts } from './utils/constants';
 import { saveUserProfile } from './utils/api';
 import { setUserData } from './store/slices/userSlice';
 import { selectUserData } from './store/selectors/userSelectors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',

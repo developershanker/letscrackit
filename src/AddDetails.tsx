@@ -96,7 +96,7 @@ export const AddDetails: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="0"
-                  placeholderTextColor=colors.SLATE_BLUE
+                  placeholderTextColor={colors.SLATE_BLUE}
                   keyboardType="numeric"
                   value={weight}
                   onChangeText={setWeight}
@@ -116,7 +116,7 @@ export const AddDetails: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="0"
-                  placeholderTextColor=colors.SLATE_BLUE
+                  placeholderTextColor={colors.SLATE_BLUE}
                   keyboardType="numeric"
                   value={height}
                   onChangeText={setHeight}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   BackHandler,
   ScrollView,
   StyleSheet,
@@ -16,6 +17,7 @@ import { colors, fonts } from './utils/constants';
 import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
 import { BMIEntry } from './store/slices/userSlice';
+import { useHealthData } from './hooks/useHealthData';
 
 const getGreeting = () => {
   const h = new Date().getHours();
@@ -39,6 +41,7 @@ export const Home: React.FC = () => {
   const formattedMetric = formatBMIMetric(latest?.method, latest?.metric);
   const metricLabel     = latest?.method ? BMI_METHOD_LABEL[latest.method] : '';
   const profileIncomplete = !userData?.profileComplete;
+  const { status: healthStatus, data: healthData, load: loadHealth } = useHealthData();
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -135,6 +138,70 @@ export const Home: React.FC = () => {
             <Ionicons name="chevron-forward" size={20} color={colors.LIGHT_YELLOW} />
           </TouchableOpacity>
         )}
+
+        {/* Health Stats */}
+        <View style={styles.healthCard}>
+          <View style={styles.healthCardHeader}>
+            <Ionicons name="fitness-outline" size={16} color={colors.LIGHT_YELLOW} />
+            <Text style={styles.healthCardTitle}>Today's Health</Text>
+            {healthStatus === 'idle' || healthStatus === 'unavailable' ? (
+              <TouchableOpacity onPress={loadHealth} style={styles.connectBtn} activeOpacity={0.8}>
+                <Text style={styles.connectBtnText}>
+                  {healthStatus === 'unavailable' ? 'Unavailable' : 'Connect'}
+                </Text>
+              </TouchableOpacity>
+            ) : healthStatus === 'loading' ? (
+              <ActivityIndicator size="small" color={colors.LIGHT_YELLOW} style={{ marginLeft: 'auto' }} />
+            ) : null}
+          </View>
+
+          {healthStatus === 'ready' ? (
+            <View style={styles.healthStats}>
+              <View style={styles.healthStat}>
+                <Ionicons name="footsteps-outline" size={20} color={colors.LIGHT_YELLOW} />
+                <Text style={styles.healthStatValue}>
+                  {healthData.steps !== undefined ? healthData.steps.toLocaleString() : '—'}
+                </Text>
+                <Text style={styles.healthStatLabel}>Steps</Text>
+                {healthData.steps !== undefined && (
+                  <View style={styles.stepBarTrack}>
+                    <View style={[styles.stepBarFill, { width: `${Math.min((healthData.steps / 10000) * 100, 100)}%` as any }]} />
+                  </View>
+                )}
+              </View>
+
+              <View style={styles.healthStatDivider} />
+
+              <View style={styles.healthStat}>
+                <Ionicons name="heart-outline" size={20} color="#FF6B6B" />
+                <Text style={styles.healthStatValue}>
+                  {healthData.heartRate !== undefined ? `${healthData.heartRate}` : '—'}
+                </Text>
+                <Text style={styles.healthStatLabel}>
+                  {healthData.heartRate !== undefined ? 'bpm' : 'Heart Rate'}
+                </Text>
+              </View>
+
+              <View style={styles.healthStatDivider} />
+
+              <View style={styles.healthStat}>
+                <Ionicons name="moon-outline" size={20} color="#A78BFA" />
+                <Text style={styles.healthStatValue}>
+                  {healthData.sleep !== undefined ? `${healthData.sleep}h` : '—'}
+                </Text>
+                <Text style={styles.healthStatLabel}>Sleep</Text>
+              </View>
+            </View>
+          ) : (
+            <Text style={styles.healthEmptyText}>
+              {healthStatus === 'loading'
+                ? 'Fetching health data…'
+                : healthStatus === 'unavailable'
+                ? 'Health data not available on this device'
+                : 'Tap Connect to sync your health stats'}
+            </Text>
+          )}
+        </View>
 
         {/* Firebase content */}
         {(heading || subHeading) ? (
@@ -352,5 +419,82 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsMedium(12),
     marginTop: 6,
     opacity: 0.9,
+  },
+  // Health stats card
+  healthCard: {
+    backgroundColor: colors.DARK_NAVY,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.NAVY_BLUE,
+    padding: 16,
+    marginBottom: 16,
+  },
+  healthCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 14,
+  },
+  healthCardTitle: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsMedium(11),
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    flex: 1,
+  },
+  connectBtn: {
+    borderWidth: 1,
+    borderColor: colors.LIGHT_YELLOW,
+    borderRadius: 6,
+    paddingVertical: 3,
+    paddingHorizontal: 10,
+  },
+  connectBtnText: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsMedium(11),
+  },
+  healthStats: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  healthStat: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
+  },
+  healthStatValue: {
+    color: colors.WHITE,
+    ...fonts.PoppinsBold(20),
+  },
+  healthStatLabel: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(11),
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  healthStatDivider: {
+    width: 1,
+    height: 50,
+    backgroundColor: colors.NAVY_BLUE,
+    alignSelf: 'center',
+  },
+  stepBarTrack: {
+    width: '80%',
+    height: 3,
+    backgroundColor: colors.NAVY_BLUE,
+    borderRadius: 2,
+    marginTop: 4,
+    overflow: 'hidden',
+  },
+  stepBarFill: {
+    height: '100%',
+    backgroundColor: colors.LIGHT_YELLOW,
+    borderRadius: 2,
+  },
+  healthEmptyText: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(12),
+    textAlign: 'center',
+    paddingVertical: 8,
   },
 });

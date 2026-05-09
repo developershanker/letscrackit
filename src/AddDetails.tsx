@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colors, fonts } from './utils/constants';
@@ -19,7 +20,9 @@ import { addBMIEntry, getBMIHistory } from './utils/api';
 import { setUserPhysicalData } from './store/slices/userSlice';
 import { calcAgeAwareBMI, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from './components/Header';
+import { useHealthData } from './hooks/useHealthData';
 
 export const AddDetails: React.FC = () => {
   const navigation = useNavigation();
@@ -27,11 +30,19 @@ export const AddDetails: React.FC = () => {
   const dispatch = useDispatch();
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
+  const { status: healthStatus, data: healthData, load: loadHealth } = useHealthData();
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', handleBack);
     return () => subscription.remove();
   }, []);
+
+  useEffect(() => {
+    if (healthStatus === 'ready') {
+      if (healthData.weight) setWeight(String(healthData.weight));
+      if (healthData.height) setHeight(String(healthData.height));
+    }
+  }, [healthStatus, healthData]);
 
   const handleBack = () => {
     navigation.goBack();
@@ -87,6 +98,31 @@ export const AddDetails: React.FC = () => {
               Enter your measurements to calculate your Body Mass Index
             </Text>
           </View>
+
+          {/* Import from Health */}
+          <TouchableOpacity
+            style={styles.healthImportBtn}
+            onPress={loadHealth}
+            activeOpacity={0.8}
+            disabled={healthStatus === 'loading'}>
+            {healthStatus === 'loading' ? (
+              <ActivityIndicator size="small" color={colors.MIDNIGHT_NAVY} />
+            ) : (
+              <Ionicons name="heart-outline" size={16} color={colors.MIDNIGHT_NAVY} />
+            )}
+            <Text style={styles.healthImportText}>
+              {healthStatus === 'loading'
+                ? 'Reading health data…'
+                : healthStatus === 'ready'
+                ? 'Health data imported'
+                : healthStatus === 'unavailable'
+                ? 'Health not available'
+                : 'Import from Health app'}
+            </Text>
+            {healthStatus === 'ready' && (
+              <Ionicons name="checkmark-circle" size={16} color={colors.MIDNIGHT_NAVY} />
+            )}
+          </TouchableOpacity>
 
           {/* Inputs */}
           <View style={styles.card}>
@@ -308,5 +344,21 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: colors.MIDNIGHT_NAVY,
     ...fonts.PoppinsSemiBold(16),
+  },
+  healthImportBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.LIGHT_YELLOW,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 14,
+    opacity: 1,
+  },
+  healthImportText: {
+    color: colors.MIDNIGHT_NAVY,
+    ...fonts.PoppinsMedium(13),
   },
 });

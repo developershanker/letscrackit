@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   BackHandler,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -31,6 +32,7 @@ export const AddDetails: React.FC = () => {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
   const { status: healthStatus, data: healthData, load: loadHealth } = useHealthData();
+  const [showHealthInfo, setShowHealthInfo] = useState(false);
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', handleBack);
@@ -99,30 +101,79 @@ export const AddDetails: React.FC = () => {
             </Text>
           </View>
 
+          {/* Health info modal */}
+          <Modal
+            visible={showHealthInfo}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setShowHealthInfo(false)}>
+            <TouchableOpacity
+              style={styles.modalOverlay}
+              activeOpacity={1}
+              onPress={() => setShowHealthInfo(false)}>
+              <View style={styles.modalCard}>
+                <View style={styles.modalHeader}>
+                  <Ionicons name="information-circle-outline" size={20} color={colors.LIGHT_YELLOW} />
+                  <Text style={styles.modalTitle}>How to grant health access</Text>
+                  <TouchableOpacity onPress={() => setShowHealthInfo(false)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                    <Ionicons name="close" size={20} color={colors.POWDER_BLUE} />
+                  </TouchableOpacity>
+                </View>
+
+                {Platform.OS === 'android' ? (
+                  <>
+                    <Text style={styles.modalStep}><Text style={styles.modalStepNum}>1. </Text>Tap <Text style={styles.modalBold}>Import from Health app</Text> above.</Text>
+                    <Text style={styles.modalStep}><Text style={styles.modalStepNum}>2. </Text>The <Text style={styles.modalBold}>Health Connect</Text> permission screen will open.</Text>
+                    <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Allow <Text style={styles.modalBold}>Weight</Text> and <Text style={styles.modalBold}>Height</Text> to auto-fill your measurements.</Text>
+                    <View style={styles.modalDivider} />
+                    <Text style={styles.modalNote}>If Health Connect is not installed, install it from the <Text style={styles.modalBold}>Play Store</Text> first.</Text>
+                    <Text style={styles.modalNote}>To revoke: <Text style={styles.modalBold}>Settings → Apps → Health Connect → App permissions → LetsCrackIt</Text></Text>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.modalStep}><Text style={styles.modalStepNum}>1. </Text>Tap <Text style={styles.modalBold}>Import from Health app</Text> above.</Text>
+                    <Text style={styles.modalStep}><Text style={styles.modalStepNum}>2. </Text>The <Text style={styles.modalBold}>Health access</Text> dialog will appear.</Text>
+                    <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Enable <Text style={styles.modalBold}>Weight</Text> and <Text style={styles.modalBold}>Height</Text>, then tap <Text style={styles.modalBold}>Allow</Text>.</Text>
+                    <View style={styles.modalDivider} />
+                    <Text style={styles.modalNote}>To revoke: <Text style={styles.modalBold}>Settings → Privacy & Security → Health → LetsCrackIt</Text></Text>
+                  </>
+                )}
+              </View>
+            </TouchableOpacity>
+          </Modal>
+
           {/* Import from Health */}
-          <TouchableOpacity
-            style={styles.healthImportBtn}
-            onPress={loadHealth}
-            activeOpacity={0.8}
-            disabled={healthStatus === 'loading'}>
-            {healthStatus === 'loading' ? (
-              <ActivityIndicator size="small" color={colors.MIDNIGHT_NAVY} />
-            ) : (
-              <Ionicons name="heart-outline" size={16} color={colors.MIDNIGHT_NAVY} />
-            )}
-            <Text style={styles.healthImportText}>
-              {healthStatus === 'loading'
-                ? 'Reading health data…'
-                : healthStatus === 'ready'
-                ? 'Health data imported'
-                : healthStatus === 'unavailable'
-                ? 'Health not available'
-                : 'Import from Health app'}
-            </Text>
-            {healthStatus === 'ready' && (
-              <Ionicons name="checkmark-circle" size={16} color={colors.MIDNIGHT_NAVY} />
-            )}
-          </TouchableOpacity>
+          <View style={styles.healthImportRow}>
+            <TouchableOpacity
+              style={styles.healthImportBtn}
+              onPress={loadHealth}
+              activeOpacity={0.8}
+              disabled={healthStatus === 'loading'}>
+              {healthStatus === 'loading' ? (
+                <ActivityIndicator size="small" color={colors.MIDNIGHT_NAVY} />
+              ) : (
+                <Ionicons name="heart-outline" size={16} color={colors.MIDNIGHT_NAVY} />
+              )}
+              <Text style={styles.healthImportText}>
+                {healthStatus === 'loading'
+                  ? 'Reading health data…'
+                  : healthStatus === 'ready'
+                  ? 'Health data imported'
+                  : healthStatus === 'unavailable'
+                  ? 'Health not available'
+                  : 'Import from Health app'}
+              </Text>
+              {healthStatus === 'ready' && (
+                <Ionicons name="checkmark-circle" size={16} color={colors.MIDNIGHT_NAVY} />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowHealthInfo(true)}
+              style={styles.healthInfoIcon}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <Ionicons name="information-circle-outline" size={20} color={colors.POWDER_BLUE} />
+            </TouchableOpacity>
+          </View>
 
           {/* Inputs */}
           <View style={styles.card}>
@@ -345,7 +396,14 @@ const styles = StyleSheet.create({
     color: colors.MIDNIGHT_NAVY,
     ...fonts.PoppinsSemiBold(16),
   },
+  healthImportRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 14,
+  },
   healthImportBtn: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -354,11 +412,65 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 16,
-    marginBottom: 14,
-    opacity: 1,
   },
   healthImportText: {
     color: colors.MIDNIGHT_NAVY,
     ...fonts.PoppinsMedium(13),
+  },
+  healthInfoIcon: {
+    padding: 4,
+  },
+  // Health info modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalCard: {
+    backgroundColor: colors.DARK_NAVY,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.NAVY_BLUE,
+    padding: 20,
+    width: '100%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  modalTitle: {
+    flex: 1,
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(13),
+  },
+  modalStep: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(13),
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  modalStepNum: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsSemiBold(13),
+  },
+  modalBold: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(13),
+  },
+  modalDivider: {
+    height: 1,
+    backgroundColor: colors.NAVY_BLUE,
+    marginVertical: 12,
+  },
+  modalNote: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(11),
+    marginBottom: 6,
+    lineHeight: 18,
+    opacity: 0.85,
   },
 });

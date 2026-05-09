@@ -11,7 +11,19 @@ export interface HealthData {
 // ─── Android (Health Connect) ────────────────────────────────────────────────
 
 async function initAndroid(): Promise<boolean> {
-  const { initialize, requestPermission } = require('react-native-health-connect');
+  const {
+    getSdkStatus,
+    initialize,
+    requestPermission,
+    SdkAvailabilityStatus,
+  } = require('react-native-health-connect');
+
+  // Check if Health Connect is available on this device before anything else
+  const status = await getSdkStatus();
+  if (status !== SdkAvailabilityStatus.SDK_AVAILABLE) {
+    return false;
+  }
+
   const ok = await initialize();
   if (ok) {
     await requestPermission([

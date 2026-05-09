@@ -155,7 +155,11 @@ export const Home: React.FC = () => {
             ) : null}
           </View>
 
-          {healthStatus === 'ready' ? (
+          {healthStatus === 'unavailable' ? (
+            <Text style={styles.healthEmptyText}>
+              Health Connect not available.{'\n'}Install it from the Play Store to sync health stats.
+            </Text>
+          ) : healthStatus === 'ready' ? (
             <View style={styles.healthStats}>
               <View style={styles.healthStat}>
                 <Ionicons name="footsteps-outline" size={20} color={colors.LIGHT_YELLOW} />
@@ -196,8 +200,6 @@ export const Home: React.FC = () => {
             <Text style={styles.healthEmptyText}>
               {healthStatus === 'loading'
                 ? 'Fetching health data…'
-                : healthStatus === 'unavailable'
-                ? 'Health data not available on this device'
                 : 'Tap Connect to sync your health stats'}
             </Text>
           )}

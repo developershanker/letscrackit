@@ -97,13 +97,13 @@ async function readAndroidHealth(): Promise<HealthData> {
 
 function initIOS(): Promise<boolean> {
   return new Promise(resolve => {
-    const AppleHealthKit = require('react-native-health').default;
+    const AppleHealthKit = require('react-native-health');
     const { Permissions } = AppleHealthKit.Constants;
     AppleHealthKit.initHealthKit(
       {
         permissions: {
           read: [
-            Permissions.Steps,
+            Permissions.StepCount,
             Permissions.HeartRate,
             Permissions.SleepAnalysis,
             Permissions.Weight,
@@ -124,7 +124,7 @@ function iosRead<T>(fn: Function, opts: object): Promise<T | null> {
 }
 
 async function readIOSHealth(): Promise<HealthData> {
-  const AppleHealthKit = require('react-native-health').default;
+  const AppleHealthKit = require('react-native-health');
   const result: HealthData = {};
   const now = new Date();
   const startOfDay = new Date(now);

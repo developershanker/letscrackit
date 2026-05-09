@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
+  Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -42,6 +44,7 @@ export const Home: React.FC = () => {
   const metricLabel     = latest?.method ? BMI_METHOD_LABEL[latest.method] : '';
   const profileIncomplete = !userData?.profileComplete;
   const { status: healthStatus, data: healthData, load: loadHealth } = useHealthData();
+  const [showHealthInfo, setShowHealthInfo] = useState(false);
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -139,11 +142,58 @@ export const Home: React.FC = () => {
           </TouchableOpacity>
         )}
 
+        {/* Health info modal */}
+        <Modal
+          visible={showHealthInfo}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowHealthInfo(false)}>
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setShowHealthInfo(false)}>
+            <View style={styles.modalCard}>
+              <View style={styles.modalHeader}>
+                <Ionicons name="information-circle-outline" size={20} color={colors.LIGHT_YELLOW} />
+                <Text style={styles.modalTitle}>How to grant health access</Text>
+                <TouchableOpacity onPress={() => setShowHealthInfo(false)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                  <Ionicons name="close" size={20} color={colors.POWDER_BLUE} />
+                </TouchableOpacity>
+              </View>
+
+              {Platform.OS === 'android' ? (
+                <>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>1. </Text>Tap the <Text style={styles.modalBold}>Connect</Text> button on the Today's Health card.</Text>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>2. </Text>The <Text style={styles.modalBold}>Health Connect</Text> permission screen will open.</Text>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Allow each permission — Steps, Heart Rate, Sleep, Weight, Height.</Text>
+                  <View style={styles.modalDivider} />
+                  <Text style={styles.modalNote}>If Health Connect is not installed, install it from the <Text style={styles.modalBold}>Play Store</Text> first.</Text>
+                  <Text style={styles.modalNote}>To revoke later: <Text style={styles.modalBold}>Settings → Apps → Health Connect → App permissions → LetsCrackIt</Text></Text>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>1. </Text>Tap the <Text style={styles.modalBold}>Connect</Text> button on the Today's Health card.</Text>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>2. </Text>The <Text style={styles.modalBold}>Health access</Text> dialog will appear.</Text>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Enable each category — Steps, Heart Rate, Sleep, Weight, Height — then tap <Text style={styles.modalBold}>Allow</Text>.</Text>
+                  <View style={styles.modalDivider} />
+                  <Text style={styles.modalNote}>To revoke later: <Text style={styles.modalBold}>Settings → Privacy & Security → Health → LetsCrackIt</Text></Text>
+                </>
+              )}
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
         {/* Health Stats */}
         <View style={styles.healthCard}>
           <View style={styles.healthCardHeader}>
             <Ionicons name="fitness-outline" size={16} color={colors.LIGHT_YELLOW} />
             <Text style={styles.healthCardTitle}>Today's Health</Text>
+            <TouchableOpacity
+              onPress={() => setShowHealthInfo(true)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={styles.infoIcon}>
+              <Ionicons name="information-circle-outline" size={16} color={colors.POWDER_BLUE} />
+            </TouchableOpacity>
             {healthStatus === 'idle' || healthStatus === 'unavailable' ? (
               <TouchableOpacity onPress={loadHealth} style={styles.connectBtn} activeOpacity={0.8}>
                 <Text style={styles.connectBtnText}>
@@ -498,5 +548,61 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsRegular(12),
     textAlign: 'center',
     paddingVertical: 8,
+  },
+  infoIcon: {
+    marginRight: 6,
+  },
+  // Health info modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalCard: {
+    backgroundColor: colors.DARK_NAVY,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.NAVY_BLUE,
+    padding: 20,
+    width: '100%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  modalTitle: {
+    flex: 1,
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(13),
+  },
+  modalStep: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(13),
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  modalStepNum: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsSemiBold(13),
+  },
+  modalBold: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(13),
+  },
+  modalDivider: {
+    height: 1,
+    backgroundColor: colors.NAVY_BLUE,
+    marginVertical: 12,
+  },
+  modalNote: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(11),
+    marginBottom: 6,
+    lineHeight: 18,
+    opacity: 0.85,
   },
 });

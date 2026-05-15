@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -43,7 +43,7 @@ export const Home: React.FC = () => {
   const formattedMetric = formatBMIMetric(latest?.method, latest?.metric);
   const metricLabel     = latest?.method ? BMI_METHOD_LABEL[latest.method] : '';
   const profileIncomplete = !userData?.profileComplete;
-  const { status: healthStatus, data: healthData, load: loadHealth } = useHealthData();
+  const { status: healthStatus, data: healthData, load: loadHealth, refresh: refreshHealth  } = useHealthData();
   const [showHealthInfo, setShowHealthInfo] = useState(false);
 
   useEffect(() => {
@@ -53,6 +53,12 @@ export const Home: React.FC = () => {
     });
     return () => sub.remove();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshHealth();
+    }, [refreshHealth])
+  );
 
   useEffect(() => {
     const load = async () => {
@@ -202,15 +208,24 @@ export const Home: React.FC = () => {
               </TouchableOpacity>
             ) : healthStatus === 'loading' ? (
               <ActivityIndicator size="small" color={colors.LIGHT_YELLOW} style={{ marginLeft: 'auto' }} />
-            ) : null}
+            ) : <TouchableOpacity
+                onPress={loadHealth}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                style={{ marginLeft: 'auto' }}>
+                <Ionicons name="refresh-outline" size={16} color={colors.POWDER_BLUE} />
+              </TouchableOpacity>}
           </View>
 
           {healthStatus === 'unavailable' ? (
             <Text style={styles.healthEmptyText}>
               Health Connect not available.{'\n'}Install it from the Play Store to sync health stats.
             </Text>
-          ) : healthStatus === 'ready' ? (
-            <View style={styles.healthStats}>
+          ) : healthStatus === 'ready' ||
+            (healthStatus === 'loading' &&
+              (healthData.steps !== undefined ||
+                healthData.heartRate !== undefined ||
+                healthData.sleep !== undefined)) ? (
+            <View style={[styles.healthStats, healthStatus === 'loading' && { opacity: 0.5 }]}>
               <View style={styles.healthStat}>
                 <Ionicons name="footsteps-outline" size={20} color={colors.LIGHT_YELLOW} />
                 <Text style={styles.healthStatValue}>

@@ -38,7 +38,7 @@ async function initAndroid(): Promise<boolean> {
 }
 
 async function readAndroidHealth(): Promise<HealthData> {
-  const { readRecords } = require('react-native-health-connect');
+  const { readRecords, aggregateRecord } = require('react-native-health-connect');
   const now = new Date();
   const startOfDay = new Date(now);
   startOfDay.setHours(0, 0, 0, 0);
@@ -51,34 +51,32 @@ async function readAndroidHealth(): Promise<HealthData> {
   const result: HealthData = {};
 
   try {
-    const { records } = await readRecords('Steps', {
+    const agg = await aggregateRecord({
+      recordType: 'Steps',
       timeRangeFilter: { operator: 'between', startTime: startOfDay.toISOString(), endTime: now.toISOString() },
     });
-    if (records.length > 0) {
-      result.steps = records.reduce((sum: number, r: any) => sum + r.count, 0);
+    if (agg.COUNT_TOTAL !== undefined) {
+      result.steps = agg.COUNT_TOTAL;
     }
   } catch {}
 
   try {
-    const { records } = await readRecords('HeartRate', {
+    const agg = await aggregateRecord({
+      recordType: 'HeartRate',
       timeRangeFilter: { operator: 'between', startTime: startOfDay.toISOString(), endTime: now.toISOString() },
     });
-    const samples = records.flatMap((r: any) => r.samples);
-    if (samples.length > 0) {
-      result.heartRate = Math.round(
-        samples.reduce((s: number, x: any) => s + x.beatsPerMinute, 0) / samples.length,
-      );
+    if (agg.COUNT_TOTAL !== undefined) {
+      result.steps = agg.COUNT_TOTAL;
     }
   } catch {}
 
   try {
-    const { records } = await readRecords('SleepSession', {
+    const agg = await aggregateRecord({
+      recordType: 'SleepSession',
       timeRangeFilter: { operator: 'between', startTime: yesterday8pm.toISOString(), endTime: now.toISOString() },
     });
-    if (records.length > 0) {
-      const latest = records[records.length - 1];
-      const durationMs = new Date(latest.endTime).getTime() - new Date(latest.startTime).getTime();
-      result.sleep = Math.round((durationMs / 3_600_000) * 10) / 10;
+    if (agg.SLEEP_DURATION_TOTAL !== undefined) {
+      result.sleep = Math.round((agg.SLEEP_DURATION_TOTAL / 3_600_000) * 10) / 10;
     }
   } catch {}
 

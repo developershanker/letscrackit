@@ -59,7 +59,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         player={player}
         style={styles.video}
         controls
-        allowsFullscreen
       />
 
       {/* Thumbnail sits on top as an overlay — removed once the user starts playback */}

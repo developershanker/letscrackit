@@ -26,6 +26,9 @@ import { completeEmailSignIn, fetchUserProfile, getBMIHistory } from './src/util
 import { setUserData, setUserPhysicalData } from './src/store/slices/userSlice';
 import { ProgressScreen } from './src/ProgressScreen';
 import { OnboardingDetails } from './src/OnboardingDetails';
+import { Explore } from './src/Explore';
+import { VideoPlayerScreen } from './src/components/VideoPlayerScreen';
+import { HealthVideo } from './src/utils/types';
 
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
@@ -45,6 +48,8 @@ export type RootStackParamList = {
   EmailAuth: undefined;
   ProgressScreen: undefined;
   OnboardingDetails: undefined;
+  Explore: undefined;
+  VideoPlayerScreen: { video: HealthVideo }
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -118,6 +123,8 @@ function App(): React.JSX.Element {
                 <Stack.Screen name="EmailAuth" component={EmailAuth} />
                 <Stack.Screen name="ProgressScreen" component={ProgressScreen} />
                 <Stack.Screen name="OnboardingDetails" component={OnboardingDetails} />
+                <Stack.Screen name="Explore" component={Explore} />
+                <Stack.Screen name="VideoPlayerScreen" component={VideoPlayerScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </SafeAreaProvider>

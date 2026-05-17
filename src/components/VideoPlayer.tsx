@@ -42,15 +42,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }) => {
   const [started, setStarted] = useState(autoPlay);
 
+  // Always call play() in the hook callback — this is the pattern v7 expects.
+  // The video loads and plays immediately but stays hidden under the thumbnail
+  // until the user taps. On tap we simply remove the overlay; the video is
+  // already playing so no second play() call is needed.
   const player = useVideoPlayer(uri, (p) => {
     p.loop = false;
-    if (autoPlay) p.play();
+    p.play();
   });
 
-  const handlePlayPress = () => {
-    player.play();
-    setStarted(true);
-  };
+  const handlePlayPress = () => setStarted(true);
 
   return (
     <View style={[styles.container, style]}>

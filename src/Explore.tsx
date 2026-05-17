@@ -26,7 +26,7 @@ const SAMPLE_VIDEOS: HealthVideo[] = [
     id: 1,
     title: 'Morning Yoga Flow for Flexibility',
     description: 'Start your day with this gentle 20-minute yoga flow designed to improve flexibility and calm your mind before work.',
-    uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
     thumbnail: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640',
     category: 'yoga',
     duration: '20:00',

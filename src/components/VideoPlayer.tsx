@@ -54,14 +54,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      {started ? (
-        <VideoView
-          player={player}
-          style={styles.video}
-          controls
-        />
-      ) : (
-        <Pressable style={styles.thumbnailContainer} onPress={handlePlayPress}>
+      {/* VideoView always mounted so the native player is ready before play() is called */}
+      <VideoView
+        player={player}
+        style={styles.video}
+        controls
+        allowsFullscreen
+      />
+
+      {/* Thumbnail sits on top as an overlay — removed once the user starts playback */}
+      {!started && (
+        <Pressable
+          style={styles.thumbnailOverlay}
+          onPress={handlePlayPress}>
           {thumbnail ? (
             <Image source={{ uri: thumbnail }} style={styles.thumbnail} resizeMode="cover" />
           ) : (
@@ -89,8 +94,13 @@ const styles = StyleSheet.create({
   video: {
     flex: 1,
   },
-  thumbnailContainer: {
-    flex: 1,
+  // Absolute insets are correct here — this element genuinely overlays VideoView
+  thumbnailOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   thumbnail: {
     width: '100%',

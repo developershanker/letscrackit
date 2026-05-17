@@ -18,67 +18,22 @@ interface VideoPlayerProps {
   autoPlay?: boolean;
 }
 
-/**
- * Reusable video player wrapper for react-native-video v7.
- *
- * v7 moved to a hook-based API: useVideoPlayer creates the player instance
- * and VideoView renders it via the `player` prop. The old props (source,
- * paused, onLoad, onError) no longer exist on VideoView.
- *
- * Design decisions:
- * - useVideoPlayer must be called unconditionally (hook rules), so the JS
- *   player object always exists — but it does NOT buffer until player.play()
- *   is called, keeping idle list cards cheap.
- * - VideoView is only mounted after the user taps play (lazy mount). This
- *   avoids creating native player surfaces for every card in the FlatList.
- * - We own the thumbnail overlay instead of relying on the poster prop,
- *   which has inconsistent behaviour across v7 beta builds.
- */
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   uri,
-  thumbnail,
   style,
-  autoPlay = false,
 }) => {
-  const [started, setStarted] = useState(autoPlay);
-
-  // Always call play() in the hook callback — this is the pattern v7 expects.
-  // The video loads and plays immediately but stays hidden under the thumbnail
-  // until the user taps. On tap we simply remove the overlay; the video is
-  // already playing so no second play() call is needed.
   const player = useVideoPlayer(uri, (p) => {
     p.loop = false;
-    p.play();
+    p.pause();
   });
-
-  const handlePlayPress = () => setStarted(true);
 
   return (
     <View style={[styles.container, style]}>
-      {/* VideoView always mounted so the native player is ready before play() is called */}
       <VideoView
         player={player}
         style={styles.video}
         controls
       />
-
-      {/* Thumbnail sits on top as an overlay — removed once the user starts playback */}
-      {!started && (
-        <Pressable
-          style={styles.thumbnailOverlay}
-          onPress={handlePlayPress}>
-          {thumbnail ? (
-            <Image source={{ uri: thumbnail }} style={styles.thumbnail} resizeMode="cover" />
-          ) : (
-            <View style={styles.thumbnailFallback} />
-          )}
-          <View style={styles.playButtonOverlay}>
-            <View style={styles.playButton}>
-              <Ionicons name="play" size={28} color={colors.MIDNIGHT_NAVY} />
-            </View>
-          </View>
-        </Pressable>
-      )}
     </View>
   );
 };

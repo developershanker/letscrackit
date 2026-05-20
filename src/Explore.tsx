@@ -19,98 +19,6 @@ import { firebaseRemoteConfigData, reportError } from './utils/helpers';
 import { type HealthVideo, type VideoCategory } from './utils/types';
 import { type RootStackParamList } from '../App';
 
-// Fallback sample videos — shown when Firebase Remote Config has no `videos_data` key yet.
-// Replace with real video URLs or set up the Remote Config key to go live.
-const SAMPLE_VIDEOS: HealthVideo[] = [
-  {
-    id: 1,
-    title: 'Morning Yoga Flow for Flexibility',
-    description: 'Start your day with this gentle 20-minute yoga flow designed to improve flexibility and calm your mind before work.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640',
-    category: 'yoga',
-    duration: '20:00',
-    instructor: 'Priya Sharma',
-    level: 'Beginner',
-  },
-  {
-    id: 2,
-    title: 'Full Body Strength Training — No Equipment',
-    description: 'A bodyweight strength circuit targeting all major muscle groups. No gym or equipment needed — just your own bodyweight.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=640',
-    category: 'strength',
-    duration: '35:00',
-    instructor: 'Arjun Mehta',
-    level: 'Intermediate',
-  },
-  {
-    id: 3,
-    title: 'Understanding Your BMI — Health Tutorial',
-    description: 'Learn what BMI means, how it is calculated, its limitations, and how to use it alongside other metrics for a complete health picture.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=640',
-    category: 'tutorial',
-    duration: '12:30',
-    instructor: 'Dr. Neha Kapoor',
-    level: 'Beginner',
-  },
-  {
-    id: 4,
-    title: 'HIIT Cardio Blast — 20 Minutes',
-    description: 'High-intensity interval training to torch calories and improve cardiovascular endurance in just 20 minutes.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=640',
-    category: 'cardio',
-    duration: '20:00',
-    instructor: 'Vikram Singh',
-    level: 'Intermediate',
-  },
-  {
-    id: 5,
-    title: 'Power Yoga for Strength & Balance',
-    description: 'Combine the mindfulness of yoga with strength-building poses in this dynamic power yoga session.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=640',
-    category: 'yoga',
-    duration: '28:00',
-    instructor: 'Priya Sharma',
-    level: 'Advanced',
-  },
-  {
-    id: 6,
-    title: 'Beginner Strength: Dumbbells 101',
-    description: 'New to weight training? This beginner-friendly session teaches proper form for the 6 essential dumbbell exercises.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=640',
-    category: 'strength',
-    duration: '18:45',
-    instructor: 'Arjun Mehta',
-    level: 'Beginner',
-  },
-  {
-    id: 7,
-    title: 'Heart Rate Zones Explained',
-    description: 'Understand the 5 heart rate zones, how to train in each, and why zone 2 training is the most underrated health tool.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=640',
-    category: 'tutorial',
-    duration: '09:15',
-    instructor: 'Dr. Neha Kapoor',
-    level: 'Beginner',  
-},
-  {
-    id: 8,
-    title: 'Tabata Cardio — Advanced Intervals',
-    description: 'Push your limits with this 8-round Tabata protocol. 20 seconds on, 10 seconds off — designed for experienced athletes.',
-    uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    thumbnail: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640',
-    category: 'cardio',
-    duration: '25:00',
-    instructor: 'Vikram Singh',
-    level: 'Advanced',
-  },
-];
 const CATEGORIES: { key: VideoCategory | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
   { key: 'yoga', label: 'Yoga' },
@@ -136,9 +44,9 @@ export const Explore: React.FC = () => {
   const fetchVideos = async () => {
     try {
       const data = await firebaseRemoteConfigData('videos_data');
-      setVideos(data ?? SAMPLE_VIDEOS);
-    } catch {
-      setVideos(SAMPLE_VIDEOS);
+      setVideos(data);
+    } catch(error) {
+      reportError(error, 'fetchVideos_Explore.tsx')
     } finally {
       setLoading(false);
     }

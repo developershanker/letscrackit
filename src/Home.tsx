@@ -271,7 +271,7 @@ export const Home: React.FC = () => {
           )}
 
           {/* Android-only hint — shown once health data is loaded */}
-          {Platform.OS === 'android' && healthStatus === 'loaded' && (
+          {Platform.OS === 'android' && healthStatus === 'ready' && (
             <TouchableOpacity
               style={styles.priorityHint}
               activeOpacity={0.7}

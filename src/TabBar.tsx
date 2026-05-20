@@ -7,6 +7,7 @@ import DynamicIcon from './icons/iconsList';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Discover } from './Discover';
+import { Explore } from './Explore';
 
 export const TabBar: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -85,6 +86,16 @@ export const TabBar: React.FC = () => {
           tabBarLabel: 'Discover',
           tabBarIcon: ({color, size}) => (
             <DynamicIcon name="disc-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={Explore}
+        options={{
+          tabBarLabel: 'Explore',
+          tabBarIcon: ({color, size}) => (
+            <DynamicIcon name="play-circle-outline" color={color} size={size} />
           ),
         }}
       />

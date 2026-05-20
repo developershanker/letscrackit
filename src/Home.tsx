@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
+  Linking,
   Modal,
   Platform,
   ScrollView,
@@ -267,6 +268,25 @@ export const Home: React.FC = () => {
                 ? 'Fetching health data…'
                 : 'Tap Connect to sync your health stats'}
             </Text>
+          )}
+
+          {/* Android-only hint — shown once health data is loaded */}
+          {Platform.OS === 'android' && healthStatus === 'loaded' && (
+            <TouchableOpacity
+              style={styles.priorityHint}
+              activeOpacity={0.7}
+              onPress={() =>
+                Linking.openURL('android-app://com.google.android.apps.healthdata').catch(() =>
+                  Linking.openURL('market://details?id=com.google.android.apps.healthdata'),
+                )
+              }>
+              <Ionicons name="information-circle-outline" size={13} color={colors.SLATE_BLUE} />
+              <Text style={styles.priorityHintText}>
+                Step data is combined from all sources. For precise data,{' '}
+                <Text style={styles.priorityHintLink}>set app priority in Health Connect</Text>
+                {' '}→ App permissions → Data preferences
+              </Text>
+            </TouchableOpacity>
           )}
         </View>
 
@@ -563,6 +583,26 @@ const styles = StyleSheet.create({
     ...fonts.PoppinsRegular(12),
     textAlign: 'center',
     paddingVertical: 8,
+  },
+  priorityHint: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 6,
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: colors.NAVY_BLUE,
+    paddingHorizontal: 4,
+  },
+  priorityHintText: {
+    flex: 1,
+    color: colors.SLATE_BLUE,
+    ...fonts.PoppinsRegular(11),
+    lineHeight: 16,
+  },
+  priorityHintLink: {
+    color: colors.LIGHT_YELLOW,
+    ...fonts.PoppinsMedium(11),
   },
   infoIcon: {
     marginRight: 6,

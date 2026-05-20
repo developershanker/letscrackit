@@ -52,6 +52,7 @@ async function readAndroidHealth(): Promise<HealthData> {
     const agg = await aggregateRecord({
       recordType: 'Steps',
       timeRangeFilter: { operator: 'between', startTime: startOfDay, endTime: nowISO },
+      dataOriginFilter: ['com.samsung.health'],
     });
     if (agg.COUNT_TOTAL !== undefined) {
       result.steps = agg.COUNT_TOTAL;

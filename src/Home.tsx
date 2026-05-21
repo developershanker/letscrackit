@@ -18,7 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from './components/Header';
 import { HealthTipsCard } from './components/HealthTipsCard';
 import { colors, fonts } from './utils/constants';
-import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL, getAgeInYears } from './utils/helpers';
+import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL, getAgeInYears, reportError } from './utils/helpers';
 import {
   selectUserData,
   selectUserPhysicalData,
@@ -84,6 +84,11 @@ export const Home: React.FC = () => {
   const [tipsError, setTipsError]     = useState(false);
   const fetchingRef = useRef(false);
 
+
+  const triggerError = (error?: string) =>{
+    setTipsError(true);
+    reportError(error, "fetchTips_Home.tsx")
+  }
   const fetchTips = useCallback(async (entryId: string) => {
     if (fetchingRef.current) return;
     fetchingRef.current = true;
@@ -104,16 +109,19 @@ export const Home: React.FC = () => {
           goal,
         }),
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {
+        triggerError("got response.ok false")
+        return;
+      };
       const data = await response.json();
-      const tips = parseHealthTips(data.tips ?? '');
+      const tips = parseHealthTips(data?.tips ?? '');
       if (tips.length > 0) {
         dispatch(setHealthTips({ entryId, tips }));
       } else {
-        setTipsError(true);
+        triggerError("tips.length is zero")
       }
-    } catch {
-      setTipsError(true);
+    } catch(error) {
+      triggerError(JSON.stringify(error))
     } finally {
       setTipsLoading(false);
       fetchingRef.current = false;

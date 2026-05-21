@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -12,13 +12,20 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from './components/Header';
+import { HealthTipsCard } from './components/HealthTipsCard';
 import { colors, fonts } from './utils/constants';
-import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
-import { selectUserData, selectUserPhysicalData } from './store/selectors/userSelectors';
+import { capitalizeWords, firebaseRemoteConfigData, formatBMIMetric, BMI_METHOD_LABEL, getAgeInYears, reportError } from './utils/helpers';
+import {
+  selectUserData,
+  selectUserPhysicalData,
+  selectHealthTips,
+  selectHealthTipsEntryId,
+} from './store/selectors/userSelectors';
+import { setHealthTips, clearHealthTips } from './store/slices/tipsSlice';
 import { BMIEntry } from './store/slices/userSlice';
 import { useHealthData } from './hooks/useHealthData';
 
@@ -29,12 +36,38 @@ const getGreeting = () => {
   return 'Good Evening';
 };
 
+const deriveGoal = (category: string): string => {
+  const lower = category.toLowerCase();
+  if (lower.includes('underweight')) return 'gain healthy weight';
+  if (lower.includes('overweight')) return 'lose weight';
+  if (lower.includes('obese')) return 'lose weight';
+  return 'maintain fitness and health';
+};
+
+// API returns tips as a markdown string — extract numbered items and strip bold markers
+const parseHealthTips = (raw: string | string[]): string[] => {
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  return raw
+    .split('\n')
+    .filter(line => /^\d+\./.test(line.trim()))
+    .map(line =>
+      line
+        .trim()
+        .replace(/^\d+\.\s*/, '')
+        .replace(/\*\*(.*?)\*\*/g, '$1'),
+    )
+    .filter(Boolean);
+};
+
 export const Home: React.FC = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [heading, setHeading]       = useState('');
   const [subHeading, setSubHeading] = useState('');
   const userData: any    = useSelector(selectUserData);
   const physicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
+  const storedTips      = useSelector(selectHealthTips);
+  const tipsEntryId     = useSelector(selectHealthTipsEntryId);
 
   const latest          = physicalData?.[0];
   const bmi             = latest?.bmi;
@@ -46,6 +79,69 @@ export const Home: React.FC = () => {
   const profileIncomplete = !userData?.profileComplete;
   const { status: healthStatus, data: healthData, load: loadHealth, refresh: refreshHealth  } = useHealthData();
   const [showHealthInfo, setShowHealthInfo] = useState(false);
+
+  const [tipsLoading, setTipsLoading] = useState(false);
+  const [tipsError, setTipsError]     = useState(false);
+  const fetchingRef = useRef(false);
+
+
+  const triggerError = (error?: string) =>{
+    setTipsError(true);
+    reportError(error, "fetchTips_Home.tsx")
+  }
+  const fetchTips = useCallback(async (entryId: string) => {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
+    setTipsLoading(true);
+    setTipsError(false);
+    try {
+      const age = userData?.dob
+        ? Math.floor(getAgeInYears(userData.dob, new Date()))
+        : 25;
+      const goal = deriveGoal(entryCategory || latest?.category || '');
+      const response = await fetch('https://letscrackit-api.vercel.app/api/health-tips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          age,
+          bmi: latest?.bmi,
+          bmiCategory: latest?.category,
+          goal,
+        }),
+      });
+      if (!response.ok) {
+        triggerError("got response.ok false")
+        return;
+      };
+      const data = await response.json();
+      const tips = parseHealthTips(data?.tips ?? '');
+      if (tips.length > 0) {
+        dispatch(setHealthTips({ entryId, tips }));
+      } else {
+        triggerError("tips.length is zero")
+      }
+    } catch(error) {
+      triggerError(JSON.stringify(error))
+    } finally {
+      setTipsLoading(false);
+      fetchingRef.current = false;
+    }
+  }, [userData?.dob, latest?.bmi, latest?.category, entryCategory, dispatch]);
+
+  const refreshTips = useCallback(() => {
+    if (!latest?.id || fetchingRef.current) return;
+    dispatch(clearHealthTips());
+    fetchTips(latest.id);
+  }, [latest?.id, dispatch, fetchTips]);
+
+  useEffect(() => {
+    if (!latest?.id || !latest?.bmi) return;
+    if (tipsEntryId === latest.id && storedTips.length > 0) return;
+    if (tipsEntryId !== latest.id) {
+      dispatch(clearHealthTips());
+    }
+    fetchTips(latest.id);
+  }, [latest?.id]);
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -148,6 +244,18 @@ export const Home: React.FC = () => {
             <Ionicons name="chevron-forward" size={20} color={colors.LIGHT_YELLOW} />
           </TouchableOpacity>
         )}
+
+        {/* Health tips */}
+        {bmi ? (
+          <HealthTipsCard
+            tips={tipsEntryId === latest?.id ? storedTips : []}
+            loading={tipsLoading}
+            error={tipsError && !tipsLoading}
+            categoryColor={entryColor}
+            onRetry={() => latest?.id && fetchTips(latest.id)}
+            onRefresh={refreshTips}
+          />
+        ) : null}
 
         {/* Health info modal */}
         <Modal

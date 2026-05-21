@@ -128,6 +128,12 @@ export const Home: React.FC = () => {
     }
   }, [userData?.dob, latest?.bmi, latest?.category, entryCategory, dispatch]);
 
+  const refreshTips = useCallback(() => {
+    if (!latest?.id || fetchingRef.current) return;
+    dispatch(clearHealthTips());
+    fetchTips(latest.id);
+  }, [latest?.id, dispatch, fetchTips]);
+
   useEffect(() => {
     if (!latest?.id || !latest?.bmi) return;
     if (tipsEntryId === latest.id && storedTips.length > 0) return;
@@ -247,6 +253,7 @@ export const Home: React.FC = () => {
             error={tipsError && !tipsLoading}
             categoryColor={entryColor}
             onRetry={() => latest?.id && fetchTips(latest.id)}
+            onRefresh={refreshTips}
           />
         ) : null}
 

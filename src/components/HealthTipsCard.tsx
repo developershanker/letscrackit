@@ -16,6 +16,7 @@ interface Props {
   error: boolean;
   categoryColor: string;
   onRetry: () => void;
+  onRefresh: () => void;
 }
 
 const TipItem: React.FC<{ tip: string; index: number; color: string }> = ({
@@ -80,14 +81,51 @@ const SkeletonLine: React.FC<{ width: string | number; marginTop?: number }> = (
   );
 };
 
+const RefreshButton: React.FC<{ loading: boolean; onPress: () => void }> = ({
+  loading,
+  onPress,
+}) => {
+  const spin = useRef(new Animated.Value(0)).current;
+  const loopRef = useRef<Animated.CompositeAnimation | null>(null);
+
+  useEffect(() => {
+    if (loading) {
+      loopRef.current = Animated.loop(
+        Animated.timing(spin, { toValue: 1, duration: 800, useNativeDriver: true }),
+      );
+      loopRef.current.start();
+    } else {
+      loopRef.current?.stop();
+      spin.setValue(0);
+    }
+  }, [loading]);
+
+  const rotate = spin.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={loading}
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+      activeOpacity={0.6}
+      style={styles.refreshBtn}>
+      <Animated.View style={{ transform: [{ rotate }] }}>
+        <Ionicons name="refresh-outline" size={15} color={loading ? colors.SLATE_BLUE : colors.POWDER_BLUE} />
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
 export const HealthTipsCard: React.FC<Props> = ({
   tips,
   loading,
   error,
   categoryColor,
   onRetry,
+  onRefresh,
 }) => {
   const color = categoryColor || colors.MINT_GREEN;
+  const hasContent = tips.length > 0;
 
   return (
     <View style={styles.card}>
@@ -96,12 +134,14 @@ export const HealthTipsCard: React.FC<Props> = ({
           <Ionicons name="sparkles" size={15} color={color} />
           <Text style={[styles.headerTitle, { color }]}>AI Health Tips</Text>
         </View>
-        {error && !loading && (
+        {error && !loading ? (
           <TouchableOpacity onPress={onRetry} style={styles.retryBtn} activeOpacity={0.7}>
             <Ionicons name="refresh-outline" size={13} color={colors.POWDER_BLUE} />
             <Text style={styles.retryText}>Retry</Text>
           </TouchableOpacity>
-        )}
+        ) : (hasContent || loading) ? (
+          <RefreshButton loading={loading} onPress={onRefresh} />
+        ) : null}
       </View>
 
       <Text style={styles.subtitle}>Personalized based on your current BMI</Text>
@@ -246,6 +286,9 @@ const styles = StyleSheet.create({
   retryText: {
     color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(11),
+  },
+  refreshBtn: {
+    padding: 2,
   },
   // Tips list
   tipsBlock: {

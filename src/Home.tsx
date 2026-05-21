@@ -44,6 +44,21 @@ const deriveGoal = (category: string): string => {
   return 'maintain fitness and health';
 };
 
+// API returns tips as a markdown string — extract numbered items and strip bold markers
+const parseHealthTips = (raw: string | string[]): string[] => {
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  return raw
+    .split('\n')
+    .filter(line => /^\d+\./.test(line.trim()))
+    .map(line =>
+      line
+        .trim()
+        .replace(/^\d+\.\s*/, '')
+        .replace(/\*\*(.*?)\*\*/g, '$1'),
+    )
+    .filter(Boolean);
+};
+
 export const Home: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -90,8 +105,9 @@ export const Home: React.FC = () => {
         }),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const { tips } = await response.json();
-      if (Array.isArray(tips) && tips.length > 0) {
+      const data = await response.json();
+      const tips = parseHealthTips(data.tips ?? '');
+      if (tips.length > 0) {
         dispatch(setHealthTips({ entryId, tips }));
       } else {
         setTipsError(true);

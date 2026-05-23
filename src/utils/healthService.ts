@@ -31,8 +31,6 @@ async function initAndroid(): Promise<boolean> {
       { accessType: 'read', recordType: 'Steps' },
       { accessType: 'read', recordType: 'HeartRate' },
       { accessType: 'read', recordType: 'SleepSession' },
-      { accessType: 'read', recordType: 'Weight' },
-      { accessType: 'read', recordType: 'Height' },
     ]);
   }
   return ok;
@@ -41,9 +39,8 @@ async function initAndroid(): Promise<boolean> {
 async function readAndroidHealth(): Promise<HealthData> {
   const { readRecords, aggregateRecord } = require('react-native-health-connect');
   const now = dayjs();
-  const startOfDay   = now.startOf('day').format();                                   // e.g. 2026-05-20T00:00:00+05:30
+  const startOfDay   = now.startOf('day').format();
   const nowISO       = now.format();
-  const oneYearAgo   = now.subtract(1, 'year').format();
   const yesterday8pm = now.subtract(1, 'day').hour(20).minute(0).second(0).millisecond(0).format();
 
   const result: HealthData = {};
@@ -78,26 +75,6 @@ async function readAndroidHealth(): Promise<HealthData> {
     }
   } catch {}
 
-  try {
-    const { records } = await readRecords('Weight', {
-      timeRangeFilter: { operator: 'between', startTime: oneYearAgo, endTime: nowISO },
-    });
-    if (records.length > 0) {
-      const latest = records[records.length - 1];
-      result.weight = Math.round(latest.weight.inKilograms * 10) / 10;
-    }
-  } catch {}
-
-  try {
-    const { records } = await readRecords('Height', {
-      timeRangeFilter: { operator: 'between', startTime: oneYearAgo, endTime: nowISO },
-    });
-    if (records.length > 0) {
-      const latest = records[records.length - 1];
-      result.height = Math.round(latest.height.inMeters * 100);
-    }
-  } catch {}
-
   return result;
 }
 
@@ -114,8 +91,6 @@ function initIOS(): Promise<boolean> {
             Permissions.StepCount,
             Permissions.HeartRate,
             Permissions.SleepAnalysis,
-            Permissions.Weight,
-            Permissions.Height,
           ],
           write: [],
         },
@@ -172,22 +147,6 @@ async function readIOSHealth(): Promise<HealthData> {
         result.sleep = Math.round((totalMs / 3_600_000) * 10) / 10;
       }
     }
-  } catch {}
-
-  try {
-    const weight = await iosRead<{ value: number }>(
-      AppleHealthKit.getLatestWeight.bind(AppleHealthKit),
-      { unit: 'gram' },
-    );
-    if (weight) result.weight = Math.round((weight.value / 1000) * 10) / 10;
-  } catch {}
-
-  try {
-    const height = await iosRead<{ value: number }>(
-      AppleHealthKit.getLatestHeight.bind(AppleHealthKit),
-      { unit: 'meter' },
-    );
-    if (height) result.height = Math.round(height.value * 100);
   } catch {}
 
   return result;

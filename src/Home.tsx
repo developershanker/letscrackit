@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -83,6 +84,7 @@ export const Home: React.FC = () => {
   const [tipsLoading, setTipsLoading] = useState(false);
   const [tipsError, setTipsError]     = useState(false);
   const fetchingRef = useRef(false);
+  const lastBackPress = useRef(0);
 
 
   const triggerError = (error?: string) =>{
@@ -145,7 +147,15 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
+      const now = Date.now();
+      if (now - lastBackPress.current < 2000) {
+        BackHandler.exitApp();
+        return true;
+      }
+      lastBackPress.current = now;
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Press again to exit', ToastAndroid.SHORT);
+      }
       return true;
     });
     return () => sub.remove();
@@ -180,6 +190,28 @@ export const Home: React.FC = () => {
           <Text style={styles.greetingLine}>{getGreeting()} 👋</Text>
           <Text style={styles.greetingName}>{firstName}</Text>
         </View>
+
+        {/* Welcome / Today's Focus card */}
+        {(heading || subHeading) ? (
+          <View style={styles.welcomeCard}>
+            <View style={styles.welcomeColorBar}>
+              <View style={[styles.welcomeColorSegment, { backgroundColor: colors.LIGHT_YELLOW }]} />
+              <View style={[styles.welcomeColorSegment, { backgroundColor: colors.MINT_GREEN }]} />
+              <View style={[styles.welcomeColorSegment, { backgroundColor: colors.SKY_BLUE }]} />
+              <View style={[styles.welcomeColorSegment, { backgroundColor: colors.CORAL }]} />
+            </View>
+            <View style={styles.welcomeInner}>
+              <View style={styles.welcomeTagRow}>
+                <Text style={styles.welcomeTagEmoji}>✨</Text>
+                <View style={styles.welcomeTagBadge}>
+                  <Text style={styles.welcomeTagText}>TODAY'S FOCUS</Text>
+                </View>
+              </View>
+              {heading ? <Text style={styles.welcomeHeading}>{capitalizeWords(heading)}</Text> : null}
+              {subHeading ? <Text style={styles.welcomeSubHeading}>{subHeading}</Text> : null}
+            </View>
+          </View>
+        ) : null}
 
         {/* Incomplete profile nudge */}
         {profileIncomplete && (
@@ -280,7 +312,7 @@ export const Home: React.FC = () => {
                 <>
                   <Text style={styles.modalStep}><Text style={styles.modalStepNum}>1. </Text>Tap the <Text style={styles.modalBold}>Connect</Text> button on the Today's Health card.</Text>
                   <Text style={styles.modalStep}><Text style={styles.modalStepNum}>2. </Text>The <Text style={styles.modalBold}>Health Connect</Text> permission screen will open.</Text>
-                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Allow each permission — Steps, Heart Rate, Sleep, Weight, Height.</Text>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Allow each permission — Steps, Heart Rate, Sleep.</Text>
                   <View style={styles.modalDivider} />
                   <Text style={styles.modalNote}>If Health Connect is not installed, install it from the <Text style={styles.modalBold}>Play Store</Text> first.</Text>
                   <Text style={styles.modalNote}>To revoke later: <Text style={styles.modalBold}>Settings → Apps → Health Connect → App permissions → LetsCrackIt</Text></Text>
@@ -289,7 +321,7 @@ export const Home: React.FC = () => {
                 <>
                   <Text style={styles.modalStep}><Text style={styles.modalStepNum}>1. </Text>Tap the <Text style={styles.modalBold}>Connect</Text> button on the Today's Health card.</Text>
                   <Text style={styles.modalStep}><Text style={styles.modalStepNum}>2. </Text>The <Text style={styles.modalBold}>Health access</Text> dialog will appear.</Text>
-                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Enable each category — Steps, Heart Rate, Sleep, Weight, Height — then tap <Text style={styles.modalBold}>Allow</Text>.</Text>
+                  <Text style={styles.modalStep}><Text style={styles.modalStepNum}>3. </Text>Enable each category — Steps, Heart Rate, Sleep — then tap <Text style={styles.modalBold}>Allow</Text>.</Text>
                   <View style={styles.modalDivider} />
                   <Text style={styles.modalNote}>To revoke later: <Text style={styles.modalBold}>Settings → Privacy & Security → Health → LetsCrackIt</Text></Text>
                 </>
@@ -397,18 +429,6 @@ export const Home: React.FC = () => {
             </TouchableOpacity>
           )}
         </View>
-
-        {/* Firebase content */}
-        {(heading || subHeading) ? (
-          <View style={styles.contentCard}>
-            <View style={styles.contentCardHeader}>
-              <Ionicons name="flash-outline" size={16} color={colors.LIGHT_YELLOW} />
-              <Text style={styles.contentTag}>Today's Focus</Text>
-            </View>
-            {heading    ? <Text style={styles.contentHeading}>{capitalizeWords(heading)}</Text>    : null}
-            {subHeading ? <Text style={styles.contentSubHeading}>{subHeading}</Text> : null}
-          </View>
-        ) : null}
 
         {/* Quick actions */}
         <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -537,34 +557,52 @@ const styles = StyleSheet.create({
     color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(12),
   },
-  // Firebase content card
-  contentCard: {
-    backgroundColor: colors.DARK_NAVY,
-    borderRadius: 16,
+  // Welcome / Today's Focus card
+  welcomeCard: {
+    borderRadius: 18,
+    overflow: 'hidden',
     borderWidth: 1,
-    borderColor: colors.NAVY_BLUE,
-    padding: 20,
-    marginBottom: 24,
+    borderColor: colors.LIGHT_YELLOW + '44',
+    backgroundColor: colors.DARK_NAVY,
+    marginBottom: 16,
   },
-  contentCardHeader: {
+  welcomeColorBar: {
+    flexDirection: 'row',
+    height: 5,
+  },
+  welcomeColorSegment: {
+    flex: 1,
+  },
+  welcomeInner: {
+    padding: 20,
+  },
+  welcomeTagRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
     marginBottom: 10,
   },
-  contentTag: {
+  welcomeTagEmoji: { fontSize: 14 },
+  welcomeTagBadge: {
+    backgroundColor: colors.LIGHT_YELLOW + '22',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderWidth: 1,
+    borderColor: colors.LIGHT_YELLOW + '44',
+  },
+  welcomeTagText: {
     color: colors.LIGHT_YELLOW,
-    ...fonts.PoppinsMedium(11),
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
+    ...fonts.PoppinsBold(9),
+    letterSpacing: 1.2,
   },
-  contentHeading: {
+  welcomeHeading: {
     color: colors.WHITE,
-    ...fonts.PoppinsSemiBold(16),
+    ...fonts.PoppinsBold(18),
+    lineHeight: 26,
     marginBottom: 6,
-    lineHeight: 24,
   },
-  contentSubHeading: {
+  welcomeSubHeading: {
     color: colors.POWDER_BLUE,
     ...fonts.PoppinsRegular(13),
     lineHeight: 20,

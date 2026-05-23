@@ -19,6 +19,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { capitalizeWords, reportError, formatBMIMetric, BMI_METHOD_LABEL } from './utils/helpers';
 import { BMIEntry } from './store/slices/userSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteAccount } from './utils/api';
 
 export const Profile: React.FC = () => {
@@ -157,25 +158,51 @@ export const Profile: React.FC = () => {
         )}
 
 
-<View style={styles.bottomSection}>
-  <TouchableOpacity
-    style={styles.primaryButton}
-    onPress={() => navigation.navigate('AddDetails')}
-    activeOpacity={0.85}>
-    <Text style={styles.primaryButtonText}>
-      {hasData ? 'Update Details' : 'Add Details'}
-    </Text>
-  </TouchableOpacity>
+        {/* Settings-style action list */}
+        <View style={styles.settingsList}>
+          <TouchableOpacity
+            style={styles.settingsItem}
+            onPress={() => navigation.navigate('AddDetails')}
+            activeOpacity={0.7}>
+            <View style={[styles.settingsIconWrap, { backgroundColor: colors.LIGHT_YELLOW + '22' }]}>
+              <Ionicons name="scale-outline" size={18} color={colors.LIGHT_YELLOW} />
+            </View>
+            <Text style={styles.settingsItemText}>{hasData ? 'Update Details' : 'Add Details'}</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.SLATE_BLUE} />
+          </TouchableOpacity>
 
-  <View style={styles.secondaryRow}>
-    <TouchableOpacity onPress={handleDeleteAccount} style={styles.deleteBtn}>
-      <Text style={styles.deleteText}>Delete Account</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.signOutBtn} onPress={handleLogout} activeOpacity={0.85}>
-      <Text style={styles.signOutText}>Sign Out</Text>
-    </TouchableOpacity>
-  </View>
-</View>
+          <View style={styles.settingsDivider} />
+
+          <TouchableOpacity
+            style={styles.settingsItem}
+            onPress={handleLogout}
+            activeOpacity={0.7}>
+            <View style={[styles.settingsIconWrap, { backgroundColor: colors.DEEP_MIDNIGHT }]}>
+              <Ionicons name="log-out-outline" size={18} color={colors.POWDER_BLUE} />
+            </View>
+            <Text style={styles.settingsItemText}>Sign Out</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.SLATE_BLUE} />
+          </TouchableOpacity>
+
+          <View style={styles.settingsDivider} />
+
+          <TouchableOpacity
+            style={styles.settingsItem}
+            onPress={handleDeleteAccount}
+            activeOpacity={0.7}>
+            <View style={[styles.settingsIconWrap, { backgroundColor: colors.DARK_MAROON }]}>
+              <Ionicons name="trash-outline" size={18} color={colors.CORAL} />
+            </View>
+            <Text style={[styles.settingsItemText, { color: colors.CORAL }]}>Delete Account</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.CORAL + '88'} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Footer */}
+        <View style={styles.profileFooter}>
+          <Text style={styles.footerVersion}>v2.11 (13)</Text>
+          <Text style={styles.footerTagline}>Made for Healthy India ❤️</Text>
+        </View>
 
       </ScrollView>
     </SafeAreaView>
@@ -306,62 +333,51 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     lineHeight: 20,
   },
-  // Bottom CTAs
-  bottomSection: {
-  paddingHorizontal: 20,
-  paddingBottom: 16,
-  paddingTop: 10,
-  gap: 10,
-},
-primaryButton: {
-  backgroundColor: colors.LIGHT_YELLOW,
-  borderRadius: 10,
-  paddingVertical: 12,
-  alignItems: 'center',
-},
-primaryButtonText: {
-  color: colors.MIDNIGHT_NAVY,
-  ...fonts.PoppinsSemiBold(14),
-},
-secondaryRow: {
-  marginTop: 18, 
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 8,
-},
-editProfileBtn: {
-  borderWidth: 1,
-  borderColor: colors.NAVY_BLUE,
-  borderRadius: 10,
-  paddingVertical: 10,
-  alignItems: 'center',
-},
-editProfileText: {
-  color: colors.POWDER_BLUE,
-  ...fonts.PoppinsMedium(13),
-},
-signOutBtn: {
-  flex: 1,
-  borderWidth: 1,
-  borderColor: colors.NAVY_BLUE,
-  borderRadius: 10,
-  paddingVertical: 10,
-  alignItems: 'center',
-},
-signOutText: {
-  color: colors.POWDER_BLUE,
-  ...fonts.PoppinsMedium(13),
-},
-deleteBtn: {
-  flex: 1,
-  borderWidth: 1,
-  borderColor: colors.DARK_MAROON,
-  borderRadius: 10,
-  paddingVertical: 10,
-  alignItems: 'center',
-},
-deleteText: {
-  color: colors.CORAL,
-  ...fonts.PoppinsMedium(13),
-},
+  // Settings list
+  settingsList: {
+    backgroundColor: colors.DARK_NAVY,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.NAVY_BLUE,
+    overflow: 'hidden',
+    marginBottom: 24,
+  },
+  settingsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 14,
+  },
+  settingsIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  settingsItemText: {
+    flex: 1,
+    color: colors.WHITE,
+    ...fonts.PoppinsMedium(14),
+  },
+  settingsDivider: {
+    height: 1,
+    backgroundColor: colors.NAVY_BLUE,
+    marginLeft: 66,
+  },
+  // Footer
+  profileFooter: {
+    alignItems: 'center',
+    paddingBottom: 24,
+    gap: 4,
+  },
+  footerVersion: {
+    color: colors.SLATE_BLUE,
+    ...fonts.PoppinsRegular(12),
+  },
+  footerTagline: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsMedium(13),
+  },
 });

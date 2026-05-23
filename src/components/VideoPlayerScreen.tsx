@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
+  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -30,7 +31,15 @@ const LEVEL_COLORS: Record<VideoLevel, string> = {
 export const VideoPlayerScreen: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RootStackParamList, 'VideoPlayerScreen'>>();
- const { video } = route?.params
+  const { video } = route?.params;
+
+  useEffect(() => {
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.goBack();
+      return true;
+    });
+    return () => sub.remove();
+  }, [navigation]);
   return (
     <SafeAreaView style={styles.container}>
       {/* Back button */}

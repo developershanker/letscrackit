@@ -22,6 +22,7 @@ import { BMIEntry } from './store/slices/userSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteAccount } from './utils/api';
+import { APP_VERSION, BUILD_NUMBER } from './utils/version';
 
 const FEEDBACK_FORM_URL = 'https://forms.gle/2JKtsjtTWC1eYCRe7';
 
@@ -223,7 +224,7 @@ export const Profile: React.FC = () => {
 
         {/* Footer */}
         <View style={styles.profileFooter}>
-          <Text style={styles.footerVersion}>v2.11 (13)</Text>
+          <Text style={styles.footerVersion}>v{APP_VERSION} ({BUILD_NUMBER})</Text>
           <Text style={styles.footerTagline}>Made for Healthy India ❤️</Text>
         </View>
 

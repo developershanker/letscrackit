@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BackHandler,
+  Linking,
+  Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -22,11 +25,37 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteAccount } from './utils/api';
 
+const FEEDBACK_FORM_URL = 'https://forms.gle/YOUR_FORM_ID_HERE';
+const PLAY_STORE_URL    = `market://details?id=com.letscrackit`;
+const PLAY_STORE_WEB    = `https://play.google.com/store/apps/details?id=com.letscrackit`;
+const APP_STORE_URL     = `itms-apps://apps.apple.com/app/idYOUR_APP_ID`;
+
 export const Profile: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userData: any = useSelector(selectUserData);
   const userPhysicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
+  const [showFeedbackSheet, setShowFeedbackSheet] = useState(false);
+
+  const openStoreRating = async () => {
+    setShowFeedbackSheet(false);
+    try {
+      const storeUrl = Platform.OS === 'ios' ? APP_STORE_URL : PLAY_STORE_URL;
+      const canOpen  = await Linking.canOpenURL(storeUrl);
+      await Linking.openURL(canOpen ? storeUrl : PLAY_STORE_WEB);
+    } catch (e) {
+      reportError(e, 'openStoreRating_Profile.tsx');
+    }
+  };
+
+  const openFeedbackForm = async () => {
+    setShowFeedbackSheet(false);
+    try {
+      await Linking.openURL(FEEDBACK_FORM_URL);
+    } catch (e) {
+      reportError(e, 'openFeedbackForm_Profile.tsx');
+    }
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -175,6 +204,19 @@ export const Profile: React.FC = () => {
 
           <TouchableOpacity
             style={styles.settingsItem}
+            onPress={() => setShowFeedbackSheet(true)}
+            activeOpacity={0.7}>
+            <View style={[styles.settingsIconWrap, { backgroundColor: colors.MINT_GREEN + '22' }]}>
+              <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.MINT_GREEN} />
+            </View>
+            <Text style={styles.settingsItemText}>Give Feedback</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.SLATE_BLUE} />
+          </TouchableOpacity>
+
+          <View style={styles.settingsDivider} />
+
+          <TouchableOpacity
+            style={styles.settingsItem}
             onPress={handleLogout}
             activeOpacity={0.7}>
             <View style={[styles.settingsIconWrap, { backgroundColor: colors.DEEP_MIDNIGHT }]}>
@@ -205,6 +247,58 @@ export const Profile: React.FC = () => {
         </View>
 
       </ScrollView>
+
+      {/* Feedback bottom sheet */}
+      <Modal
+        visible={showFeedbackSheet}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowFeedbackSheet(false)}>
+        <TouchableOpacity
+          style={styles.sheetOverlay}
+          activeOpacity={1}
+          onPress={() => setShowFeedbackSheet(false)}>
+          <TouchableOpacity activeOpacity={1} onPress={() => {}}>
+            <View style={styles.sheet}>
+              {/* Handle bar */}
+              <View style={styles.sheetHandle} />
+
+              <Text style={styles.sheetTitle}>How would you like to help? 🙏</Text>
+              <Text style={styles.sheetSubtitle}>Your feedback helps us make the app better for everyone</Text>
+
+              {/* Rate on Store */}
+              <TouchableOpacity style={styles.feedbackOption} onPress={openStoreRating} activeOpacity={0.85}>
+                <View style={[styles.feedbackIconWrap, { backgroundColor: colors.AMBER + '22' }]}>
+                  <Ionicons name="star" size={22} color={colors.AMBER} />
+                </View>
+                <View style={styles.feedbackOptionText}>
+                  <Text style={styles.feedbackOptionTitle}>Rate on {Platform.OS === 'ios' ? 'App Store' : 'Play Store'}</Text>
+                  <Text style={styles.feedbackOptionDesc}>Takes just 30 seconds ⭐</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={16} color={colors.SLATE_BLUE} />
+              </TouchableOpacity>
+
+              <View style={styles.feedbackDivider} />
+
+              {/* Feedback Form */}
+              <TouchableOpacity style={styles.feedbackOption} onPress={openFeedbackForm} activeOpacity={0.85}>
+                <View style={[styles.feedbackIconWrap, { backgroundColor: colors.SKY_BLUE + '22' }]}>
+                  <Ionicons name="document-text-outline" size={22} color={colors.SKY_BLUE} />
+                </View>
+                <View style={styles.feedbackOptionText}>
+                  <Text style={styles.feedbackOptionTitle}>Share Detailed Feedback</Text>
+                  <Text style={styles.feedbackOptionDesc}>Fill a quick Google Form 📝</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={16} color={colors.SLATE_BLUE} />
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.sheetCancel} onPress={() => setShowFeedbackSheet(false)} activeOpacity={0.7}>
+                <Text style={styles.sheetCancelText}>Maybe Later</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -365,6 +459,84 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.NAVY_BLUE,
     marginLeft: 66,
+  },
+  // Feedback bottom sheet
+  sheetOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'flex-end',
+  },
+  sheet: {
+    backgroundColor: colors.DARK_NAVY,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderColor: colors.NAVY_BLUE,
+    paddingHorizontal: 20,
+    paddingBottom: 36,
+    paddingTop: 12,
+  },
+  sheetHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.NAVY_BLUE,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  sheetTitle: {
+    color: colors.WHITE,
+    ...fonts.PoppinsBold(18),
+    marginBottom: 6,
+  },
+  sheetSubtitle: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(13),
+    lineHeight: 20,
+    marginBottom: 24,
+  },
+  feedbackOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingVertical: 14,
+  },
+  feedbackIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  feedbackOptionText: {
+    flex: 1,
+    gap: 3,
+  },
+  feedbackOptionTitle: {
+    color: colors.WHITE,
+    ...fonts.PoppinsSemiBold(14),
+  },
+  feedbackOptionDesc: {
+    color: colors.POWDER_BLUE,
+    ...fonts.PoppinsRegular(12),
+  },
+  feedbackDivider: {
+    height: 1,
+    backgroundColor: colors.NAVY_BLUE,
+    marginLeft: 62,
+  },
+  sheetCancel: {
+    marginTop: 20,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.NAVY_BLUE,
+  },
+  sheetCancelText: {
+    color: colors.SLATE_BLUE,
+    ...fonts.PoppinsMedium(14),
   },
   // Footer
   profileFooter: {

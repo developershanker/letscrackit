@@ -25,7 +25,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteAccount } from './utils/api';
 
-const FEEDBACK_FORM_URL = 'https://forms.gle/YOUR_FORM_ID_HERE';
+const FEEDBACK_FORM_URL = 'https://forms.gle/2JKtsjtTWC1eYCRe7';
 const PLAY_STORE_URL    = `market://details?id=com.letscrackit`;
 const PLAY_STORE_WEB    = `https://play.google.com/store/apps/details?id=com.letscrackit`;
 const APP_STORE_URL     = `itms-apps://apps.apple.com/app/idYOUR_APP_ID`;

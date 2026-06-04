@@ -1,3 +1,4 @@
-// Keep in sync with android/app/build.gradle → versionName / versionCode
-export const APP_VERSION  = '2.12';
-export const BUILD_NUMBER = 14;
+import DeviceInfo from 'react-native-device-info';
+
+export const APP_VERSION  = DeviceInfo.getVersion();     // reads versionName from build.gradle
+export const BUILD_NUMBER = DeviceInfo.getBuildNumber();  // reads versionCode from build.gradle

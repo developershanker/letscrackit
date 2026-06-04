@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {
   BackHandler,
+  Linking,
   ScrollView,
   StyleSheet,
   View,
@@ -22,11 +23,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteAccount } from './utils/api';
 
+const FEEDBACK_FORM_URL = 'https://forms.gle/2JKtsjtTWC1eYCRe7';
+
 export const Profile: React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const userData: any = useSelector(selectUserData);
   const userPhysicalData: BMIEntry[] = useSelector(selectUserPhysicalData) ?? [];
+  const openFeedbackForm = async () => {
+    try {
+      await Linking.openURL(FEEDBACK_FORM_URL);
+    } catch (e) {
+      reportError(e, 'openFeedbackForm_Profile.tsx');
+    }
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -175,6 +185,19 @@ export const Profile: React.FC = () => {
 
           <TouchableOpacity
             style={styles.settingsItem}
+            onPress={openFeedbackForm}
+            activeOpacity={0.7}>
+            <View style={[styles.settingsIconWrap, { backgroundColor: colors.MINT_GREEN + '22' }]}>
+              <Ionicons name="chatbubble-ellipses-outline" size={18} color={colors.MINT_GREEN} />
+            </View>
+            <Text style={styles.settingsItemText}>Give Feedback</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.SLATE_BLUE} />
+          </TouchableOpacity>
+
+          <View style={styles.settingsDivider} />
+
+          <TouchableOpacity
+            style={styles.settingsItem}
             onPress={handleLogout}
             activeOpacity={0.7}>
             <View style={[styles.settingsIconWrap, { backgroundColor: colors.DEEP_MIDNIGHT }]}>
@@ -205,6 +228,7 @@ export const Profile: React.FC = () => {
         </View>
 
       </ScrollView>
+
     </SafeAreaView>
   );
 };

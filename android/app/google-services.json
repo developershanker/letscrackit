@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "113606866455-ef4o4kva67hblhvo34gfl2ob9p8ursg4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letscrackit",
+            "certificate_hash": "c7beb609e5b0838cb5bfea4dd91db1adac83a1a4"
+          }
+        },
+        {
           "client_id": "113606866455-mtk8s7c16tbhlf1mqobfmpbd1glm7usu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,4 +1,3 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
     "react-native/scripts/react_native_pods.rb",
@@ -7,30 +6,68 @@ require Pod::Executable.execute_command('node', ['-p',
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
-
 use_modular_headers!
 
-linkage = ENV['USE_FRAMEWORKS']
-if linkage != nil
-  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
-end
+$rn_path = nil
 
 target 'LetsCrackIt' do
   config = use_native_modules!
-
+  $rn_path = config[:reactNativePath]
   use_react_native!(
     :path => config[:reactNativePath],
-    # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+end
 
-  post_install do |installer|
-    react_native_post_install(
-      installer,
-      config[:reactNativePath],
-      :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
-    )
+post_install do |installer|
+  react_native_post_install(
+    installer,
+    $rn_path,
+    :mac_catalyst_enabled => false,
+  )
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
+      if target.name == 'RNAppleHealthKit'
+        config.build_settings['RCT_NEW_ARCH_ENABLED'] = '0'
+      end
+    end
+  end
+
+  # Firebase SDK 12+ defines FIRAuth in Swift; its ObjC bridge header is only
+  # generated at build time. We ship a pre-generated copy so Firebase.h can resolve
+  # <FirebaseAuth/FirebaseAuth-Swift.h> without use_frameworks!.
+  firebase_auth_headers = installer.sandbox.root.to_s + "/Headers/Public/FirebaseAuth"
+  swift_header_src = File.join(installer.sandbox.root.to_s, "../FirebaseAuth-Swift.generated.h")
+  swift_header_dst = firebase_auth_headers + "/FirebaseAuth-Swift.h"
+  if Dir.exist?(firebase_auth_headers) && File.exist?(swift_header_src)
+    FileUtils.cp(swift_header_src, swift_header_dst)
+  end
+
+  # FirebaseFirestoreInternal is built as a static lib but its podspec also adds
+  # -weak_framework which the linker rejects when no .framework exists. Strip it.
+  pods_ldflags_xcconfigs = Dir.glob(installer.sandbox.root.to_s + "/Target Support Files/Pods-LetsCrackIt/Pods-LetsCrackIt.*.xcconfig")
+  pods_ldflags_xcconfigs.each do |xcconfig_path|
+    content = File.read(xcconfig_path)
+    if content.include?('-weak_framework "FirebaseFirestoreInternal"')
+      File.write(xcconfig_path, content.gsub(' -weak_framework "FirebaseFirestoreInternal"', ''))
+    end
+  end
+
+  # Fix gRPC modulemap — must use .to_s on Pathname so string concat works
+  grpc_dir = installer.sandbox.root.to_s + "/Headers/Private/grpc"
+  grpc_modulemap = grpc_dir + "/gRPC-Core.modulemap"
+  FileUtils.mkdir_p(grpc_dir)
+  File.write(grpc_modulemap, "module gRPC_Core { }\n") unless File.exist?(grpc_modulemap)
+
+  # Patch react-native-health for RN 0.75+ compatibility (setBridge: has no public header)
+  rnh_file = File.join(installer.sandbox.root, "../node_modules/react-native-health/RCTAppleHealthKit/RCTAppleHealthKit.m")
+  if File.exist?(rnh_file)
+    content = File.read(rnh_file)
+    patch = "\n// RN 0.75+ removed the public header for setBridge: — declare it here to suppress compile error\n@interface RCTCallableJSModules (LegacyBridgeSetter)\n- (void)setBridge:(RCTBridge *)bridge;\n@end\n"
+    unless content.include?("LegacyBridgeSetter")
+      content = content.sub("#import <React/RCTEventDispatcher.h>", "#import <React/RCTEventDispatcher.h>#{patch}")
+      File.write(rnh_file, content)
+    end
   end
 end

@@ -38,7 +38,7 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>LetsCrackIt may write health data to Apple Health on your behalf.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -60,5 +60,57 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.113606866455-p7sf873flftqtk5mrd00sr1dlf3d1kel</string>
+			</array>
+		</dict>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ShortBaby.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Feather.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>FontAwesome6_Regular.ttf</string>
+		<string>Poppins-Light.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>Rubik-SemiBoldItalic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>Rubik-ExtraBoldItalic.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>Rubik-Black.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>ScholarlyAmbitionRegular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>Rubik-SemiBold.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Rubik-ExtraBold.ttf</string>
+		<string>FontAwesome6_Solid.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+		<string>FontAwesome6_Brands.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>MaterialIcons.ttf</string>
+	</array>
 </dict>
 </plist>

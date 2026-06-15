@@ -19,7 +19,6 @@ async function initAndroid(): Promise<boolean> {
     SdkAvailabilityStatus,
   } = require('react-native-health-connect');
 
-  // Check if Health Connect is available on this device before anything else
   const status = await getSdkStatus();
   if (status !== SdkAvailabilityStatus.SDK_AVAILABLE) {
     return false;
@@ -55,13 +54,16 @@ async function readAndroidHealth(): Promise<HealthData> {
     }
   } catch {}
 
+  // Use readRecords for HeartRate — aggregateRecord COUNT_TOTAL counts records, not BPM
   try {
-    const agg = await aggregateRecord({
-      recordType: 'HeartRate',
+    const hrData = await readRecords('HeartRate', {
       timeRangeFilter: { operator: 'between', startTime: startOfDay, endTime: nowISO },
     });
-    if (agg.COUNT_TOTAL !== undefined) {
-      result.steps = agg.COUNT_TOTAL;
+    const allSamples = (hrData.records ?? []).flatMap((r: any) => r.samples ?? []);
+    if (allSamples.length > 0) {
+      result.heartRate = Math.round(
+        allSamples.reduce((s: number, x: any) => s + x.beatsPerMinute, 0) / allSamples.length,
+      );
     }
   } catch {}
 
@@ -83,6 +85,11 @@ async function readAndroidHealth(): Promise<HealthData> {
 function initIOS(): Promise<boolean> {
   return new Promise(resolve => {
     const AppleHealthKit = require('react-native-health');
+    if (!AppleHealthKit?.initHealthKit) {
+      console.warn('[HealthKit] Native module not available - NativeModules.AppleHealthKit is undefined');
+      resolve(false);
+      return;
+    }
     const { Permissions } = AppleHealthKit.Constants;
     AppleHealthKit.initHealthKit(
       {
@@ -95,7 +102,10 @@ function initIOS(): Promise<boolean> {
           write: [],
         },
       },
-      (err: string) => resolve(!err),
+      (err: string) => {
+        if (err) console.warn('[HealthKit] initHealthKit error:', err);
+        resolve(!err);
+      },
     );
   });
 }
@@ -106,13 +116,18 @@ function iosRead<T>(fn: Function, opts: object): Promise<T | null> {
   });
 }
 
+// Sleep stage values that represent actual sleep (not just time in bed / awake)
+// iOS < 16: 'ASLEEP'
+// iOS 16+: 'CORE' (light), 'DEEP', 'REM', 'UNSPECIFIED'
+const SLEEP_STAGES = new Set(['ASLEEP', 'CORE', 'DEEP', 'REM', 'UNSPECIFIED']);
+
 async function readIOSHealth(): Promise<HealthData> {
   const AppleHealthKit = require('react-native-health');
   const result: HealthData = {};
   const now = dayjs();
-  const startOfDay    = now.startOf('day').format();
-  const nowISO        = now.format();
-  const yesterday6pm  = now.subtract(1, 'day').hour(18).minute(0).second(0).millisecond(0).format();
+  const startOfDay   = now.startOf('day').format();
+  const nowISO       = now.format();
+  const yesterday6pm = now.subtract(1, 'day').hour(18).minute(0).second(0).millisecond(0).format();
 
   try {
     const steps = await iosRead<{ value: number }>(
@@ -128,19 +143,25 @@ async function readIOSHealth(): Promise<HealthData> {
       { startDate: startOfDay, endDate: nowISO, ascending: false, limit: 20 },
     );
     if (samples && samples.length > 0) {
-      result.heartRate = Math.round(samples.reduce((s, x) => s + x.value, 0) / samples.length);
+      result.heartRate = Math.round(
+        samples.reduce((s, x) => s + x.value, 0) / samples.length,
+      );
     }
   } catch {}
 
   try {
     const sleep = await iosRead<Array<{ startDate: string; endDate: string; value: string }>>(
       AppleHealthKit.getSleepSamples.bind(AppleHealthKit),
-      { startDate: yesterday6pm, endDate: nowISO, limit: 20 },
+      { startDate: yesterday6pm, endDate: nowISO, limit: 50 },
     );
     if (sleep && sleep.length > 0) {
-      const asleep = sleep.filter(s => s.value === 'ASLEEP' || s.value === 'INBED');
-      if (asleep.length > 0) {
-        const totalMs = asleep.reduce(
+      // Prefer specific sleep stages (iOS 16+); fall back to INBED if none available
+      let sleepSamples = sleep.filter(s => SLEEP_STAGES.has(s.value));
+      if (sleepSamples.length === 0) {
+        sleepSamples = sleep.filter(s => s.value === 'INBED');
+      }
+      if (sleepSamples.length > 0) {
+        const totalMs = sleepSamples.reduce(
           (sum, s) => sum + (new Date(s.endDate).getTime() - new Date(s.startDate).getTime()),
           0,
         );

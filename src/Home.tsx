@@ -359,7 +359,9 @@ export const Home: React.FC = () => {
 
           {healthStatus === 'unavailable' ? (
             <Text style={styles.healthEmptyText}>
-              Health Connect not available.{'\n'}Install it from the Play Store to sync health stats.
+              {Platform.OS === 'ios'
+                ? 'Apple Health not available.\nEnsure Health access is enabled in Settings → Privacy & Security → Health.'
+                : 'Health Connect not available.\nInstall it from the Play Store to sync health stats.'}
             </Text>
           ) : healthStatus === 'ready' ||
             (healthStatus === 'loading' &&

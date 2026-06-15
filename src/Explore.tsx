@@ -53,7 +53,7 @@ export const Explore: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigation.goBack();
+    navigation.navigate('Home');
     return true;
   };
 

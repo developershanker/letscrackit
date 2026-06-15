@@ -118,7 +118,7 @@ export const OnboardingDetails: React.FC = () => {
     try {
       await saveUserProfile(dob, sex as 'male' | 'female');
       dispatch(setUserData({ ...userData, dob, sex, profileComplete: true }));
-      isEditMode ? navigation.goBack() : navigation.navigate('TabBar' as never);
+      isEditMode ? navigation.goBack() : navigation.reset({ index: 0, routes: [{ name: 'TabBar' }] });
     } catch {
       Alert.alert('Error', 'Failed to save profile. Please try again.');
     } finally {

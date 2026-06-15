@@ -41,7 +41,7 @@ export const Profile: React.FC = () => {
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
+      navigation.navigate('Home');
       return true;
     });
     return () => backHandler.remove();

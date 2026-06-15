@@ -75,7 +75,7 @@ function App(): React.JSX.Element {
 
     // Navigate after sign-in is complete
     if (navigationRef.isReady()) {
-      navigationRef.navigate(profile?.profileComplete ? 'TabBar' : 'OnboardingDetails');
+      navigationRef.reset({ index: 0, routes: [{ name: profile?.profileComplete ? 'TabBar' : 'OnboardingDetails' }] });
     }
   } catch (error) {
     reportError(error, "handleEmailLink_App.tsx")

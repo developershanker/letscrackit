@@ -40,7 +40,7 @@ export const Login: React.FC = () => {
       dispatch(setUserData({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL, ...profile }));
       const getUserPhysicalData = await getBMIHistory();
       dispatch(setUserPhysicalData(getUserPhysicalData));
-      navigation.navigate(profile.profileComplete ? 'TabBar' : 'OnboardingDetails');
+      navigation.reset({ index: 0, routes: [{ name: profile.profileComplete ? 'TabBar' : 'OnboardingDetails' }] });
     } catch (error) {
       reportError(error, 'handleLogin_Login.tsx');
     } finally {

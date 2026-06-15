@@ -42,7 +42,7 @@ export const Discover: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigation.goBack();
+    navigation.navigate('Home');
     return true;
   };
 

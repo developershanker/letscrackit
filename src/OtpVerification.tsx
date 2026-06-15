@@ -70,7 +70,7 @@ export const OtpVerification: React.FC = () => {
       dispatch(setUserData({ uid: user.uid, phoneNumber: user.phoneNumber, ...profile }));
       const physicalData = await getBMIHistory();
       dispatch(setUserPhysicalData(physicalData));
-     navigation.navigate(profile?.profileComplete ? 'TabBar' : 'OnboardingDetails');
+     navigation.reset({ index: 0, routes: [{ name: profile?.profileComplete ? 'TabBar' : 'OnboardingDetails' }] });
     } catch (e: any) {
       Alert.alert('Invalid OTP', e?.message ?? 'The OTP entered is incorrect. Please try again.');
       setDigits(Array(OTP_LENGTH).fill(''));
